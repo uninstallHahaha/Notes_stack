@@ -5,7 +5,9 @@
 
 
 
-#### 使用zookeeper作为dubbo的注册中心, 安装zookeeper
+#### zookeeper做dubbo的注册中心
+
+安装zookeeper
 
 1. 下载zookeeper并解压
 2. 在解压文件夹根目录下新建data文件夹, 用于存放注册的数据
