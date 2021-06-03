@@ -78,6 +78,8 @@
    </dependencies>
    ```
 
+   
+
 5. 在 `web.xml` 中配置前端过滤器, 使得所有请求都从这个sm过滤器进入
 
    ```xml
@@ -98,6 +100,8 @@
        <url-pattern>/</url-pattern>
    </servlet-mapping>
    ```
+
+   
 
 6. 在`resources`文件夹下创建并编辑springMVC的配置文件 `springmvc.xml`
 
@@ -121,9 +125,11 @@
    <mvc:annotation-driven/>
    ```
 
+   
+
 8. 在 `webapp` 文件夹下新建页面 `index.jsp`, 页面中添加 带有请求的超链接
 
-9. 在 `java` 文件夹下新建 `controller` 文件夹, 在文件夹下 新建 控制器类 `helloController`, 在类上加 `@Controller` 注解使其变为控制器 , 在 `helloController` 中添加接口方法, 在方法上加 `@RequestMapping(path="/hello")`
+8. 在 `java` 文件夹下新建 `controller` 文件夹, 在文件夹下 新建 控制器类 `helloController`, 在类上加 `@Controller` 注解使其变为控制器 , 在 `helloController` 中添加接口方法, 在方法上加 `@RequestMapping(path="/hello")`
 
    ```java
    @Controller
@@ -136,6 +142,8 @@
        }
    }
    ```
+
+   
 
 10. 在 `WEB-INF/pages/` 下新建 `success.jsp` 的返回页面
 
@@ -221,6 +229,8 @@ public String paramsBind(String name , int age){
    }
    ```
 
+   
+
 2. 注册自定义的转换器 
 
    `springmvc.xml`
@@ -237,6 +247,8 @@ public String paramsBind(String name , int age){
    <!--修改注解支持使得上面的配置生效( 使用以上的conversionservice作为配置实例 )-->
    <mvc:annotation-driven conversion-service="conversionService"/>
    ```
+
+   
 
 3. 直接使用自定义转换的类型传参即可
 
@@ -344,6 +356,8 @@ public String test(@CookieValue(value="JSESIONID")String cookie){
   }
   ```
 
+  
+
 * 用于参数列表上, 使得验证方法无需返回值, 而是将处理完的数据保存到一个map中, 控制器参数再到map中取数据
 
   ```java
@@ -398,6 +412,8 @@ public class Test{
 }
 ```
 
+
+
 ```jsp
 <!--在jsp头标签中设置 isELIgnored=false 以启用el表达式-->
 ${ requestScope.msg }
@@ -432,6 +448,8 @@ ${ sessionScope.msg }
   }
   ```
 
+  
+
 * 使用关键字进行请求转发
 
   ```java
@@ -439,12 +457,16 @@ ${ sessionScope.msg }
   return "forward:/WEB-INF/pages/success.jsp";
   ```
 
+  
+
 * 使用关键字进行请求重定向 
 
   ```java
   //将会使用重定向的方式跳转, 同时不需要写项目名称, 底层会自动加上
   return "redirect:/index.jsp";
   ```
+  
+  
 
 
 
@@ -472,6 +494,8 @@ ${ sessionScope.msg }
      </dependency>
      ```
 
+     
+
   2. 直接使用bean接收json类型的参数即可
 
      ```java
@@ -480,6 +504,8 @@ ${ sessionScope.msg }
          ...
      }
      ```
+     
+     
 
 * **使用@ResponseBody**
 
@@ -521,6 +547,8 @@ ${ sessionScope.msg }
      </dependency>
      ```
 
+     
+
   2. 传统文件解析方法...
 
 * ***使用springmvc提供的文件解析器实现文件上传***
@@ -538,6 +566,8 @@ ${ sessionScope.msg }
      	<property name="maxUploadSize" value="10485760"/>
      </bean>
      ```
+
+     
 
   3. 在控制器方法参数列表中加上文件类型的参数 `MultipartFile upload` (名称必须和name属性一致)
 
@@ -566,6 +596,8 @@ ${ sessionScope.msg }
          return "success";
      }
      ```
+     
+     
      
   5. 修改springmvc对资源文件的过滤规则 , 将上一步设置的 uploads 文件夹设置为springmvc中的资源文件夹, 使得可以直接访问该路径下的文件
 
@@ -651,8 +683,10 @@ ${ sessionScope.msg }
      }
      ```
 
-  2. 创建异常处理类 ( 自定义的异常处理方法 )
+     
 
+  2. 创建异常处理类 ( 自定义的异常处理方法 )
+  
      ```java
      //实现接口成为一个异常处理器
      //ex为接收到的异常
@@ -672,13 +706,15 @@ ${ sessionScope.msg }
      }
      ```
 
+     
+  
   3. 配置异常处理器  `springmvc.xml`
-
+  
      ```xml
      <!--配置完后系统抛出的异常会使用该类进行处理-->
      <bean id="exceptionResolver" class="自定义的异常处理类的全路径类名"/>
      ```
-
+  
      
 
 ### springMVC拦截器
@@ -778,6 +814,8 @@ public class myIntercepter implements HandlerInterceptor{
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller">
     </context:component-scan>
     ```
+
+    
 
 12. 在 `AccountServiceImpl`的类上加注解 `@Service("accountService")`  (将service这个类交给aoc容器管理, 成为spring容器中的一个bean对象, 然后就可以通过注解的方式直接自动绑定)
 
@@ -1011,6 +1049,8 @@ public void saveAccount(Account account){
 > 
 > </ c:forEach>
 > ```
+>
+> 
 
 
 

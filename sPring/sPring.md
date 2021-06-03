@@ -13,8 +13,7 @@
 * 程序的耦合: 程序之间的依赖关系
 
 	1. 类之间的依赖
- 	2. 方法之间的依赖
-
+	2. 方法之间的依赖
 * 解耦: 降低程序间的依赖, 应当编译器不依赖, 运行时依赖
 
 1. 使用反射来创建对象, 而不是使用 new 关键字
@@ -496,6 +495,8 @@ public void test(){
    <context:component-scan base-package="包名"></context:component-scan>
    ```
 
+   
+
 4. 给各个层中的实现类上加注解, 使其被容器管理
 
 5. 删除实现类中的set方法, 同时给类中成员属性加上自动绑定的注解 
@@ -547,6 +548,8 @@ public void test(){
        }
    }
    ```
+
+   
 
 6. 在获取容器的时候使用 ApplicationContext 的另外一个实现类 `AnnotationConfigApplicationContext` 
 
@@ -1109,8 +1112,10 @@ public static void main(){
      }
      ```
 
-  5. 新建spring配置文件, 使用ioc容器管理数据源对象和jdbctemplate对象
+     
 
+  5. 新建spring配置文件, 使用ioc容器管理数据源对象和jdbctemplate对象
+  
      ```xml
      <beans>
      
@@ -1126,8 +1131,10 @@ public static void main(){
      </beans>
      ```
 
+     
+  
   6. 修改测试为读取spring配置文件获取对象 以及 **jdbcTemplate的CRUD操作**
-
+  
      ```java
      public static void main(){
          //获取容器...
@@ -1167,10 +1174,12 @@ public static void main(){
      }
      ```
 
+     
+  
   7. 创建dao接口及其实现, 将jdbcTemplate应用于dao层
-
+  
   8. 实际开发中, dao层的类不止一个, 其中每个类中都要有一个jdbcTemplate对象为类成员属性 和 它的set方法, 而且该成员属性还要在spring的配置文件中使用property进行注入, 这样就造成了很多重复的代码, 如下
-
+  
      ```java
      public class AccountDao implements IAccountDao{
          //每个dao实现类中都要这些
@@ -1182,7 +1191,9 @@ public static void main(){
          //...其他接口
      }
      ```
-
+  
+     
+  
      ```xml
      <bean id="accountDao" class="...">
      	<property name="jt" ref="jdbcTemplate"></property>
@@ -1192,7 +1203,9 @@ public static void main(){
          <property name="dataSource" ref="dataSource"></property>
      </bean>
      ```
-
+  
+     
+  
   9. 将dao层实现类中关于jdbcTemplate成员属性的代码抽取到另外一个类中, 所有dao层的类都继承这个类, 从而这些dao层的实现类中都有了jdbcTemplate成员属性
 
      ```java
@@ -1204,16 +1217,20 @@ public static void main(){
          }
      }
      ```
-
+  
+     
+  
      ```java
      //那么dao层类就应当是这样
      public class AccountDao extends JdbcDaoSupport implements IAccontDao{
          //...其他接口方法
      }
      ```
-
+  
+     
+  
   10. 同时, 可将JdbcDaoSupport进行改造, 使得给dao层的类提供dataSource对象即可
-
+  
       ```java
       class JdbcDaoSupport{
           private JdbcTemplate jt;
@@ -1242,17 +1259,17 @@ public static void main(){
       
       <!--不再需要在配置文件中配置jdbcTemplate对象-->
       ```
-
-      
-
-  11. **以上的JdbcDaoSupport类在spring包中已经存在, 现在只需要删除 自己写的这个JdbcDaoSupport类, 导入spring包中的 `org.springframework.jdbc.core.support.JdbcDaoSupport` 即可使用**
-
-  12. 总结: 对于dao层的实现类, 只需要继承 `JdbcDaoSupport` , 然后在类中写接口方法即可. 对于配置文件, 只需要配置 `dataSource` 对象, 同时将该对象作为参数赋给实现了上述接口的类即可.
-
   
-
+      
+  
+  11. **以上的JdbcDaoSupport类在spring包中已经存在, 现在只需要删除 自己写的这个JdbcDaoSupport类, 导入spring包中的 `org.springframework.jdbc.core.support.JdbcDaoSupport` 即可使用**
+  
+  12. 总结: 对于dao层的实现类, 只需要继承 `JdbcDaoSupport` , 然后在类中写接口方法即可. 对于配置文件, 只需要配置 `dataSource` 对象, 同时将该对象作为参数赋给实现了上述接口的类即可.
+  
+  
+  
   #### 如果使用上述方式继承了spring的JdbcDaoSupport类, 那么就不能再dao类中定义一个jdbcTemplate并且使用@Autowired自动注入.
-
+  
   #### 如果不使用上述继承的方式, 那么可以使用常规的注解自动注入的方式
 
 
@@ -1331,6 +1348,8 @@ public static void main(){
    </aop:config>
    ```
 
+   
+
 4. 测试业务层的方法是否事务控制成功
 
 
@@ -1348,6 +1367,8 @@ public static void main(){
    <!--开启对事务管理注解的支持-->
    <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
    ```
+
+   
 
 2. 在需要事务支持的类( 业务层的类 )上加上 `@Transactional` 注解, 使其方法被事务管理
 
