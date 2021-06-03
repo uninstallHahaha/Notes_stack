@@ -155,9 +155,11 @@
 
 19. 此时就可对 css 文件打包 , 可以使用 html 引入打包后的 build.js 文件测试 css 文件的打包结果
 
-###### webpack 自动生成html文件
+###### 打包index.html文件
 
 > 就是自动在output目录生成一个html 文件, 这个文件已经引入了 生成的 build.js 文件
+>
+> 这样的话, 就可以直接把output目录拿出来单独使用了
 
 20. 在src 下新建 index.html 文件 , 随便写点内容
 
@@ -182,7 +184,7 @@
     ```
 
 
-###### webpack 打包图片文件
+###### 打包图片文件
 
 23. 下载包 `npm i url-loader file-loader -D`
 
@@ -228,7 +230,7 @@
     ```
 
 
-###### webpack 打包其他文件
+###### 打包其他文件
 
 > 就是一些只需要原样打包的文件 , 例如 woff , eot , svg
 
@@ -248,17 +250,25 @@
 
 30. 使用 webpack 命令打包
 
-###### webpack 使用devServer
+###### *使用devServer热加载*
+
+>   这个本质就是开一个服务器, 把内容加载到内存中, 然后发生修改时, 同步内存中的数据, 并不会实时的落盘
+>
+>   因此每次开发完成后, 需要手动 打包一次 来保存更改
 
 31. 此时每次修改代码都要手动执行 webpack 重新打包, 然后手动刷新浏览器
 
-32. 在 webpack 的配置文件中配置 devserver , 这个配置和五个核心配置同级
+32. `npm i webpack-dev-server -D` 下载启动服务的工具包
+
+33. 在 webpack 的配置文件中配置 devserver , 这个配置和五个核心配置同级
 
     ```js
     //设置了开发服务器后, 每次其实都是将更新编译的文件存到内存中, 不会更新本地的文件
     devServer: {
         //设置要更新和运行的文件在哪里, 就是编译后的路径
         contentBase: resolve(__dirname, 'build'),
+        //是否实时监听
+        inline: true,
         //设置使用 gzip 压缩, 这样能够提高更新速度
         compress : true,
         //服务开在哪个端口上
@@ -268,18 +278,20 @@
     }
     ```
 
-33. `npm i webpack-dev-server -D` 下载启动服务的工具包
+34. 在 package.json 中设置一个用来执行 `webpack-dev-server` 命令的 `npm run xxx`, 注意因为这个插件是本地安装, 所以没有配置到系统环境变量中, 并不能直接在命令行使用, 因此要利用 npm run 本地优先查找的特性来执行
 
-34. `npx webpack-dev-server` 启动开发服务器
+    `"dev": "webpack-dev-server"`
 
-35. `localhost:3000` 查看页面
+35. `npm run dev` 启动开发服务器
 
-###### 整理源文件目录结构
+36. `localhost:3000` 查看页面
+
+###### *整理源文件目录结构*
 
 36. 在 src 下分别创建 js , css , img , asset 文件夹, 分别将不同类型的资源对应放到目标文件夹中
 37. 修改 index.js 中对其他各个文件的引用路径即可
 
-###### 整理编译后的文件目录结构
+###### *整理编译后的文件目录结构*
 
 38. 现在编译后生成的各种文件都是放到一起的, 想要将它们放到不同的文件夹中
 
