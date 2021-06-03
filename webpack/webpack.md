@@ -45,51 +45,63 @@
 
     这步操作实际上是生成 package.json 文件, 也就是将当前文件夹作为 nodejs 的项目文件夹, 在其中可以使用 nodejs 的包
 
-3. `npm i webpack webpack-cli -g` 全局安装webpack, 是安装到本机, 可以直接在命令行中使用 webpack 命令
+3. 然后编辑　package.json 文件, 在 scripts 中添加 "bulid" : "wepack", 这样就可以通过执行 `npm run build` 来执行配置的命令 `webpack`
 
-4. `npm i webpack webpack-cli -D` 局部安装webpack , 安装到当前的 npm 项目下
+4. `npm i webpack webpack-cli -g` 全局安装webpack, 是安装到本机, 可以直接在命令行中使用 webpack 命令
 
-5. 在文件夹中新建  
+5. `npm i webpack webpack-cli -D --save-dev` 局部安装webpack , 安装到当前的 npm 项目下
+
+    <span style='color:cyan;'>注意 :　应当在本地安装webpack, 因为使用 `npm run xxx`时, 默认先从本地查找该命令, 如果没有则从全局查找, 而如果一个别人的项目, 该项目原本使用的 webpack 和 全局的 webpack 版本不同, 那么如果没有本地安装一样的版本, 那么打包时用的就是全局版本, 就很可能出现打包错误, 所以要在本地安装一样的版本来打包 </span>
+
+    `--save-dev` 设置这个包只在开发环境下使用, 因为 webpack 只是在开发的时候对js文件进行打包, 实际生产环境下只需要用到打包后的文件, 所以应当将 webpack 这个包设置为 --save-dev
+
+6. 在文件夹中新建  
 
    1. src 文件夹 : 存放源代码
    2. build 文件夹 : 存放经过webpack 打包后生成的文件
 
    *   <span style='color:cyan'>开发模式是 : 在src中按照任何模块化的规范(比如 CMD,AMD,CommonJs,Es6)进行开发, 开发完成后使用webpack命令打包这些模块到build文件夹下为一个浏览器可识别的es5的js文件, 然后在html页面中直接引用这个js文件即可</span>
 
-6. 在 src 文件夹中新建 index.js 作为 webpack 打包的入口文件, 随便写点 js
+7. 在 src 文件夹中新建 index.js 作为 webpack 打包的入口文件, 随便写点 js
 
-7. 使用webpack 命令来打包这个 index.js, 当然如果使用了webpack配置文件, 那么直接执行 webpack 命令即可
+8. 使用webpack 命令来打包这个 index.js
+
+   当然如果使用了webpack配置文件, 那么直接执行 webpack 命令即可
+
+   一般情况下, 都是把 webpack 命令配置到 npm 的 scrips 中, 然后通过 `npm run xxx`来执行
 
    使用开发环境模式打包 : `webpack ./src/index.js -o ./build/build.js --mode=development`
 
    使用生产环境模式打包 : `webpack ./src/index.js -o ./build/build.js --mode=production` 生产环境模式会将生成的 js 文件压缩
 
-8. 打包生成的 js 文件可以直接使用 node 运行  `node .\build\build.js`
+9. 打包生成的 js 文件可以直接使用 node 运行  `node .\build\build.js`
 
-9. 打包生成的 js 文件也可以直接引入到 html 中使用
+10. 打包生成的 js 文件也可以直接引入到 html 中使用
 
-10. 在 src 中新建 data.json 文件, 随便写点 json
+11. 在 src 中新建 data.json 文件, 随便写点 json
 
-11. 在 src 下的 index.js 中使用 es6 的语法导入上述 json 文件, 并使用 json 中的数据
+12. 在 src 下的 index.js 中使用 es6 的语法导入上述 json 文件, 并使用 json 中的数据
 
     ```js
     import data from './data.json';
     console.log(data)
     ```
 
-12. 再次使用 webpack 指令对 index.js 进行打包  , 然后在 html 中引用打包后的文件进行测试
+13. 再次使用 webpack 指令对 index.js 进行打包  , 然后在 html 中引用打包后的文件进行测试
 
-13. 在 src 中新建 index.css 文件
+14. 在 src 中新建 index.css 文件
 
-14. 然后在 index.js 中使用 Es6 语法引入该 css 文件
+15. 然后在 index.js 中使用 Es6 语法引入该 css 文件
 
     ```js
     import './index.css';
     ```
 
-15. 使用 webpack 命令对 index.js 重新打包, 此时会报错 , 这就证明了 webpack 本身不能翻译 css 文件
+16. 使用 webpack 命令对 index.js 重新打包, 此时会报错 , 这就证明了 webpack 本身不能翻译 css 文件
 
 ###### webpack 打包样式文件
+
+>   本质就是下载 loader , 然后设置指定哪些文件使用哪个 loader 来处理, 每种文件使用不同的 loader, 这里列举了 css 的 laoder 实例, 具体使用哪个loader以及相关配置, 可以在 webpack 官网找到
 
 16. 在项目根目录新建 webpack.config.js 文件作为 webpack 的配置文件 , 该配置文件使用 commonjs 语法 , 也就是 nodejs 的语法
 
@@ -118,7 +130,7 @@
                 {
                     //test用正则
                     test: /\.css$/,
-                    //use 设置这种文件使用哪些loader 处理, css文件被这些loader处理的顺序是列表中的从尾到头
+                    //use 设置这种文件使用哪些loader处理, css文件被这些loader处理的顺序是列表中的从尾到头
                     use: [
                        'style-loader', //在html中创建style标签,将js中的样式字符串添加进去
                         'css-loader'  //将css文件变为commonjs模块加载到js中
