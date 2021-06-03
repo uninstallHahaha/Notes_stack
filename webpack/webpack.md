@@ -197,14 +197,16 @@
         //loader设置
         options:{
             //图片小于8k时, 就把图片转换为 base64 加载在页面中
+            //当图片大于8k时, 使用 file-loader 将图片重命名后放到build目录下
             //优点: 减少请求次数
             //缺点: 转换为 base64 之后体积会变大, 所以适合对小图片进行base64转换
             limit: 8*1024,
             //因为 url-loader 使用es6中的模块化方式引入图片, 而下面使用的 html-loader 使用的是commonjs,所以设置 url-loader 不使用 es6的模块化方式, 从而使得 下面的 html-loader 可正常使用
             esModule: false,
+            //将生成的图片都放到img文件夹下
             //生成的文件名太长, 重新设置
-            // [hash:10] 取hash值前十位 , [ext] 原本文件的后缀
-            name: '[hash:10].[ext]'
+            //[name]原来文件的名字 , [hash:10] 取hash值前十位 , [ext] 原本文件的后缀
+            name: 'img/[name].[hash:10].[ext]'
         }
     }
     ```
@@ -289,7 +291,7 @@
     
     ...
     // css 和 less 不用设置, 因为它们打包后就直接加到 html 文件中的 style标签中了
-    //在各个 loader 中的 options 下添加 outputPath 参数指定将文件生成到哪个文件夹下 , 例如url-laoder
+    //在各个 loader 中的 options 下添加 outputPath 参数指定将文件生成到哪个文件夹下 , 例如url-loader
     {
         test: /\.(jpg|png|gif)$/,
         loader: 'url-loader',
@@ -302,7 +304,16 @@
     }
     ```
 
-    
+
+###### 注意 
+
+此时webpack生成的bundle.js文件并不全是es5语法, 还是会存在es6的语法, 如果要考虑兼容性, 应当使用下面的 <span style='color:cyan;'>js 兼容性处理</span>
+
+
+
+
+
+
 
 #### webpack 生产环境
 
