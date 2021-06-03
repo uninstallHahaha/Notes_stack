@@ -52,6 +52,8 @@
    1. src 文件夹 : 存放源代码
    2. build 文件夹 : 存放经过webpack 打包后生成的文件
 
+   *   <span style='color:cyan'>开发模式是 : 在src中按照任何模块化的规范(比如 CMD,AMD,CommonJs,Es6)进行开发, 开发完成后使用webpack命令打包这些模块到build文件夹下为一个浏览器可识别的es5的js文件, 然后在html页面中直接引用这个js文件即可</span>
+
 6. 在 src 文件夹中新建 index.js 作为 webpack 打包的入口文件, 随便写点 js
 
 7. 使用webpack 命令来打包这个 index.js
