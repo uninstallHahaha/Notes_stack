@@ -37,6 +37,8 @@
 
 #### webpack 开发环境
 
+>   <span style='color:red'>注意</span> : 安装以下 loader 或者 plugins 时一定要注意版本和 webpack 和 webpack-cli 的对应关系, 否则会出现不可预料的错误.
+
 ###### webpack 基本打包
 
 1. 首先需要安装 nodejs  , 因为要适用 npm 来管理项目的依赖
