@@ -43,6 +43,8 @@
 
 2. 创建一个文件夹, 在文件夹内打开命令行, `npm init` 初始化为一个 npm 项目
 
+    这步操作实际上是生成 package.json 文件, 也就是将当前文件夹作为 nodejs 的项目文件夹, 在其中可以使用 nodejs 的包
+
 3. `npm i webpack webpack-cli -g` 全局安装webpack, 是安装到本机, 可以直接在命令行中使用 webpack 命令
 
 4. `npm i webpack webpack-cli -D` 局部安装webpack , 安装到当前的 npm 项目下
@@ -56,7 +58,7 @@
 
 6. 在 src 文件夹中新建 index.js 作为 webpack 打包的入口文件, 随便写点 js
 
-7. 使用webpack 命令来打包这个 index.js
+7. 使用webpack 命令来打包这个 index.js, 当然如果使用了webpack配置文件, 那么直接执行 webpack 命令即可
 
    使用开发环境模式打包 : `webpack ./src/index.js -o ./build/build.js --mode=development`
 
