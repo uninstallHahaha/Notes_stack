@@ -189,7 +189,9 @@
 
 
 
-### springboot中的springmvc ( 与springmvc完全相同 )
+### springboot中的springmvc 
+
+>   与springmvc完全相同 
 
 * @Controller
 * @RestController
@@ -202,7 +204,9 @@
 
 
 
-### springboot使用jsp返回  ( 配置springmvc的视图解析器 )
+### springboot使用jsp返回  
+
+>    配置springmvc的视图解析器 
 
 1. 在pom中加入jsp的依赖包
 
@@ -313,7 +317,9 @@
 
 
 
-### springboot中使用事务 ( spring的事务 )
+### springboot中使用事务
+
+>   ( spring的事务 )
 
 1. 在运行的主类上加注解 `@EnableTransactionManagement`
 2. 在service实现类的方法上加 `@Transactional` 指定该方法使用事务
@@ -339,7 +345,9 @@
 
 
 
-### springboot热部署 ( 修改代码自动重新加载 )
+### springboot热部署 
+
+>   ( 修改代码自动重新加载 )
 
 1. 在pom中添加依赖
 
