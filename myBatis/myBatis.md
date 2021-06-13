@@ -870,3 +870,41 @@ List<User> findAll();
     ```
 
 3.  像往常一样使用实体类
+
+
+
+
+
+###### mybatis-plus
+
+>   默认定义了常用的crud接口, 只需要用dao层接口继承 BaseMapper 即可
+>
+>   只对使用mybatis的项目做扩展而不是改变, 原先使用xml或者注解自定义的接口还可以用
+
+*   在springboot中使用
+
+    1.  引入
+
+        ```xml
+        <!--引入了mybatis-plus就不要引入myatis了, 因为mybatis-plus继承了mybatis--> 
+        <dependency>
+                    <groupId>com.baomidou</groupId>
+                    <artifactId>mybatis-plus-boot-starter</artifactId>
+                    <version>3.4.3</version>
+                </dependency>
+        ```
+
+    2.  给dao层接口继承BaseMapper, 那么它就默认有了一系列的接口
+
+        ```java
+        public interface IUserDao extends BaseMapper<User> {}
+        ```
+
+    3.  此时, 
+
+        既可以使用dao层中通过注解或者xml配置文件自定义的接口, 
+
+        也可以使用mybatis-plus中提供的默认接口
+
+    
+

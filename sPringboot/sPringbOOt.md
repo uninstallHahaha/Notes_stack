@@ -371,6 +371,49 @@
 
 
 
+
+
+### springboot单元测试
+
+[单元测试](https://www.jianshu.com/p/72b19e24a602)
+
+1.  引入
+
+    ```xml
+     <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+            </dependency>
+    ```
+
+2.  首先搭建好能跑起来的springboot项目结构, 也就是程序主入口 Application.java
+
+3.  在项目的test目录下创建测试代码, 其实写在哪里都一样, 只是为了规范, 测试代码应当放到 test目录下
+
+    ```java
+    @RunWith(SpringRunner.class)
+    @SpringBootTest
+    public class mainTest {
+        //获取到自动注入对象
+        @Autowired
+        UserService userService;
+    
+        //执行测试方法
+        @Test
+        public void TestGetAllUser(){
+            List<User> userList = userService.getUserList();
+            System.out.println(userList);
+        }
+    }
+    ```
+
+    
+
+
+
+
+
 ### 在springboot中使用redis
 
 1. 引入依赖
