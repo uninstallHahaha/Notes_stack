@@ -726,7 +726,7 @@ List<User> findAll();
 
 
 
-#### 使用注解自定义返回值封装方法
+#### 使用注解定义resultMap
 
 1. 在接口类的方法上使用  `@Results` 
 
@@ -755,7 +755,9 @@ List<User> findAll();
 
 
 
-#### 使用注解实现多对一的关联查询且立即加载 ( 在查询账户的同时将所属用户查询出来 )
+#### 注解一对一关联查询-立即查询
+
+>   使用注解实现多对一的关联查询且立即加载 ( 在查询账户的同时将所属用户查询出来 )
 
 1. 使用Results->Result->One->select&fetchType 注解
 
@@ -777,7 +779,11 @@ List<User> findAll();
 
    
 
-#### 使用注解实现多对多的关联查询且不立即加载 ( 在查询user的同时, 懒加载该user名下的account ) 
+#### 注解一对多查询-懒加载
+
+>   使用注解实现多对多的关联查询且不立即加载 
+>
+>   ( 在查询user的同时, 懒加载该user名下的account ) 
 
 1. 使用Results->Result->Many->select&fetchType 注解
 
@@ -827,3 +833,40 @@ List<User> findAll();
 
 
 
+
+
+### 简化工作
+
+###### Lombok
+
+>   使用Lombok提供的注解, 不再需要手动给实体类定义各种setter和getter以及其他构造方法之类的
+>
+>   它会在编译的时候自动生成以上方法
+
+1.  引入
+
+    ```xml
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.12</version>
+        <scope>provided</scope>
+    </dependency>
+    ```
+
+2.  在实体类上使用
+
+    ```java
+    import lombok.Data;
+    
+    //Data注解在编译时帮你生成各种方法
+    public @Data class User {
+        int id;
+        String name;
+        int age;
+        Date birthday;
+    }
+    ```
+
+3.  像往常一样使用实体类
