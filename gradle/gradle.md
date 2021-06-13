@@ -1,6 +1,6 @@
-Gradle
+##### Gradle
 
-
+>   实际上就是类似于 maven 的jar包管理工具
 
 >   gradle 使用 groovy 语言编写配置文件, 所以
 
@@ -36,6 +36,12 @@ foo1(con1)
 ```
 
 
+
+设置本地仓库地址
+
+>   settings > gradle > service directory path > 设置仓库地址
+>
+>   可以和maven共用同一个本地仓库, 就是把 gradle的本地仓库地址设置为maven 的本地仓库地址
 
 
 

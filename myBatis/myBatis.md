@@ -299,7 +299,11 @@ List<User> findAll();
 
 * 设置resultType为实体类型时, 默认按照每条记录中每个字段的名字从实体类中的属性去匹配赋值
 
-##### 使用resultMap设置数据库查询结果列名和实体类中属性的对应关系
+
+
+#### resultMap
+
+>    使用resultMap设置数据库查询结果列名和实体类中属性的对应关系
 
 1. 在  `mapper`  标签下使用  `resultMap`  标签定义一个对应关系
 ```xml
@@ -327,7 +331,7 @@ List<User> findAll();
 
 
 
-#### 在配置文件中配置公用属性
+#### 配置文件中的公用属性
 
 1. 在configuration标签下, 使用properties标签定义公用属性
 
@@ -346,7 +350,9 @@ List<User> findAll();
    </configuration>
    ```
 
-#### 将上述公共属性从外部文件引入
+
+
+#### 从外部文件引入公共属性
 
 1. 在resources下新建属性配置文件 jdbcConfig.properties
 
@@ -388,17 +394,18 @@ List<User> findAll();
 
 
 
-> 连接池: 
->
-> ​	* 存储连接对象的集合, 线程安全的, 不能让两个线程拿到同一个连接
->
-> 	* 数据结构为队列, 先进先出
-
 
 
 #### myBatis的连接池配置
 
-* 在主配置文件的dataSource标签下配置, type属性设置使用哪种连接池的方式
+>   连接池: 
+>
+>   *   存储连接对象的集合, 线程安全的, 不能让两个线程拿到同一个连接
+>
+>   *   数据结构为队列, 先进先出
+
+*   在主配置文件的dataSource标签下配置, type属性设置使用哪种连接池的方式
+
 * type的取值: 
   * **POOLED** : 实现了传统的javax.sql.DataSource的规范, 而生成的连接池	
   * **UNPOOLED** : 采用传统的连接获取方式,但是没有使用连接池, 连接随用随生成
