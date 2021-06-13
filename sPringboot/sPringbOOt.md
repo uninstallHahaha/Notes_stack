@@ -279,6 +279,8 @@
 
 3. 在application.properties配置文件中配置mapper配置文件的所在位置  和 数据源参数
 
+   >   application.properties 文件应当在 resources文件夹下
+
    ```properties
    #由于上一步将mapper放在了类路径下, 所以使用classpath
    #具体路径根据实际情况来写
