@@ -328,9 +328,9 @@
 
 
 
-### springboot中使用restful风格的请求地址
+### springboot中创建restful接口
 
-1. 在requestmapping中添加参数的映射, 然后在处理方法的参数上使用PathVariable来绑定参数
+1. 在RequestMapping中添加参数的映射, 然后在处理方法的参数上使用PathVariable来绑定参数
 
    ```java
    //这是一个controller
