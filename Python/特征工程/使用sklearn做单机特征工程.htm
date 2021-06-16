@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta property="og:description" content="目录 1 特征工程是什么？2 数据预处理 2.1 无量纲化 2.1.1 标准化 2.1.2 区间缩放法 2.1.3 标准化与归一化的区别 2.2 对定量特征二值化 2.3 对定性特征哑编码 2.4 缺">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>使用sklearn做单机特征工程 - jasonfreak - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="https://common.cnblogs.com/favicon.ico?v=20200522" type="image/x-icon">
+    
+    <link rel="stylesheet" href="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/blog-common.css">
+    <link id="MainCss" rel="stylesheet" href="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/bundle-mtclean.css">
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/bundle-mtclean-mobile.css">
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/jasonfreak/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/jasonfreak/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/jasonfreak/wlwmanifest.xml">
+    <script src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/amp4ads-host-v0.js"></script><script async="" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/analytics.js"></script><script type="text/javascript" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/encoder.js"></script><script src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/jquery-2.js"></script>
+    <script src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/blog-common.js"></script>
+    <script>
+        var currentBlogId = 277313;
+        var currentBlogApp = 'jasonfreak';
+        var cb_enable_mathjax = true;
+        var isLogined = false;
+        var skinName = 'MTClean';
+    </script>
+    <script type="text/x-mathjax-config;executed=true">
+        MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processClass: 'math', processEscapes: true },
+        TeX: {
+        equationNumbers: { autoNumber: ['AMS'], useLabelIds: true },
+        extensions: ['extpfeil.js', 'mediawiki-texvc.js'],
+        Macros: {bm: "\\boldsymbol"}
+        },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+        });
+    </script>
+    <script src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/MathJax.js"></script>
+    
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style><link rel="preload" href="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/integrator.js" as="script"><script type="text/javascript" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/integrator.js"></script><script src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/pubads_impl_2020052601.js" async=""></script><link rel="prefetch" href="https://9db61d2f3fcb4200eb70be7d38208f32.safeframe.googlesyndication.com/safeframe/1-0-37/html/container.html"><link rel="prefetch" href="https://tpc.googlesyndication.com/safeframe/1-0-37/html/container.html"></head>
+<body><div id="MathJax_Message" style="display: none;"></div>
+    <a name="top"></a>
+    
+    <div id="top">
+
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/jasonfreak/">jasonfreak</a>
+</h1>
+<p id="tagline">
+一个懒惰的人，总是想设计更智能的程序来避免做重复性工作
+</p>
+
+
+</div>
+<div id="main">
+	<div id="post_detail">
+	<div class="post">
+		<h2>
+			
+<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/jasonfreak/p/5448385.html">使用sklearn做单机特征工程</a>
+
+		</h2>
+		
+<div id="cnblogs_post_body" class="blogpost-body ">
+    <h1>目录</h1>
+<p>1 特征工程是什么？<br>2 数据预处理<br>　　2.1 无量纲化<br>　　　　2.1.1 标准化<br>　　　　2.1.2 区间缩放法<br>　　　　2.1.3 标准化与归一化的区别<br>　　2.2 对定量特征二值化<br>　　2.3 对定性特征哑编码<br>　　2.4 缺失值计算<br>　　2.5 数据变换<br>　　2.6 回顾<br>3 特征选择<br>　　3.1 Filter<br>　　　　3.1.1 方差选择法<br>　　　　3.1.2 相关系数法<br>　　　　3.1.3 卡方检验<br>　　　　3.1.4 互信息法<br>    　　3.2 Wrapper<br>        　　　　3.2.1 递归特征消除法<br>　　3.3 Embedded<br>　　　　3.3.1 基于惩罚项的特征选择法<br>　　　　3.3.2 基于树模型的特征选择法<br>　　3.4 回顾<br>4 降维<br>　　4.1 主成分分析法（PCA）<br>　　4.2 线性判别分析法（LDA）<br>　　4.3 回顾<br>5 总结<br>6 参考资料</p>
+<hr>
+<h1>1 特征工程是什么？</h1>
+<p>　　有这么一句话在业界广泛流传：数据和特征决定了机器学习的上限，而模型和算法只是逼近这个上限而已。那特征工程到底是什么呢？顾名思义，其本质是一项工程活动，目的是最大限度地从原始数据中提取特征以供算法和模型使用。通过总结和归纳，人们认为特征工程包括以下方面：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/927391-20160430145122660-830141495.jpg" alt=""></p>
+<p>　　特征处理是特征工程的核心部分，sklearn提供了较为完整的特征处理方法，包括数据预处理，特征选择，降维等。首次接触到sklearn，通常会被其丰富且方便的算法模型库吸引，但是这里介绍的特征处理库也十分强大！</p>
+<p>　　本文中使用sklearn中的<a href="http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" target="_blank">IRIS（鸢尾花）数据集</a>来
+对特征处理功能进行说明。IRIS数据集由Fisher在1936年整理，包含4个特征（Sepal.Length（花萼长度）、
+Sepal.Width（花萼宽度）、Petal.Length（花瓣长度）、Petal.Width（花瓣宽度）），特征值都为正浮点数，单位为厘米。
+目标值为鸢尾花的分类（Iris Setosa（山鸢尾）、Iris Versicolour（杂色鸢尾），Iris 
+Virginica（维吉尼亚鸢尾））。导入IRIS数据集的代码如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">from</span> sklearn.datasets <span style="color: #0000ff;">import</span><span style="color: #000000;"> load_iris
+</span><span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> <span style="color: #008000;">#</span><span style="color: #008000;">导入IRIS数据集</span>
+<span style="color: #008080;"> 4</span> iris =<span style="color: #000000;"> load_iris()
+</span><span style="color: #008080;"> 5</span> 
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">#</span><span style="color: #008000;">特征矩阵</span>
+<span style="color: #008080;"> 7</span> <span style="color: #000000;">iris.data
+</span><span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span> <span style="color: #008000;">#</span><span style="color: #008000;">目标向量</span>
+<span style="color: #008080;">10</span> iris.target</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<hr>
+<h1>2 数据预处理</h1>
+<p>　　通过特征提取，我们能得到未经处理的特征，这时的特征可能有以下问题：</p>
+<ul>
+<li>不属于同一量纲：即特征的规格不一样，不能够放在一起比较。无量纲化可以解决这一问题。</li>
+<li>信息冗余：对于某些定量特征，其包含的有效信息为区间划分，例如学习成绩，假若只关心“及格”或不“及格”，那么需要将定量的考分，转换成“1”和“0”表示及格和未及格。二值化可以解决这一问题。</li>
+<li>定性特征不能直接使用：某些机器学习算法和模型只能接受定量特征的输入，那么需要将定性特征转换为定量特征。最简单的方式是为每一种定性值指定一个定量值，但是这种方式过于灵活，增加了调参的工作。<a href="http://www.ats.ucla.edu/stat/mult_pkg/faq/general/dummy.htm" target="_blank">通常使用哑编码的方式将定性特征转换为定量特征</a>：假设有N种定性值，则将这一个特征扩展为N种特征，当原始特征值为第i种定性值时，第i个扩展特征赋值为1，其他扩展特征赋值为0。哑编码的方式相比直接指定的方式，不用增加调参的工作，对于线性模型来说，使用哑编码后的特征可达到非线性的效果。</li>
+<li>存在缺失值：缺失值需要补充。</li>
+<li>信息利用率低：不同的机器学习算法和模型对数据中信息的利用是不同的，之前提到在线性模型中，使用对定性特征哑编码可以达到非线性的效果。类似地，对定量变量多项式化，或者进行其他的转换，都能达到非线性的效果。</li>
+</ul>
+<p>　　我们使用sklearn中的preproccessing库来进行数据预处理，可以覆盖以上问题的解决方案。</p>
+<h2>2.1 无量纲化</h2>
+<p>　　无量纲化使不同规格的数据转换到同一规格。常见的无量纲化方法有标准化和区间缩放法。标准化的前提是特征值服从正态分布，标准化后，其转换成标准正态分布。区间缩放法利用了边界值信息，将特征的取值区间缩放到某个特点的范围，例如[0, 1]等。</p>
+<h3>2.1.1 标准化</h3>
+<p>　　标准化需要计算特征的均值和标准差，公式表达为：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/927391-20160502113957732-1062097580.png" alt=""></p>
+<p>　　使用preproccessing库的StandardScaler类对数据进行标准化的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.preprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> StandardScaler
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">标准化，返回值为标准化后的数据</span>
+<span style="color: #008080;">4</span> StandardScaler().fit_transform(iris.data)</pre>
+</div>
+<h3>2.1.2 区间缩放法</h3>
+<p>　　区间缩放法的思路有多种，常见的一种为利用两个最值进行缩放，公式表达为：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/927391-20160502113301013-1555489078.png" alt=""></p>
+<p>　　使用preproccessing库的MinMaxScaler类对数据进行区间缩放的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.preprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> MinMaxScaler
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">区间缩放，返回值为缩放到[0, 1]区间的数据</span>
+<span style="color: #008080;">4</span> MinMaxScaler().fit_transform(iris.data)</pre>
+</div>
+<h3>2.1.3 标准化与归一化的区别</h3>
+<p>　　简单来说，标准化是依照特征矩阵的列处理数据，其通过求z-score的方法，将样本的特征值转换到同一量纲下。归一化是依照特征矩阵的行处理
+数据，其目的在于样本向量在点乘运算或其他核函数计算相似性时，拥有统一的标准，也就是说都转化为“单位向量”。规则为l2的归一化公式如下：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/927391-20160719002904919-1602367496.htm" alt=""></p>
+<p>　　使用preproccessing库的Normalizer类对数据进行归一化的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.preprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> Normalizer
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#归一</span><span style="color: #008000;">化，返回值为归一化后的数据</span>
+<span style="color: #008080;">4</span> Normalizer().fit_transform(iris.data)</pre>
+</div>
+<h2>2.2 对定量特征二值化</h2>
+<p>　　定量特征二值化的核心在于设定一个阈值，大于阈值的赋值为1，小于等于阈值的赋值为0，公式表达如下：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/927391-20160502115121216-456946808.png" alt=""></p>
+<p>　　使用preproccessing库的Binarizer类对数据进行二值化的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.preprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> Binarizer
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">二值化，阈值设置为3，返回值为二值化后的数据</span>
+<span style="color: #008080;">4</span> Binarizer(threshold=3).fit_transform(iris.data)</pre>
+</div>
+<h2>2.3 对定性特征哑编码</h2>
+<p>　　由于IRIS数据集的特征皆为定量特征，故使用其目标值进行哑编码（实际上是不需要的）。使用preproccessing库的OneHotEncoder类对数据进行哑编码的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.preprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> OneHotEncoder
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">哑编码，对IRIS数据集的目标值，返回值为哑编码后的数据</span>
+<span style="color: #008080;">4</span> OneHotEncoder().fit_transform(iris.target.reshape((-1,1)))</pre>
+</div>
+<h2>2.4 缺失值计算</h2>
+<p>　　由于IRIS数据集没有缺失值，故对数据集新增一个样本，4个特征均赋值为NaN，表示数据缺失。使用preproccessing库的Imputer类对数据进行缺失值计算的代码如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> numpy <span style="color: #0000ff;">import</span><span style="color: #000000;"> vstack, array, nan
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">from</span> sklearn.preprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> Imputer
+</span><span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">缺失值计算，返回值为计算缺失值后的数据</span>
+<span style="color: #008080;">5</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数missing_value为缺失值的表示形式，默认为NaN</span>
+<span style="color: #008080;">6</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数strategy为缺失值填充方式，默认为mean（均值）</span>
+<span style="color: #008080;">7</span> Imputer().fit_transform(vstack((array([nan, nan, nan, nan]), iris.data)))</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h2>2.5 数据变换</h2>
+<p>　　常见的数据变换有基于多项式的、基于指数函数的、基于对数函数的。4个特征，度为2的多项式转换公式如下：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/927391-20160502134944451-270339895.png" alt=""></p>
+<p>　　使用preproccessing库的PolynomialFeatures类对数据进行多项式转换的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.preprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> PolynomialFeatures
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">多项式转换</span>
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数degree为度，默认值为2</span>
+<span style="color: #008080;">5</span> PolynomialFeatures().fit_transform(iris.data)</pre>
+</div>
+<p>　　基于单变元函数的数据变换可以使用一个统一的方式完成，使用preproccessing库的FunctionTransformer对数据进行对数函数转换的代码如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> numpy <span style="color: #0000ff;">import</span><span style="color: #000000;"> log1p
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">from</span> sklearn.preprocessing <span style="color: #0000ff;">import</span><span style="color: #000000;"> FunctionTransformer
+</span><span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">自定义转换函数为对数函数的数据变换</span>
+<span style="color: #008080;">5</span> <span style="color: #008000;">#</span><span style="color: #008000;">第一个参数是单变元函数</span>
+<span style="color: #008080;">6</span> FunctionTransformer(log1p).fit_transform(iris.data)</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h2>2.6 回顾</h2>
+<table border="0" align="center">
+<tbody>
+<tr>
+<td>类</td>
+<td>功能</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>StandardScaler</td>
+<td>无量纲化</td>
+<td>标准化，基于特征矩阵的列，将特征值转换至服从标准正态分布</td>
+</tr>
+<tr>
+<td>MinMaxScaler</td>
+<td>无量纲化</td>
+<td>区间缩放，基于最大最小值，将特征值转换到[0, 1]区间上</td>
+</tr>
+<tr>
+<td>Normalizer</td>
+<td>归一化</td>
+<td>基于特征矩阵的行，将样本向量转换为“单位向量”</td>
+</tr>
+<tr>
+<td>Binarizer</td>
+<td>二值化</td>
+<td>基于给定阈值，将定量特征按阈值划分</td>
+</tr>
+<tr>
+<td>OneHotEncoder</td>
+<td>哑编码</td>
+<td>将定性数据编码为定量数据</td>
+</tr>
+<tr>
+<td>Imputer</td>
+<td>缺失值计算</td>
+<td>计算缺失值，缺失值可填充为均值等</td>
+</tr>
+<tr>
+<td>PolynomialFeatures</td>
+<td>多项式数据转换</td>
+<td>多项式数据转换</td>
+</tr>
+<tr>
+<td>FunctionTransformer</td>
+<td>自定义单元数据转换</td>
+<td>使用单变元的函数来转换数据</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<hr>
+<p>&nbsp;</p>
+<h1>3 特征选择</h1>
+<p>　　当数据预处理完成后，我们需要选择有意义的特征输入机器学习的算法和模型进行训练。通常来说，从两个方面考虑来选择特征：</p>
+<ul>
+<li>特征是否发散：如果一个特征不发散，例如方差接近于0，也就是说样本在这个特征上基本上没有差异，这个特征对于样本的区分并没有什么用。</li>
+<li>特征与目标的相关性：这点比较显见，与目标相关性高的特征，应当优选选择。除方差法外，本文介绍的其他方法均从相关性考虑。</li>
+</ul>
+<p>　　根据特征选择的形式又可以将特征选择方法分为3种：</p>
+<ul>
+<li>Filter：过滤法，按照发散性或者相关性对各个特征进行评分，设定阈值或者待选择阈值的个数，选择特征。</li>
+<li>Wrapper：包装法，根据目标函数（通常是预测效果评分），每次选择若干特征，或者排除若干特征。</li>
+<li>Embedded：嵌入法，先使用某些机器学习的算法和模型进行训练，得到各个特征的权值系数，根据系数从大到小选择特征。类似于Filter方法，但是是通过训练来确定特征的优劣。</li>
+</ul>
+<p>　　我们使用sklearn中的feature_selection库来进行特征选择。</p>
+<h2>3.1 Filter</h2>
+<h3>3.1.1 方差选择法</h3>
+<p>　　使用方差选择法，先要计算各个特征的方差，然后根据阈值，选择方差大于阈值的特征。使用feature_selection库的VarianceThreshold类来选择特征的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> VarianceThreshold
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">方差选择法，返回值为特征选择后的数据</span>
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数threshold为方差的阈值</span>
+<span style="color: #008080;">5</span> VarianceThreshold(threshold=3).fit_transform(iris.data)</pre>
+</div>
+<h3>3.1.2 相关系数法</h3>
+<p>　　使用相关系数法，先要计算各个特征对目标值的相关系数以及相关系数的P值。用feature_selection库的SelectKBest类结合相关系数来选择特征的代码如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> SelectKBest
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">from</span> scipy.stats <span style="color: #0000ff;">import</span><span style="color: #000000;"> pearsonr
+</span><span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">选择K个最好的特征，返回选择特征后的数据</span>
+<span style="color: #008080;">5</span> <span style="color: #008000;">#</span><span style="color: #008000;">第一个参数为计算评估特征是否好的函数，该函数输入特征矩阵和目标向量，输出二元组（评分，P值）的数组，数组第i项为第i个特征的评分和P值。在此定义为计算相关系数</span>
+<span style="color: #008080;">6</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数k为选择的特征个数</span>
+<span style="color: #008080;">7</span> SelectKBest(<span style="color: #0000ff;">lambda</span> X, Y: array(map(<span style="color: #0000ff;">lambda</span> x:pearsonr(x, Y), X.T)).T, k=2).fit_transform(iris.data, iris.target)</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h3>3.1.3 卡方检验</h3>
+<p>　　经典的卡方检验是检验定性自变量对定性因变量的相关性。假设自变量有N种取值，因变量有M种取值，考虑自变量等于i且因变量等于j的样本频数的观察值与期望的差距，构建统计量：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/927391-20160502144243326-2086446424.png" alt=""></p>
+<p>　　<a href="http://wiki.mbalib.com/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C" target="_blank">这个统计量的含义简而言之就是自变量对因变量的相关性</a>。用feature_selection库的SelectKBest类结合卡方检验来选择特征的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> SelectKBest
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> chi2
+</span><span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">选择K个最好的特征，返回选择特征后的数据</span>
+<span style="color: #008080;">5</span> SelectKBest(chi2, k=2).fit_transform(iris.data, iris.target)</pre>
+</div>
+<h3>3.1.4 互信息法</h3>
+<p>　　经典的互信息也是评价定性自变量对定性因变量的相关性的，互信息计算公式如下：</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/927391-20160502145723247-1184422794.png" alt=""></p>
+<p>　　为了处理定量数据，最大信息系数法被提出，使用feature_selection库的SelectKBest类结合最大信息系数法来选择特征的代码如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> SelectKBest
+</span><span style="color: #008080;"> 2</span> <span style="color: #0000ff;">from</span> minepy <span style="color: #0000ff;">import</span><span style="color: #000000;"> MINE
+</span><span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">#</span><span style="color: #008000;">由于MINE的设计不是函数式的，定义mic方法将其为函数式的，返回一个二元组，二元组的第2项设置成固定的P值0.5</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">def</span><span style="color: #000000;"> mic(x, y):
+</span><span style="color: #008080;"> 6</span>     m =<span style="color: #000000;"> MINE()
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">    m.compute_score(x, y)
+</span><span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">return</span> (m.mic(), 0.5<span style="color: #000000;">)
+</span><span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #008000;">#</span><span style="color: #008000;">选择K个最好的特征，返回特征选择后的数据</span>
+<span style="color: #008080;">11</span> SelectKBest(<span style="color: #0000ff;">lambda</span> X, Y: array(map(<span style="color: #0000ff;">lambda</span> x:mic(x, Y), X.T)).T, k=2).fit_transform(iris.data, iris.target)</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h2>3.2 Wrapper</h2>
+<h3>3.2.1 递归特征消除法</h3>
+<p>　　递归消除特征法使用一个基模型来进行多轮训练，每轮训练后，消除若干权值系数的特征，再基于新的特征集进行下一轮训练。使用feature_selection库的RFE类来选择特征的代码如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> RFE
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">from</span> sklearn.linear_model <span style="color: #0000ff;">import</span><span style="color: #000000;"> LogisticRegression
+</span><span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">递归特征消除法，返回特征选择后的数据</span>
+<span style="color: #008080;">5</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数estimator为基模型</span>
+<span style="color: #008080;">6</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数n_features_to_select为选择的特征个数</span>
+<span style="color: #008080;">7</span> RFE(estimator=LogisticRegression(), n_features_to_select=2).fit_transform(iris.data, iris.target)</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h2>3.3 Embedded</h2>
+<h3>3.3.1 基于惩罚项的特征选择法</h3>
+<p>　　使用带惩罚项的基模型，除了筛选出特征外，同时也进行了降维。使用feature_selection库的SelectFromModel类结合带L1惩罚项的逻辑回归模型，来选择特征的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> SelectFromModel
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">from</span> sklearn.linear_model <span style="color: #0000ff;">import</span><span style="color: #000000;"> LogisticRegression
+</span><span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">带L1惩罚项的逻辑回归作为基模型的特征选择</span>
+<span style="color: #008080;">5</span> SelectFromModel(LogisticRegression(penalty=<span style="color: #800000;">"</span><span style="color: #800000;">l1</span><span style="color: #800000;">"</span>, C=0.1)).fit_transform(iris.data, iris.target)</pre>
+</div>
+<p>　　<a href="http://www.zhihu.com/question/28641663/answer/41653367" target="_blank">L1惩罚项降维的原理在于保留多个对目标值具有同等相关性的特征中的一个</a>，所以没选到的特征不代表不重要。故，可结合L2惩罚项来优化。具体操作为：若一个特征在L1中的权值为1，选择在L2中权值差别不大且在L1中权值为0的特征构成同类集合，将这一集合中的特征平分L1中的权值，故需要构建一个新的逻辑回归模型：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('908776ad-47d4-49a2-80ec-b8f4ddbd9a36')"><img id="code_img_closed_908776ad-47d4-49a2-80ec-b8f4ddbd9a36" class="code_img_closed" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/ContractedBlock.gif" alt=""><img id="code_img_opened_908776ad-47d4-49a2-80ec-b8f4ddbd9a36" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('908776ad-47d4-49a2-80ec-b8f4ddbd9a36',event)" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_908776ad-47d4-49a2-80ec-b8f4ddbd9a36" class="cnblogs_code_hide">
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">from</span> sklearn.linear_model <span style="color: #0000ff;">import</span><span style="color: #000000;"> LogisticRegression
+</span><span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> LR(LogisticRegression):
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">def</span> <span style="color: #800080;">__init__</span>(self, threshold=0.01, dual=False, tol=1e-4, C=1.0<span style="color: #000000;">,
+</span><span style="color: #008080;"> 5</span>                  fit_intercept=True, intercept_scaling=1, class_weight=<span style="color: #000000;">None,
+</span><span style="color: #008080;"> 6</span>                  random_state=None, solver=<span style="color: #800000;">'</span><span style="color: #800000;">liblinear</span><span style="color: #800000;">'</span>, max_iter=100<span style="color: #000000;">,
+</span><span style="color: #008080;"> 7</span>                  multi_class=<span style="color: #800000;">'</span><span style="color: #800000;">ovr</span><span style="color: #800000;">'</span>, verbose=0, warm_start=False, n_jobs=1<span style="color: #000000;">):
+</span><span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span>         <span style="color: #008000;">#</span><span style="color: #008000;">权值相近的阈值</span>
+<span style="color: #008080;">10</span>         self.threshold =<span style="color: #000000;"> threshold
+</span><span style="color: #008080;">11</span>         LogisticRegression.<span style="color: #800080;">__init__</span>(self, penalty=<span style="color: #800000;">'</span><span style="color: #800000;">l1</span><span style="color: #800000;">'</span>, dual=dual, tol=tol, C=<span style="color: #000000;">C,
+</span><span style="color: #008080;">12</span>                  fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, class_weight=<span style="color: #000000;">class_weight,
+</span><span style="color: #008080;">13</span>                  random_state=random_state, solver=solver, max_iter=<span style="color: #000000;">max_iter,
+</span><span style="color: #008080;">14</span>                  multi_class=multi_class, verbose=verbose, warm_start=warm_start, n_jobs=<span style="color: #000000;">n_jobs)
+</span><span style="color: #008080;">15</span>         <span style="color: #008000;">#</span><span style="color: #008000;">使用同样的参数创建L2逻辑回归</span>
+<span style="color: #008080;">16</span>         self.l2 = LogisticRegression(penalty=<span style="color: #800000;">'</span><span style="color: #800000;">l2</span><span style="color: #800000;">'</span>, dual=dual, tol=tol, C=C, fit_intercept=fit_intercept, intercept_scaling=intercept_scaling, class_weight = class_weight, random_state=random_state, solver=solver, max_iter=max_iter, multi_class=multi_class, verbose=verbose, warm_start=warm_start, n_jobs=<span style="color: #000000;">n_jobs)
+</span><span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span>     <span style="color: #0000ff;">def</span> fit(self, X, y, sample_weight=<span style="color: #000000;">None):
+</span><span style="color: #008080;">19</span>         <span style="color: #008000;">#</span><span style="color: #008000;">训练L1逻辑回归</span>
+<span style="color: #008080;">20</span>         super(LR, self).fit(X, y, sample_weight=<span style="color: #000000;">sample_weight)
+</span><span style="color: #008080;">21</span>         self.coef_old_ =<span style="color: #000000;"> self.coef_.copy()
+</span><span style="color: #008080;">22</span>         <span style="color: #008000;">#</span><span style="color: #008000;">训练L2逻辑回归</span>
+<span style="color: #008080;">23</span>         self.l2.fit(X, y, sample_weight=<span style="color: #000000;">sample_weight)
+</span><span style="color: #008080;">24</span> 
+<span style="color: #008080;">25</span>         cntOfRow, cntOfCol =<span style="color: #000000;"> self.coef_.shape
+</span><span style="color: #008080;">26</span>         <span style="color: #008000;">#</span><span style="color: #008000;">权值系数矩阵的行数对应目标值的种类数目</span>
+<span style="color: #008080;">27</span>         <span style="color: #0000ff;">for</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(cntOfRow):
+</span><span style="color: #008080;">28</span>             <span style="color: #0000ff;">for</span> j <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(cntOfCol):
+</span><span style="color: #008080;">29</span>                 coef =<span style="color: #000000;"> self.coef_[i][j]
+</span><span style="color: #008080;">30</span>                 <span style="color: #008000;">#</span><span style="color: #008000;">L1逻辑回归的权值系数不为0</span>
+<span style="color: #008080;">31</span>                 <span style="color: #0000ff;">if</span> coef !=<span style="color: #000000;"> 0:
+</span><span style="color: #008080;">32</span>                     idx =<span style="color: #000000;"> [j]
+</span><span style="color: #008080;">33</span>                     <span style="color: #008000;">#</span><span style="color: #008000;">对应在L2逻辑回归中的权值系数</span>
+<span style="color: #008080;">34</span>                     coef1 =<span style="color: #000000;"> self.l2.coef_[i][j]
+</span><span style="color: #008080;">35</span>                     <span style="color: #0000ff;">for</span> k <span style="color: #0000ff;">in</span><span style="color: #000000;"> range(cntOfCol):
+</span><span style="color: #008080;">36</span>                         coef2 =<span style="color: #000000;"> self.l2.coef_[i][k]
+</span><span style="color: #008080;">37</span>                         <span style="color: #008000;">#</span><span style="color: #008000;">在L2逻辑回归中，权值系数之差小于设定的阈值，且在L1中对应的权值为0</span>
+<span style="color: #008080;">38</span>                         <span style="color: #0000ff;">if</span> abs(coef1-coef2) &lt; self.threshold <span style="color: #0000ff;">and</span> j != k <span style="color: #0000ff;">and</span> self.coef_[i][k] ==<span style="color: #000000;"> 0:
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">                            idx.append(k)
+</span><span style="color: #008080;">40</span>                     <span style="color: #008000;">#</span><span style="color: #008000;">计算这一类特征的权值系数均值</span>
+<span style="color: #008080;">41</span>                     mean = coef /<span style="color: #000000;"> len(idx)
+</span><span style="color: #008080;">42</span>                     self.coef_[i][idx] =<span style="color: #000000;"> mean
+</span><span style="color: #008080;">43</span>         <span style="color: #0000ff;">return</span> self</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>　　使用feature_selection库的SelectFromModel类结合带L1以及L2惩罚项的逻辑回归模型，来选择特征的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> SelectFromModel
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">带L1和L2惩罚项的逻辑回归作为基模型的特征选择</span>
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数threshold为权值系数之差的阈值</span>
+<span style="color: #008080;">5</span> SelectFromModel(LR(threshold=0.5, C=0.1)).fit_transform(iris.data, iris.target)</pre>
+</div>
+<h3>3.3.2 基于树模型的特征选择法</h3>
+<p>　　树模型中GBDT也可用来作为基模型进行特征选择，使用feature_selection库的SelectFromModel类结合GBDT模型，来选择特征的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.feature_selection <span style="color: #0000ff;">import</span><span style="color: #000000;"> SelectFromModel
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">from</span> sklearn.ensemble <span style="color: #0000ff;">import</span><span style="color: #000000;"> GradientBoostingClassifier
+</span><span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">GBDT作为基模型的特征选择</span>
+<span style="color: #008080;">5</span> SelectFromModel(GradientBoostingClassifier()).fit_transform(iris.data, iris.target)</pre>
+</div>
+<h2>3.4 回顾</h2>
+<table border="0" align="center">
+<tbody>
+<tr>
+<td>类</td>
+<td>所属方式</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>VarianceThreshold</td>
+<td>Filter</td>
+<td>方差选择法</td>
+</tr>
+<tr>
+<td>SelectKBest</td>
+<td>Filter</td>
+<td>可选关联系数、卡方校验、最大信息系数作为得分计算的方法</td>
+</tr>
+<tr>
+<td>RFE</td>
+<td>Wrapper</td>
+<td>递归地训练基模型，将权值系数较小的特征从特征集合中消除</td>
+</tr>
+<tr>
+<td>SelectFromModel</td>
+<td>Embedded</td>
+<td>训练基模型，选择权值系数较高的特征</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<hr>
+<h1>4 降维</h1>
+<p>　　当特征选择完成后，可以直接训练模型了，但是可能由于特征矩阵过大，导致计算量大，训练时间长的问题，因此降低特征矩阵维度也是必不可少的。常
+见的降维方法除了以上提到的基于L1惩罚项的模型以外，另外还有主成分分析法（PCA）和线性判别分析（LDA），线性判别分析本身也是一个分类模型。
+PCA和LDA有很多的相似点，其本质是要将原始的样本映射到维度更低的样本空间中，但是PCA和LDA的映射目标不一样：<a href="http://www.cnblogs.com/LeftNotEasy/archive/2011/01/08/lda-and-pca-machine-learning.html" target="_blank">PCA是为了让映射后的样本具有最大的发散性；而LDA是为了让映射后的样本有最好的分类性能</a>。所以说PCA是一种无监督的降维方法，而LDA是一种有监督的降维方法。</p>
+<h2>4.1 主成分分析法（PCA）</h2>
+<p>　　使用decomposition库的PCA类选择特征的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.decomposition <span style="color: #0000ff;">import</span><span style="color: #000000;"> PCA
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">主成分分析法，返回降维后的数据</span>
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数n_components为主成分数目</span>
+<span style="color: #008080;">5</span> PCA(n_components=2).fit_transform(iris.data)</pre>
+</div>
+<h2>4.2 线性判别分析法（LDA）</h2>
+<p>　　使用lda库的LDA类选择特征的代码如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008080;">1</span> <span style="color: #0000ff;">from</span> sklearn.lda <span style="color: #0000ff;">import</span><span style="color: #000000;"> LDA
+</span><span style="color: #008080;">2</span> 
+<span style="color: #008080;">3</span> <span style="color: #008000;">#</span><span style="color: #008000;">线性判别分析法，返回降维后的数据</span>
+<span style="color: #008080;">4</span> <span style="color: #008000;">#</span><span style="color: #008000;">参数n_components为降维后的维数</span>
+<span style="color: #008080;">5</span> LDA(n_components=2).fit_transform(iris.data, iris.target)</pre>
+</div>
+<h2>4.3 回顾</h2>
+<table border="0" align="center">
+<tbody>
+<tr>
+<td>库</td>
+<td>类</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>decomposition</td>
+<td>PCA</td>
+<td>主成分分析法</td>
+</tr>
+<tr>
+<td>lda</td>
+<td>LDA</td>
+<td>线性判别分析法</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<hr>
+<h1>5 总结</h1>
+<p>　　再让我们回归一下本文开始的特征工程的思维导图，我们可以使用sklearn完成几乎所有特征处理的工作，而且不管是数据预处理，还是特征选
+择，抑或降维，它们都是通过某个类的方法fit_transform完成的，fit_transform要不只带一个参数：特征矩阵，要不带两个参数：特
+征矩阵加目标向量。这些难道都是巧合吗？还是故意设计成这样？方法fit_transform中有fit这一单词，它和训练模型的fit方法有关联吗？接
+下来，我将在<a href="http://www.cnblogs.com/jasonfreak/p/5448462.html" target="_blank">《使用sklearn优雅地进行数据挖掘》</a>中阐述其中的奥妙！</p>
+<hr>
+<h1>6 参考资料</h1>
+<ol>
+<li><a href="http://www.ats.ucla.edu/stat/mult_pkg/faq/general/dummy.htm" target="_blank">FAQ: What is dummy coding?</a></li>
+<li><a href="http://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_iris.html#sklearn.datasets.load_iris" target="_blank">IRIS（鸢尾花）数据集</a></li>
+<li><a href="http://wiki.mbalib.com/wiki/%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C" target="_blank">卡方检验</a></li>
+<li><a href="http://dataunion.org/14072.html" target="_blank">干货：结合Scikit-learn介绍几种常用的特征选择方法</a></li>
+<li><a href="http://www.zhihu.com/question/28641663/answer/41653367" target="_blank">机器学习中，有哪些特征选择的工程方法？</a></li>
+<li><a href="http://www.cnblogs.com/LeftNotEasy/archive/2011/01/08/lda-and-pca-machine-learning.html" target="_blank">机器学习中的数学(4)-线性判别分析（LDA）, 主成分分析(PCA)</a></li>
+</ol>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block"><div id="BlogPostCategory">
+    分类: 
+            <a href="https://www.cnblogs.com/jasonfreak/category/823064.html" target="_blank">特征工程</a></div>
+<div id="EntryTag">
+    标签: 
+            <a href="https://www.cnblogs.com/jasonfreak/tag/Python/">Python</a>,             <a href="https://www.cnblogs.com/jasonfreak/tag/sklearn/">sklearn</a>,             <a href="https://www.cnblogs.com/jasonfreak/tag/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/">特征工程</a></div>
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5448385,cb_blogId,1);green_channel_success(this,'谢谢推荐！');">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow('7cccbecc-71f8-e511-9fc1-ac853d9f53cc');" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/jasonfreak/" target="_blank"><img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/20160402101100.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/jasonfreak/">jasonfreak</a><br>
+            <a href="https://home.cnblogs.com/u/jasonfreak/followees/">关注 - 0</a><br>
+            <a href="https://home.cnblogs.com/u/jasonfreak/followers/">粉丝 - 429</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow('7cccbecc-71f8-e511-9fc1-ac853d9f53cc');return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5448385,'Digg')">
+        <span class="diggnum" id="digg_count">38</span>
+    </div>
+    <div class="buryit" onclick="votePost(5448385,'Bury')">
+        <span class="burynum" id="bury_count">3</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/jasonfreak/p/5441512.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/jasonfreak/p/5441512.html" title="发布于 2016-04-29 21:08">使用Python进行描述性统计</a>
+    <br>
+    <a href="https://www.cnblogs.com/jasonfreak/p/5448462.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/jasonfreak/p/5448462.html" title="发布于 2016-05-04 11:46">使用sklearn优雅地进行数据挖掘</a>
+
+</div>
+</div>
+		<p class="postfoot">
+			posted on 
+<span id="post-date">2016-05-02 17:41</span>&nbsp;
+<a href="https://www.cnblogs.com/jasonfreak/">jasonfreak</a>&nbsp;
+阅读(<span id="post_view_count">119809</span>)&nbsp;
+评论(<span id="post_comment_count">25</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=5448385" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(5448385);return false;">收藏</a>
+		</p>
+	</div>
+	
+	
+<script src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/highlight.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 277313, cb_blogApp = 'jasonfreak', cb_blogUserGuid = '7cccbecc-71f8-e511-9fc1-ac853d9f53cc';
+    var cb_entryId = 5448385, cb_entryCreatedDate = '2016-05-02 17:41', cb_postType = 1; 
+    loadViewCount(cb_entryId);
+    loadSideColumnAd();
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder">
+
+<div id="comment_pager_top">
+    
+</div>
+
+
+<div id="comments">
+<h3>Feedback</h3>
+	<div class="feedbackNoItems"></div>
+			<h4>
+				
+<a href="#3422133" class="layer">#1楼</a>
+<a name="3422133" id="comment_anchor_3422133"></a>
+
+
+					<span>
+						
+<span class="comment_date">2016-05-03 20:16</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3422133" href="https://www.cnblogs.com/charlotte77/" target="_blank">Charlotte77</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3422133" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    哈哈，我就知道是iris 数据
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3422133, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3422133, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3422133_avatar" style="display:none">
+            https://pic.cnblogs.com/face/853467/20160428085235.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3456528" class="layer">#2楼</a>
+<a name="3456528" id="comment_anchor_3456528"></a>
+
+
+					<span>
+						
+<span class="comment_date">2016-06-22 07:49</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3456528" href="https://www.cnblogs.com/hhh5460/" target="_blank">罗兵</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3456528" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    好文！拜读！感谢！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3456528, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3456528, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3456528_avatar" style="display:none">
+            https://pic.cnblogs.com/face/709432/20150122201055.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3458270" class="layer">#3楼</a>
+<a name="3458270" id="comment_anchor_3458270"></a>
+
+
+					<span>
+						
+<span class="comment_date">2016-06-24 16:04</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3458270" href="https://home.cnblogs.com/u/982651/" target="_blank">Lydon</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3458270" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    期待楼主大作。谢谢分享！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3458270, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3458270, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3458465" class="layer">#4楼</a>
+<a name="3458465" id="comment_anchor_3458465"></a>
+
+
+					<span>
+						
+<span class="comment_date">2016-06-25 07:28</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3458465" href="https://www.cnblogs.com/hhh5460/" target="_blank">罗兵</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3458465" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    博主，感谢写出这么好的文章！<br><br>另，我能否转载这篇博文？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3458465, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3458465, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3458465_avatar" style="display:none">
+            https://pic.cnblogs.com/face/709432/20150122201055.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3458466" class="layer">#5楼</a>
+<a name="3458466" id="comment_anchor_3458466"></a>
+[<span class="louzhu">楼主</span>]
+
+					<span>
+						
+<span class="comment_date">2016-06-25 07:32</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3458466" href="https://www.cnblogs.com/jasonfreak/" target="_blank">jasonfreak</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3458466" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    <a href="#3458465" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3458465);">@</a>
+罗兵<br>可以的，互相学习！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3458466, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3458466, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3458466_avatar" style="display:none">
+            https://pic.cnblogs.com/face/927391/20160402101100.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3488734" class="layer">#6楼</a>
+<a name="3488734" id="comment_anchor_3488734"></a>
+
+
+					<span>
+						
+<span class="comment_date">2016-08-13 12:15</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3488734" href="https://www.cnblogs.com/dinglei-ml/" target="_blank">丁磊-ml</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3488734" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    大神，你好！！！<br>发现，虽然你特征工程的方法很全，但没有每个处理方法适用于哪种问题的介绍？？？<br>是不是在实战中根据自己的经验来尝试？？？从而得到自己的提升
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3488734, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3488734, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3488741" class="layer">#7楼</a>
+<a name="3488741" id="comment_anchor_3488741"></a>
+[<span class="louzhu">楼主</span>]
+
+					<span>
+						
+<span class="comment_date">2016-08-13 12:30</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3488741" href="https://www.cnblogs.com/jasonfreak/" target="_blank">jasonfreak</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3488741" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    <a href="#3488734" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3488734);">@</a>
+丁磊-ml<br>您好，本文只介绍了常用的特征处理方法及其sklearn实现，以及同类方法的简单的比较，例如：“PCA是为了让映射后的样本具有最大的发散性；而LDA是为了让映射后的样本有最好的分类性能”。当然，还有更多的特征处理办法和技巧，这就说来话长啦，哈哈哈。<br>我也觉得需要通过实践来加深对理论的理解，试错是少不了的过程。期待您在学习和实践过程中分享关于特征工程方面更深入的经验和知识！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3488741, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3488741, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3488741_avatar" style="display:none">
+            https://pic.cnblogs.com/face/927391/20160402101100.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3488782" class="layer">#8楼</a>
+<a name="3488782" id="comment_anchor_3488782"></a>
+
+
+					<span>
+						
+<span class="comment_date">2016-08-13 14:32</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3488782" href="https://www.cnblogs.com/dinglei-ml/" target="_blank">丁磊-ml</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3488782" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    <a href="#3488741" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3488741);">@</a>
+jasonfreak<br>大神知道有哪些书是讲解　特征工程，数据预处理的吗？？？<br>很想读读那些书！！！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3488782, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3488782, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3590926" class="layer">#9楼</a>
+<a name="3590926" id="comment_anchor_3590926"></a>
+
+
+					<span>
+						
+<span class="comment_date">2016-12-27 22:37</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3590926" href="https://www.cnblogs.com/haoyuan/" target="_blank">魔灵幽亭</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3590926" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    同样，感谢博主的文章！我在运行代码的时候，也遇到一个问题。用皮尔森来挑选变量处的代码，我这里需要改成：<br><div class="cnblogs_Highlighter sh-gutter"><div><div id="highlighter_523851" class="syntaxhighlighter  python"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="python plain">SelectKBest(</code><code class="python keyword">lambda</code> <code class="python plain">X, Y: </code><code class="python functions">tuple</code><code class="python plain">(</code><code class="python functions">map</code><code class="python plain">(</code><code class="python functions">tuple</code><code class="python plain">,array(</code><code class="python functions">list</code><code class="python plain">(</code><code class="python functions">map</code><code class="python plain">(</code><code class="python keyword">lambda</code> <code class="python plain">x:pearsonr(x, Y), X.T))).T)), k</code><code class="python keyword">=</code><code class="python value">2</code><code class="python plain">).fit_transform(iris.data, iris.target)</code></div></div></td></tr></tbody></table></div></div></div><br><br>需要将其转化成tuple才行。不知博主看后有没有建议。<br><br>至于，上面的map之后加个list是因为我用的Python3。<br><br>谢谢博主的文章。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3590926, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3590926, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3601031" class="layer">#10楼</a>
+<a name="3601031" id="comment_anchor_3601031"></a>
+
+
+					<span>
+						
+<span class="comment_date">2017-01-10 21:56</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3601031" href="https://www.cnblogs.com/stevenlk/" target="_blank">会飞的蝸牛</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3601031" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    请问博主，你这个博客的主题是哪里来的啊，好简洁，特别欣赏，能推荐一下吗
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3601031, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3601031, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3601031_avatar" style="display:none">
+            https://pic.cnblogs.com/face/571280/20131101170318.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3673801" class="layer">#11楼</a>
+<a name="3673801" id="comment_anchor_3673801"></a>
+
+
+					<span>
+						
+<span class="comment_date">2017-04-21 17:38</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3673801" href="https://www.cnblogs.com/senlammark/" target="_blank">状语从句</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3673801" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    拜读了，多谢
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3673801, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3673801, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3693516" class="layer">#12楼</a>
+<a name="3693516" id="comment_anchor_3693516"></a>
+
+
+					<span>
+						
+<span class="comment_date">2017-05-16 15:53</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3693516" href="https://www.cnblogs.com/satchel/" target="_blank">詹晴天</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3693516" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    楼主，文章中给的有些链接打不开，尤其是idre.ucla的链接，不针对外界开放，请问有没有什么方法获得这些链接里的内容
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3693516, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3693516, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3693516_avatar" style="display:none">
+            https://pic.cnblogs.com/face/1118361/20170305135807.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3794912" class="layer">#13楼</a>
+<a name="3794912" id="comment_anchor_3794912"></a>
+
+
+					<span>
+						
+<span class="comment_date">2017-09-24 17:26</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3794912" href="https://home.cnblogs.com/u/1210696/" target="_blank">哈士奇说喵</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3794912" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    我觉得楼主的无量纲化这个描述不对，我个人的理解是，不同的特征之间做无量纲化，比如说身高1.7m和体重160斤这个两个特征做无量纲化，而楼主所说的max-min和z-socre应该是归一化的两种形式，是对同一特征下，数值进行缩放
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3794912, 'Digg', this.parentElement, false);">
+                支持(1)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3794912, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3796726" class="layer">#14楼</a>
+<a name="3796726" id="comment_anchor_3796726"></a>
+
+
+					<span>
+						
+<span class="comment_date">2017-09-26 09:51</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3796726" href="https://www.cnblogs.com/laresh/" target="_blank">司徒道</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3796726" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    <a href="#3590926" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,3590926);">@</a>
+魔灵幽亭<br>同python3,这样就行<br><div class="cnblogs_Highlighter sh-gutter"><div><div id="highlighter_554790" class="syntaxhighlighter  python"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="python plain">SelectKBest(</code><code class="python keyword">lambda</code> <code class="python plain">X, Y: </code><code class="python functions">list</code><code class="python plain">(array([pearsonr(x, Y) </code><code class="python keyword">for</code> <code class="python plain">x </code><code class="python keyword">in</code> <code class="python plain">X.T]).T), k</code><code class="python keyword">=</code><code class="python value">2</code><code class="python plain">).fit_transform(iris.data, iris.target)</code></div></div></td></tr></tbody></table></div></div></div>
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3796726, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3796726, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3796726_avatar" style="display:none">
+            https://pic.cnblogs.com/face/824706/20151019165511.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3818251" class="layer">#15楼</a>
+<a name="3818251" id="comment_anchor_3818251"></a>
+
+
+					<span>
+						
+<span class="comment_date">2017-10-22 20:55</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3818251" href="https://www.cnblogs.com/LittleHann/" target="_blank">郑瀚Andrew.Hann</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3818251" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    good post
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3818251, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3818251, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3818251_avatar" style="display:none">
+            https://pic.cnblogs.com/face/532548/20200526223315.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3836327" class="layer">#16楼</a>
+<a name="3836327" id="comment_anchor_3836327"></a>
+
+
+					<span>
+						
+<span class="comment_date">2017-11-09 20:27</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3836327" href="https://home.cnblogs.com/u/1276260/" target="_blank">paris008</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3836327" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    发散是啥？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3836327, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3836327, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3855328" class="layer">#17楼</a>
+<a name="3855328" id="comment_anchor_3855328"></a>
+
+
+					<span>
+						
+<span class="comment_date">2017-12-01 10:35</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3855328" href="https://home.cnblogs.com/u/637828/" target="_blank">xxddexiaobaicai</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3855328" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    我的是python2 我改成这样可以执行了，我看了一下源码，好像有score就行了，SelectKBest(lambda 
+X,Y:array(map(lambda x: pearsonr(x, Y), X.T)).T[0], 
+k=3).fit_transform(iris.data, iris.target)<br>还请各位指教。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3855328, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3855328, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#3893308" class="layer">#18楼</a>
+<a name="3893308" id="comment_anchor_3893308"></a>
+
+
+					<span>
+						
+<span class="comment_date">2018-01-19 10:38</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_3893308" href="https://home.cnblogs.com/u/1304939/" target="_blank">Stone1111</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_3893308" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    标准化是依照特征矩阵的列处理数据，归一化是依照特征矩阵的行处理数据，这个不太理解，博主可以解释下吗？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3893308, 'Digg', this.parentElement, false);">
+                支持(1)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3893308, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#4023384" class="layer">#19楼</a>
+<a name="4023384" id="comment_anchor_4023384"></a>
+
+
+					<span>
+						
+<span class="comment_date">2018-07-18 17:38</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_4023384" href="https://www.cnblogs.com/solong1989/" target="_blank">Solong1989</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_4023384" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    OneHotEncoder 
+一般翻译为“独热编码”，而哑变量或者哑编码，一般指pandas的get_dummies方法，这两个方法结果是有区别的；另外，博主对归一化和标准化
+的概念解释，我觉得也有问题，一般来讲，标准化指的是Z-score，归一化指的是最大最小归一化，但其实归一化其实并不是特指某个特定的方法，凡是把数
+据缩放到0-1间的变换，都可以称之为归一化。并非博主所说的那个按行列的区别，另外，Normalizer一般翻译为正则化！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4023384, 'Digg', this.parentElement, false);">
+                支持(1)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4023384, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_4023384_avatar" style="display:none">
+            https://pic.cnblogs.com/face/1416994/20190219223255.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#4028676" class="layer">#20楼</a>
+<a name="4028676" id="comment_anchor_4028676"></a>
+
+
+					<span>
+						
+<span class="comment_date">2018-07-25 17:23</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_4028676" href="https://www.cnblogs.com/lwwangfang/" target="_blank">lwwangfang</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_4028676" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    @ jasonfreak  <br>十分感谢博主，小白有种找到救命稻草的感觉。<br><br>但是我有个问题，如果我的每个数据样本是二维
+的，比如，每个样本是128 * 440。  128  是不同的特征属性，440  是时间秒数。 一个数据样本128 * 
+440就是记录随时间变化的特征属性们的值。  这种，我想用特征选择方法从128  个特征属性中选出10个来，获得10*440 
+的选择后的新样本，怎么办呢？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4028676, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4028676, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#4190858" class="layer">#21楼</a>
+<a name="4190858" id="comment_anchor_4190858"></a>
+
+
+					<span>
+						
+<span class="comment_date">2019-02-28 22:39</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_4190858" href="https://www.cnblogs.com/whu-flb2020/" target="_blank">泡大蒜的窝窝头</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_4190858" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    清晰，全面，具体。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4190858, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4190858, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_4190858_avatar" style="display:none">
+            https://pic.cnblogs.com/face/1375202/20181104164522.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#4191458" class="layer">#22楼</a>
+<a name="4191458" id="comment_anchor_4191458"></a>
+
+
+					<span>
+						
+<span class="comment_date">2019-03-01 15:09</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_4191458" href="https://www.cnblogs.com/fclbky/" target="_blank">大雄fcl</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_4191458" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    <a href="#4028676" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,4028676);">@</a>
+lwwangfang<br>如果使用想标准差，卡方的话直接把一个样本的一维数据转二维算标准差就行了，或者可以把两个维度的数据平铺到一个维度上也可以比较，如果用相关性方法直接将输入数据 转二维运算就可以了
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4191458, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4191458, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_4191458_avatar" style="display:none">
+            https://pic.cnblogs.com/face/678287/20141114213728.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#4198034" class="layer">#23楼</a>
+<a name="4198034" id="comment_anchor_4198034"></a>
+
+
+					<span>
+						
+<span class="comment_date">2019-03-10 11:03</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_4198034" href="https://www.cnblogs.com/HingAglaiaWong/" target="_blank">HingAglaiaWong</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_4198034" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    marked
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4198034, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4198034, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_4198034_avatar" style="display:none">
+            https://pic.cnblogs.com/face/1099997/20190331134446.png
+        </span>
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#4240503" class="layer">#24楼</a>
+<a name="4240503" id="comment_anchor_4240503"></a>
+
+
+					<span>
+						
+<span class="comment_date">2019-04-25 15:21</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_4240503" href="https://www.cnblogs.com/bellz/" target="_blank">bellz</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_4240503" data-format-type="Ubb" class="blog_comment_body cnblogs-ubb">
+    有帮助！感谢！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4240503, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4240503, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+			<h4>
+				
+<a href="#4533886" class="layer">#25楼</a>
+<a name="4533886" id="comment_anchor_4533886"></a>
+
+        <span id="comment-maxId" style="display:none">4533886</span>
+        <span id="comment-maxDate" style="display:none">2020/3/27 上午10:27:45</span>
+
+					<span>
+						
+<span class="comment_date">2020-03-27 10:27</span>
+
+
+					</span>
+				
+
+            <a id="a_comment_author_4533886" href="https://home.cnblogs.com/u/1770207/" target="_blank">kaneziki</a>
+
+			</h4>
+			<p>
+				
+</p><div id="comment_body_4533886" data-format-type="Markdown" class="blog_comment_body cnblogs-markdown">
+    <p>大佬, 我能引用你那张归纳的图片吗？</p>
+
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red"></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4533886, 'Digg', this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4533886, 'Bury', this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+				&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    
+    
+</span>
+
+
+			<p></p>
+</div>
+
+<div id="comment_pager_bottom">
+    
+</div>
+
+
+</div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container" style="visibility: visible;"><div class="login_tips">
+    注册用户登录后才能发表评论，请 
+    <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return login('commentform');">登录</a>
+     或 
+    <a rel="nofollow" href="javascript:void(0);" class="underline" onclick="return register();">注册</a>，
+    <a href="https://www.cnblogs.com/">访问</a> 网站首页。
+</div></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"><a href="https://www.wenjuan.com/s/3uIjeq0/" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'T2-博客园问卷调查')">【推荐】了解你才能更懂你，博客园首发问卷调查，助力社区新升级</a><br><a href="http://www.ucancode.com/index.htm" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'T2-ucancode')">【推荐】超50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://fineui.com/" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'T2-FineUI')">【推荐】12年经典 UI 控件库 FineUI，支持 ASP.NET Core 3.1</a><br></div>
+    <div id="opt_under_post"></div>
+    <script async="async" src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/gpt.js"></script>
+    <script>
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+    </script>
+    <script>
+        googletag.cmd.push(function () {
+            googletag.defineSlot("/1090369/C1", [300, 250], "div-gpt-ad-1546353474406-0").addService(googletag.pubads());
+            googletag.defineSlot("/1090369/C2", [468, 60], "div-gpt-ad-1539008685004-0").addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+    </script>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id="div-gpt-ad-1546353474406-0" style="height:250px; width:300px;" data-google-query-id="CKOps-rI2OkCFcYEvQodlqQEKQ"><div id="google_ads_iframe_/1090369/C1_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/1090369/C1_0" title="3rd party ad content" name="google_ads_iframe_/1090369/C1_0" scrolling="no" marginwidth="0" marginheight="0" style="border: 0px none; vertical-align: bottom;" srcdoc="" data-google-container-id="1" data-load-complete="true" width="300" height="250" frameborder="0"></iframe></div></div>
+    </div>
+    <div id="under_post_news"><div class="recomm-block"><b>相关博文：</b><br>·  <a title="特征选择实践---python" href="https://www.cnblogs.com/babyfei/p/9674374.html" target="_blank" onclick="clickRecomItmem(9674374)">特征选择实践---python</a><br>·  <a title="机器学习中，有哪些特征选择的工程方法？" href="https://www.cnblogs.com/bonelee/p/8632866.html" target="_blank" onclick="clickRecomItmem(8632866)">机器学习中，有哪些特征选择的工程方法？</a><br>·  <a title="特征工程" href="https://www.cnblogs.com/weibao/p/6252280.html" target="_blank" onclick="clickRecomItmem(6252280)">特征工程</a><br>·  <a title="2.特征工程之特征选择" href="https://www.cnblogs.com/huangyc/p/9967758.html" target="_blank" onclick="clickRecomItmem(9967758)">2.特征工程之特征选择</a><br>·  <a title="谁动了我的特征？——sklearn特征转换行为全记录" href="https://www.cnblogs.com/jasonfreak/p/5619260.html" target="_blank" onclick="clickRecomItmem(5619260)">谁动了我的特征？——sklearn特征转换行为全记录</a><br>»  <a target="_blank" href="https://recomm.cnblogs.com/blogpost/5448385">更多推荐...</a></div></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id="div-gpt-ad-1539008685004-0" style="height:60px; width:468px;" data-google-query-id="CKSps-rI2OkCFcYEvQodlqQEKQ"><div id="google_ads_iframe_/1090369/C2_0__container__" style="border: 0pt none; width: 468px; height: 60px;"></div></div>
+    </div>
+    <div id="under_post_kb">
+<div class="itnews c_ad_block">
+    <b>最新 IT 新闻</b>:
+    <br>
+ ·              <a href="https://news.cnblogs.com/n/662997/" target="_blank">GE出售130年历史祖产：爱迪生创办的照明业务2.5亿美元卖了</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/662996/" target="_blank">海尔救人小哥喜提新房：112平米/56万元 免费送家电</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/662995/" target="_blank">3D实景逛街技术在中国率先投用！天猫618上线3D购</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/662994/" target="_blank">丁磊发布致股东信：网易正在准备赴港二次上市</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/662963/" target="_blank">美团的2020：千亿美元帝国的贪吃蛇游戏 气势汹汹也危机重重</a>
+            <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+        fixPostBody();
+        deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);        deliverAdT2();
+        deliverAdC1();
+        deliverAdC2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div></div>
+
+
+</div>
+<div id="leftmenu">
+
+	
+<h3>导航</h3>
+<ul>
+			<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+			<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/jasonfreak/">
+首页</a>
+</li>
+			<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/jasonfreak">
+联系</a></li>
+			<li>
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/jasonfreak/rss/">
+订阅</a> 
+<a id="blog_nav_rss_image" href="https://www.cnblogs.com/jasonfreak/rss/">
+    <img src="%E4%BD%BF%E7%94%A8sklearn%E5%81%9A%E5%8D%95%E6%9C%BA%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B_files/xml.gif" alt="订阅">
+</a></li>
+			<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+
+	<h3>统计信息</h3>
+	<ul>
+		<li>随笔 - 
+12</li>
+		<li>文章 - 
+0</li>
+		<li>评论 - 
+87</li>
+		<li>Trackbacks - 
+0
+	</li>
+</ul>
+
+
+	
+<div id="sidebar_news" class="newsItem"><h3>News</h3>
+	<ul>
+	  <li>
+<div id="blog-news">
+    
+    <div id="profile_block">
+        昵称：
+        <a href="https://home.cnblogs.com/u/jasonfreak/">
+            jasonfreak
+        </a>
+        <br>
+        园龄：
+        <a href="https://home.cnblogs.com/u/jasonfreak/" title="入园时间：2016-04-02">
+            4年1个月
+        </a>
+        <br>
+        粉丝：
+        <a href="https://home.cnblogs.com/u/jasonfreak/followers/">
+            429
+        </a>
+        <br>
+        关注：
+        <a href="https://home.cnblogs.com/u/jasonfreak/followees/">
+            0
+        </a>
+        <div id="p_b_follow">
+<a href="javascript:void(0)" onclick="follow('7cccbecc-71f8-e511-9fc1-ac853d9f53cc')">+加关注</a></div>
+        <script>getFollowStatus('7cccbecc-71f8-e511-9fc1-ac853d9f53cc');</script>
+    </div>
+</div></li>
+	</ul>
+
+</div>
+
+<div id="sidebar_ad"></div>
+	<div id="blog-sidecolumn">
+<!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    <div id="sidebar_search" class="mySearch">
+        <h3 class="catListTitle">搜索</h3>
+        <div id="sidebar_search_box">
+            <div id="widget_my_zzk" class="div_my_zzk">
+                <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+            </div>
+            <div id="widget_my_google" class="div_my_zzk">
+                <input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 常用链接 -->
+
+
+<!-- 最新随笔 -->
+
+
+
+<!-- 我的标签 -->
+<div id="sidebar_toptags" class="sidebar-block">
+    
+<h3>我的标签</h3>
+<div id="MyTag">
+    <ul>
+        
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/">数据挖掘</a>(8)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/sklearn/">sklearn</a>(5)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/Python/">Python</a>(3)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/">线性模型</a>(3)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B/">特征工程</a>(2)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">线性代数</a>(2)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>(2)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/">集成学习</a>(2)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">数据分析</a>(2)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/jasonfreak/tag/SciPy/">SciPy</a>(1)
+        </li>
+    <li>
+        <a href="https://www.cnblogs.com/jasonfreak/tag/">更多</a>
+    </li>
+
+    </ul>
+</div>
+
+</div>
+
+<!-- 积分与排名 -->
+
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+    
+
+		<h3>
+
+随笔分类
+
+
+</h3>
+				<ul>
+			
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/category/850009.html" rel="" target="">
+    代码发布(1)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/category/816889.html" rel="" target="">
+    环境搭建(1)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/category/854265.html" rel="" target="">
+    机器学习(2)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/category/822836.html" rel="" target="">
+    数据分析(2)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/category/823065.html" rel="" target="">
+    数据挖掘(8)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/category/823064.html" rel="" target="">
+    特征工程(2)
+</a>
+ 
+ </li>
+			
+				</ul>
+		<h3>
+
+随笔档案
+
+
+</h3>
+				<ul>
+			
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/archive/2016/11.html" rel="" target="">
+    2016年11月(1)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/archive/2016/07.html" rel="" target="">
+    2016年7月(3)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/archive/2016/06.html" rel="" target="">
+    2016年6月(4)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/archive/2016/05.html" rel="" target="">
+    2016年5月(2)
+</a>
+ 
+ </li>
+				<li>
+<a href="https://www.cnblogs.com/jasonfreak/archive/2016/04.html" rel="" target="">
+    2016年4月(2)
+</a>
+ 
+ </li>
+			
+				</ul>
+
+
+</div>
+
+<!-- 最新评论 -->
+<div id="sidebar_recentcomments" class="sidebar-block">
+    <div id="recent_comments_wrap" class="RecentComment">
+    <h3 class="catListTitle">最新评论</h3>
+    <div class="RecentCommentBlock">
+        <ul>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/jasonfreak/p/5720137.html">1. Re:使用sklearn进行集成学习——实践</a></li>
+                    <li class="recent_comment_body">感谢楼主 ,好写的很好,帮助很大. 关于"最大深度”（max_depth）"参数的描述--"若少的那一层给原子模型带来的是方差增大，则新子模型会准确度提高；若少的那一层给原子模型带来的是偏差减小，则新...</li>
+                    <li class="recent_comment_author">--JYGu</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/jasonfreak/p/5448385.html">2. Re:使用sklearn做单机特征工程</a></li>
+                    <li class="recent_comment_body"><p>大佬, 我能引用你那张归纳的图片吗？</p>
+</li>
+                    <li class="recent_comment_author">--kaneziki</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/jasonfreak/p/5391190.html">3. Re:马踏飞燕——奔跑在Docker上的Spark</a></li>
+                    <li class="recent_comment_body">厉害啊</li>
+                    <li class="recent_comment_author">--tigerofsky</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/jasonfreak/p/5720137.html">4. Re:使用sklearn进行集成学习——实践</a></li>
+                    <li class="recent_comment_body">666</li>
+                    <li class="recent_comment_author">--ghhhz</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/jasonfreak/p/5657196.html">5. Re:使用sklearn进行集成学习——理论</a></li>
+                    <li class="recent_comment_body">非常棒的解读，但是“模型是随机变量”这个表达是不是要修改下，换成“模型的输出是随机变量”更符合随机变量的数学定义？</li>
+                    <li class="recent_comment_author">--咕噜咕噜小叔叔</li>
+        </ul>
+    </div>
+</div>
+</div>
+
+
+
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block">
+    
+<div id="topview_posts_wrap">
+    <h3 class="catListTitle">阅读排行榜</h3>
+    <div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5448385.html">
+                            1. 使用sklearn做单机特征工程(119809)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5441512.html">
+                            2. 使用Python进行描述性统计(86549)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5448462.html">
+                            3. 使用sklearn优雅地进行数据挖掘(76511)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5720137.html">
+                            4. 使用sklearn进行集成学习——实践(49077)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5657196.html">
+                            5. 使用sklearn进行集成学习——理论(41647)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block">
+    
+<div id="topfeedback_posts_wrap">
+    <h3 class="catListTitle">评论排行榜</h3>
+    <div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5448385.html">
+                            1. 使用sklearn做单机特征工程(25)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5448462.html">
+                            2. 使用sklearn优雅地进行数据挖掘(23)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5657196.html">
+                            3. 使用sklearn进行集成学习——理论(11)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/5720137.html">
+                            4. 使用sklearn进行集成学习——实践(8)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/jasonfreak/p/6033276.html">
+                            5. 虎扑论坛装备区到底有没有李宁水军？——论坛水军发现实践(6)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+    
+<div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">推荐排行榜</h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/jasonfreak/p/5448385.html">
+                                1. 使用sklearn做单机特征工程(38)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/jasonfreak/p/5448462.html">
+                                2. 使用sklearn优雅地进行数据挖掘(29)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/jasonfreak/p/5657196.html">
+                                3. 使用sklearn进行集成学习——理论(13)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/jasonfreak/p/5441512.html">
+                                4. 使用Python进行描述性统计(11)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/jasonfreak/p/5720137.html">
+                                5. 使用sklearn进行集成学习——实践(9)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div></div>
+                    <script>loadBlogSideColumn();</script>
+
+</div>
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a href="https://www.cnblogs.com/" id="footer_site_link">博客园</a>
+	<br>
+	Copyright © 2020 jasonfreak
+<br><span id="poweredby">Powered by .NET Core on Kubernetes</span>
+
+</p>
+
+
+
+
+    
+
+
+</body></html>

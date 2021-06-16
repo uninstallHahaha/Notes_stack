@@ -1,0 +1,51 @@
+﻿<Window x:Class="WpfDemo.siderList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfDemo"
+        mc:Ignorable="d"
+        Title="siderList" Height="450" Width="800" Background="#3a3a3a">
+    <Window.Resources>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <StackPanel x:Name="item" Height="50" Orientation="Horizontal">
+                            <Rectangle x:Name="rect" VerticalAlignment="Stretch" Width="5" Fill="DarkRed" Visibility="Hidden"></Rectangle>
+                            <ContentPresenter VerticalAlignment="Center" Margin="15 0"></ContentPresenter>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Visibility" Value="Visible" TargetName="rect"></Setter>
+                                <Setter Property="Background" Value="#1a1a1a" TargetName="item"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Visibility" Value="Visible" TargetName="rect"></Setter>
+                                <Setter Property="Background" Value="#2a2a2a" TargetName="item"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Background="#111" Grid.Column="0">
+            <ListBox Background="Transparent" BorderThickness="0"  FontSize="16" Foreground="White" Margin="0,100,0,0">
+                <ListBoxItem>weapon</ListBoxItem>
+                <ListBoxItem>items</ListBoxItem>
+                <ListBoxItem>sills</ListBoxItem>
+                <ListBoxItem>friends</ListBoxItem>
+                <ListBoxItem>notice</ListBoxItem>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,25 @@
+﻿<Window x:Class="WpfDemo.ItemControllDemo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfDemo"
+        mc:Ignorable="d"
+        Title="ItemControllDemo" Height="300" Width="800">
+    <Grid>
+        <ItemsControl x:Name="mic">
+            <ItemsControl.ItemsPanel>
+                <!--定义该ItemsControll的外层容器, 应当是panel系列, 否则会报错-->
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"></StackPanel>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <!--定义数据项模板-->
+                <DataTemplate>
+                    <TextBlock Width="40" Height="40" Text="{Binding txt}" Background="#eee"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Window>

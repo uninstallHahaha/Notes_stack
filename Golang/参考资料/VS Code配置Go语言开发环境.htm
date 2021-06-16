@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><div id="translate-button" style="background-color: white; display: none;"><img src="data:image/png;base64,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"></div><head>
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="baidu-site-verification" content="code-7nivAemV0f">
+    <meta name="generator" content="Hugo 0.54.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>VS Code配置Go语言开发环境 | 李文周的博客</title>
+    <meta property="og:title" content="VS Code配置Go语言开发环境 - 李文周的博客">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2017-06-18T14:50:00+08:00">
+        
+        
+    <meta property="article:modified_time" content="2017-06-18T14:50:00+08:00">
+        
+    <meta name="Keywords" content="Go,Go 教程,Go 语言教程,李文周,七米">
+    <meta name="description" content="李文周的Blog,vscode,配置,go开发环境,go编辑器">
+        
+    <meta name="author" content="李文周">
+    <meta property="og:url" content="https://www.liwenzhou.com/posts/Go/00_go_in_vscode/">
+    <link rel="shortcut icon" href="https://www.liwenzhou.com/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/normalize.css">
+    
+        <link rel="stylesheet" href="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/prism.css">
+    
+    <link rel="stylesheet" href="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/style.css">
+    <script src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/hm.js"></script><script type="text/javascript" src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/jquery.js"></script>
+
+    
+
+
+    
+    
+        <link rel="stylesheet" href="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/sidebar_menu.css">
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e0a55b64495e292a238b463a78dd56da";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body><div id="MathJax_Message" style="display: none;"></div>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.liwenzhou.com/">
+                        李文周的博客
+                    </a>
+                
+                <p class="description">Go 语言教程 Go语言学习QQ群：645090316 微信公众号：李文周</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://www.liwenzhou.com/">首页</a>
+                    
+                    <a href="https://www.liwenzhou.com/archives/" title="归档">归档</a>
+                    
+                    <a href="https://www.liwenzhou.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">VS Code配置Go语言开发环境</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2017年6月18日
+                        </date>
+                        
+                        <div class="post-meta meta-category">
+                            |
+                            
+                                <a href="https://www.liwenzhou.com/categories/Golang">Golang</a>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv" style="display: inline;">
+                                本文总阅读量<span id="busuanzi_value_page_pv">42375</span>次
+                            </span>
+                        </div>
+                        
+                        <div class="post-content">
+                            <p>VS Code是微软开源的一款编辑器，插件系统十分的丰富。本文就介绍了如何使用VS Code搭建Go语言开发环境。</p>
+
+<p><strong>因为Go语言及相关编辑工具的更新迭代，本文已于2020/03/25更新，可能会和视频有所出入，请以更新后的本文为准。</strong></p>
+
+<h1 id="autoid-0-0-0">VS Code配置Go语言开发环境</h1>
+
+<p>说在前面的话，Go语言是采用UTF8编码的，理论上使用任何文本编辑器都能做Go语言开发。大家可以根据自己的喜好自行选择。编辑器/IDE没有最好只有最适合。</p>
+
+<h2 id="autoid-1-0-0">下载与安装</h2>
+
+<p><code>VS Code</code>官方下载地址：<a href="https://code.visualstudio.com/Download" target="_blank">https://code.visualstudio.com/Download</a></p>
+
+<p>三大主流平台都支持，请根据自己的电脑平台选择对应的安装包。
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode_home.png" alt="vscode_home">
+双击下载好的安装文件，双击安装即可。</p>
+
+<h2 id="autoid-1-1-0">安装中文简体插件</h2>
+
+<p>点击左侧菜单栏最后一项<code>管理扩展</code>，在<code>搜索框</code>中输入<code>chinese</code> ，选中结果列表第一项，点击<code>install</code>安装。</p>
+
+<p>安装完毕后右下角会提示<code>重启VS Code</code>，重启之后你的VS Code就显示中文啦！
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode1.gif" alt="安装简体中文插件">
+<code>VSCode</code>主界面介绍：
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode_menu.png" alt="vscode_menu"></p>
+
+<h2 id="autoid-1-2-0">安装Go开发扩展</h2>
+
+<p>现在我们要为我们的VS Code编辑器安装<code>Go</code>扩展插件，让它支持Go语言开发。
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode_plugin.png" alt="安装go扩展图"></p>
+
+<h2 id="autoid-1-3-0">变更编辑器主题</h2>
+
+<p>依次点击<code>设置-&gt;颜色主题</code>，
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode_theme01.png" alt="vscode_theme">
+会弹出如下窗口：
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode_theme02.png" alt="vscode_theme">
+可以根据自己的喜好选择相应的主题。</p>
+
+<h2 id="autoid-1-4-0">安装Go语言开发工具包</h2>
+
+<p>在座Go语言开发的时候为我们提供诸如代码提示、代码自动补全等功能。</p>
+
+<p>在此之前请先设置<code>GOPROXY</code>，打开终端执行以下命令：</p>
+
+<pre class="line-numbers language-bash"><code class=" language-bash">go <span class="token function">env</span> -w GOPROXY<span class="token operator">=</span>https://goproxy.cn,direct
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>Windows平台按下<code>Ctrl+Shift+P</code>，Mac平台按<code>Command+Shift+P</code>，这个时候VS Code界面会弹出一个输入框，如下图：
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode09.png" alt="vscode09"></p>
+
+<p>我们在这个输入框中输入<code>&gt;go:install</code>，下面会自动搜索相关命令，我们选择<code>Go:Install/Update Tools</code>这个命令，按下图选中并会回车执行该命令（或者使用鼠标点击该命令）
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode10.png" alt="vscode10">
+在弹出的窗口选中所有，并点击“确定”按钮，进行安装。
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode11.png" alt="vscode11"></p>
+
+<p>然后会弹出如下窗口，开始安装工具：
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode12.png" alt="vscode12"></p>
+
+<p>喝口水，等待所有工具都安装成功，如下图所示:
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode14.png" alt="vscode14"></p>
+
+<h2 id="autoid-1-5-0">配置VSCode开启自动保存</h2>
+
+<p>按下图依次点击 <code>文件-&gt;首选项-&gt;设置</code>，
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode15.png" alt="vscode15">
+打开设置页面就能看到自动保存相关配置如下图，可以根据自己的喜好选择自动保存的方式：
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode16.png" alt="vscode16"></p>
+
+<h2 id="autoid-1-6-0">配置代码片段快捷键</h2>
+
+<p>还是按<code>Ctrl/Command+Shift+P</code>,按下图输入<code>&gt;snippets</code>，选择命令并执行：
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode17.png" alt="vscode16"></p>
+
+<p>然后在弹出的窗口点击选择<code>go</code>选项：
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode18.png" alt="vscode18">
+然后弹出如下页面：
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode19.png" alt="vscode19"></p>
+
+<p>大家可以简单看下上面的注释，介绍了主要用法：</p>
+
+<pre class="line-numbers language-js"><code class=" language-js">“这里放个名字”<span class="token punctuation">:</span><span class="token punctuation">{</span>
+    <span class="token string">"prefix"</span><span class="token punctuation">:</span> <span class="token string">"这个是快捷键"</span><span class="token punctuation">,</span>
+    <span class="token string">"body"</span><span class="token punctuation">:</span> <span class="token string">"这里是按快捷键插入的代码片段"</span><span class="token punctuation">,</span>
+    <span class="token string">"description"</span><span class="token punctuation">:</span> <span class="token string">"这里放提示信息的描述"</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中<code>$0</code>表示最终光标提留的位置。
+举个例子，我这里创建了两个快捷方式，一个是输入<code>pln</code>就会在编辑器中插入<code>fmt.Println()</code>代码；输入<code>plf</code>，就会插入<code>fmt.Printf("")</code>代码。</p>
+
+<pre class="line-numbers language-json"><code class=" language-json"><span class="token punctuation">{</span>
+	<span class="token property">"println"</span><span class="token operator">:</span><span class="token punctuation">{</span>
+		<span class="token property">"prefix"</span><span class="token operator">:</span> <span class="token string">"pln"</span><span class="token punctuation">,</span>
+		<span class="token property">"body"</span><span class="token operator">:</span><span class="token string">"fmt.Println($0)"</span><span class="token punctuation">,</span>
+		<span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"println"</span>
+	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	<span class="token property">"printf"</span><span class="token operator">:</span><span class="token punctuation">{</span>
+		<span class="token property">"prefix"</span><span class="token operator">:</span> <span class="token string">"plf"</span><span class="token punctuation">,</span>
+		<span class="token property">"body"</span><span class="token operator">:</span> <span class="token string">"fmt.Printf(\"$0\")"</span><span class="token punctuation">,</span>
+		<span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"printf"</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>把上面的代码，按下图方式粘贴到配置文件中，保存并关闭配置文件即可。
+<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode20.png" alt="vscode20">
+添加如上配置后，保存。
+我们打开一个go文件，测试一下效果：<img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/vscode21.gif" alt="demo1"></p>
+                        <hr>
+                        <p>
+                            <img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/wxgzh_qrcode.jpg" alt="扫码关注微信公众号">
+                        </p>
+                        </div>
+                        
+                        <div id="gitalk-container"></div>
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="https://www.liwenzhou.com/posts/Go/about_golang/">为什么你应该学习Go语言？</a></li>
+        
+        <li><a href="https://www.liwenzhou.com/posts/Python/python_unittest/">Python单元测试简介及Django中的单元测试</a></li>
+        
+        <li><a href="https://www.liwenzhou.com/posts/Django/django_websocket/">Django通过channels实现websocket</a></li>
+        
+        <li><a href="https://www.liwenzhou.com/posts/Django/about_django_contenttypes/">Django contenttypes介绍及基本使用</a></li>
+        
+        <li><a href="https://www.liwenzhou.com/posts/Django/logging_in_django/">Django框架中logging的使用</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://www.liwenzhou.com/tags/Golang">Golang</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        
+<div id="search" accept-charset="utf-8" _lpchecked="1">
+  <ul id="s-u" class="search-result"></ul>
+  <input id="s-k" type="text" autocomplete="off" name="key" maxlength="20" placeholder="搜索一下">
+  <button id="s-b" type="button" class="submit icon-search"></button>
+</div>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">我亲自录制的视频课程</h3>
+        <a href="https://study.163.com/course/courseMain.htm?courseId=1210171207&amp;share=2&amp;shareId=480000002229610"><img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/goweb2.png" width="250"></a>
+        <h3 class="widget-title">微信扫码支持一下</h3>
+        <img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/zanshang_qr.jpg" width="256" height="239">
+    </section>
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/go_menu/" title="【置顶】Go语言学习之路/Go语言教程">【置顶】Go语言学习之路/Go语言教程</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/priority_in_go_select/" title="Go语言在select语句中实现优先级">Go语言在select语句中实现优先级</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/deploy_go_app/" title="部署Go语言项目的 N 种方法">部署Go语言项目的 N 种方法</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/ratelimit/" title="常用限流策略——漏桶与令牌桶介绍">常用限流策略——漏桶与令牌桶介绍</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/benchmark_tool/" title="常用的HTTP服务压测工具介绍">常用的HTTP服务压测工具介绍</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/gin_swagger/" title="使用swagger生成接口文档">使用swagger生成接口文档</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/makefile/" title="为Go项目编写Makefile">为Go项目编写Makefile</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/validator_usages/" title="validator库参数校验若干实用技巧">validator库参数校验若干实用技巧</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/read_gin_sourcecode/" title="gin框架源码解析">gin框架源码解析</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/use_zap_in_gin/" title="使用zap接收gin框架默认的日志并配置日志归档">使用zap接收gin框架默认的日志并配置日志归档</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Development/">Development(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Django/">Django(3)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Front-end/">Front-end(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Golang/">Golang(75)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/JavaScript/">JavaScript(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Python/">Python(13)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://www.liwenzhou.com/tags/Development/">Development</a>
+    
+    <a href="https://www.liwenzhou.com/tags/Django/">Django</a>
+    
+    <a href="https://www.liwenzhou.com/tags/Golang/">Golang</a>
+    
+    <a href="https://www.liwenzhou.com/tags/Python/">Python</a>
+    
+    <a href="https://www.liwenzhou.com/tags/about/">about</a>
+    
+    <a href="https://www.liwenzhou.com/tags/front-end/">front-end</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://geektutu.com/" title="致力于分享有趣的技术实践">极客兔兔-有趣的技术实践</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://draveness.me/golang/" title="灯塔">draveness-Go语言设计与实现</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/liwenzhou/" title="Python全栈之路">Q1mi-Python全栈之路</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/zhaof" title="Python/Go语言之路">赵凡的博客</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://resn.cnblogs.com/" title="R_e-博客园">R_e-博客园</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://roddypy.com/" title="罗迪's Blog">罗迪's Blog</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">微信公众号</h3>
+        <img src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/qrcode_for_gzh.jpg" width="258" height="258">
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.liwenzhou.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        © 2020 <a href="https://www.liwenzhou.com/">李文周的博客 By 李文周</a>.本站博客未经授权禁止转载.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io/" target="_blank">Hugo</a>.
+        <a href="http://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.<a href="http://www.beian.miit.gov.cn/">京ICP备15037996号-1</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript" src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/page.js" async="true"></script>
+    <script type="text/javascript" src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/prism.js" async="true"></script>
+    <script src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/MathJax.js" async=""></script>
+    <link rel="stylesheet" href="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/gitalk.css">
+    <script src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/gitalk.js"></script>
+
+<a id="rocket" href="#top" class="show"></a>
+<script type="text/javascript" src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/totop.js" async="true"></script>
+
+
+
+<script type="text/javascript" src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/busuanzi.js" async=""></script>
+
+
+
+
+  <script src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/bootstrap.js"></script>
+
+  <script src="VS%20Code%E9%85%8D%E7%BD%AEGo%E8%AF%AD%E8%A8%80%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83_files/post_category.js"></script>
+
+
+
+<div id="sideToolbar" style="display: block;"><div class="sideCatalogBg" id="sideCatalog" style="visibility: visible;"><div id="sideCatalog-catalog"><ul class="nav" style="width:225px;zoom:1"><li class=""><span>1&nbsp;&nbsp;</span><a href="#autoid-0-0-0" title="VS Code配置Go语言开发环境">VS Code配置Go语言开发环境...</a><span class="sideCatalog-dot"></span></li><li class="h2Offset active"><span>1.1&nbsp;&nbsp;</span><a href="#autoid-1-0-0" title="下载与安装">下载与安装</a></li><li class="h2Offset"><span>1.2&nbsp;&nbsp;</span><a href="#autoid-1-1-0" title="安装中文简体插件">安装中文简体插件</a></li><li class="h2Offset"><span>1.3&nbsp;&nbsp;</span><a href="#autoid-1-2-0" title="安装Go开发扩展">安装Go开发扩展</a></li><li class="h2Offset"><span>1.4&nbsp;&nbsp;</span><a href="#autoid-1-3-0" title="变更编辑器主题">变更编辑器主题</a></li><li class="h2Offset"><span>1.5&nbsp;&nbsp;</span><a href="#autoid-1-4-0" title="安装Go语言开发工具包">安装Go语言开发工具包</a></li><li class="h2Offset"><span>1.6&nbsp;&nbsp;</span><a href="#autoid-1-5-0" title="配置VSCode开启自动保存">配置VSCode开启自动保存...</a></li><li class="h2Offset"><span>1.7&nbsp;&nbsp;</span><a href="#autoid-1-6-0" title="配置代码片段快捷键">配置代码片段快捷键</a></li></ul></div></div><a href="javascript:void(0);" id="sideCatalogBtn" class="sideCatalogBtnDisable"></a></div></body></html>

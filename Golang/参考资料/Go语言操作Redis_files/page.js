@@ -1,0 +1,2 @@
+(function () { $("pre code").parent().addClass("line-numbers") }())
+window.MathJax = { tex2jax: { inlineMath: [['$', '$']], processEscapes: true } }; var gitalk = new Gitalk({ clientID: "6c577fa44d443442aa28", clientSecret: "2722e9530577dda4772862a76987b24b42a74dad", repo: "BlogComments", owner: "Q1mi", admin: ["Q1mi"], id: location.href.slice(location.href.slice(0, location.href.length - 1).lastIndexOf("/") + 1, -1), distractionFreeMode: false }); gitalk.render("gitalk-container");

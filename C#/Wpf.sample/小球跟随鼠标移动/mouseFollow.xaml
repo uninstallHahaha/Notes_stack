@@ -1,0 +1,16 @@
+﻿<Window x:Class="WpfDemo.mouseFollow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfDemo"
+        mc:Ignorable="d"
+        Title="mouseFollow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Canvas x:Name="mc" Background="#FF007ACC">
+        <Path Fill="Beige">
+            <Path.Data>
+                <EllipseGeometry x:Name="ball" Center="0,0" RadiusX="10" RadiusY="10"></EllipseGeometry>
+            </Path.Data>
+        </Path>
+    </Canvas>
+</Window>

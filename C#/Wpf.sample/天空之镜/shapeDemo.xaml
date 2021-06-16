@@ -1,0 +1,40 @@
+﻿<Window x:Class="WpfDemo.shapeDemo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfDemo"
+        mc:Ignorable="d"
+        Title="shapeDemo" Height="300" Width="800">
+    <Grid Height="200">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <!--上面的文本框-->
+        <TextBox x:Name="refTxt" Text="this is a reflect textbox." Width="800" 
+                 HorizontalContentAlignment="Center" FontSize="20" VerticalAlignment="Bottom"></TextBox>
+        <Rectangle Grid.Row="1" Height="30" VerticalAlignment="Top">
+            <!--使用幻影画刷复制文本框内容-->
+            <Rectangle.Fill>
+                <VisualBrush Visual="{Binding ElementName=refTxt}"></VisualBrush>
+            </Rectangle.Fill>
+            <!--设置渐进透明-->
+            <Rectangle.OpacityMask>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="Black" Offset="1"></GradientStop>
+                    <GradientStop Color="Transparent" Offset="0.4"></GradientStop>
+                </LinearGradientBrush>
+            </Rectangle.OpacityMask>
+            <!--翻转镜面内容, 调整位置-->
+            <Rectangle.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="-1"></ScaleTransform>
+                    <TranslateTransform Y="25"></TranslateTransform>
+                </TransformGroup>
+            </Rectangle.RenderTransform>
+        </Rectangle>
+
+    </Grid>
+</Window>

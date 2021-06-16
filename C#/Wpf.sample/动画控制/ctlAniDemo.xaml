@@ -1,0 +1,51 @@
+﻿<Window x:Class="WpfDemo.ctlAniDemo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfDemo"
+        mc:Ignorable="d"
+        Title="ctlAniDemo" Height="450" Width="800">
+    <Window.Triggers>
+        <!--对一个故事板动画的控制应当放在同一个Triggers下-->
+        <EventTrigger SourceName="startBtn" RoutedEvent="Button.Click">
+            <!--开始故事板动画, 要定义name属性为了能够进行其他操作-->
+            <BeginStoryboard x:Name="stb">
+                <!--定义currentTimeInvalidated事件实时获取动画进度-->
+                <Storyboard CurrentTimeInvalidated="stb_CurrentTimeInvalidated">
+                    <DoubleAnimation Storyboard.TargetName="img" Storyboard.TargetProperty="Opacity" 
+                                     From="1" To="0" Duration="0:0:10"></DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <!--暂停故事板动画-->
+        <EventTrigger SourceName="pauseBtn" RoutedEvent="Button.Click">
+            <PauseStoryboard BeginStoryboardName="stb"></PauseStoryboard>
+        </EventTrigger>
+        <!--继续故事板动画-->
+        <EventTrigger RoutedEvent="Button.Click" SourceName="resumeBtn">
+            <ResumeStoryboard BeginStoryboardName="stb"></ResumeStoryboard>
+        </EventTrigger>
+        <!--停止故事板动画-->
+        <EventTrigger SourceName="stopBtn" RoutedEvent="Button.Click">
+            <StopStoryboard BeginStoryboardName="stb"></StopStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Image x:Name="img" Source="yang.jpg" Margin="0 5"></Image>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal">
+            <Button x:Name="startBtn" Content="start" Width="100" Margin="5 0"></Button>
+            <Button x:Name="pauseBtn" Content="pause" Width="100" Margin="5 0"></Button>
+            <Button x:Name="resumeBtn" Content="resume" Width="100" Margin="5 0"></Button>
+            <Button x:Name="stopBtn" Content="stop" Width="100" Margin="5 0"></Button>
+        </StackPanel>
+        <ProgressBar x:Name="pb" Grid.Row="2" Height="10" Minimum="0" Maximum="1" Margin="5" Foreground="Aqua"></ProgressBar>
+
+    </Grid>
+</Window>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><div id="translate-button" style="background-color: white; display: none; top: 232px; left: 200px;"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAEgWuABIFrgFpirNTAAAMIUlEQVRo3s1Ze5RV1Xn//b597mMuw/CYEREwRhCVCisian1Q3joQQREhljSKrctXKIlpiHHFB9qoXTYrmiwa2rAqqUgaRFEBQSAIUtKFKChFCM+gCwGFgjAMM3PvOWfvr3/s+2KcQYxD9bvr3Hvufp3v9732/r4DnDL1Yfm/B3+7/lt3NOrXTn3+V4im/NuSpzer0z4vR92+bF4+N417eOGTr2RVb1+l+75sXk6ViqYz4f5Vc362T/Wa51Rr/0O393zwcOrLZi44Beb14lterLz62ze9JhkMfPUVaApgpxoYG7fTryIAAigwpoMfXHlm7+FDVxytQ989f1SkJNZUxrCySpzZvPALPl4J8AsJ4aQauOGXf7j0rMuvXvzhRnSJGiPNSKwWInGWqO4iqIrmSsszF+fNTgCMKmNwGQEDYES+7aMW5r5OYAuAegAPfCY4ttZx3+IPaw8neiza/0eXEImdVaWzSqdw6WRSzh/gtj91VeLCL6iCL0wlAFUdiWNHFQC+O++TW7/ev9OzixcAmURoARh1gMJBFS5IJKVdFffpwdW3c/9603vAGLQ/9wLNNmQZNRyFCQQE6ZyDDesJCpwCxqQYhQ1IVnbEwd3bUHfgPXY9/xJ1cYqII4RN9UhlKtFU18Tqc/pH7c7umE2mgA5GNWVs5t2tjVunT+iw+6QaqJ00fdrgqZMfWbqCSCK2RpyhAlAtU6eBYcCv/wVQmQJydQBNyXFYtjoJqPq+wgUHmCQgBrChH0MAFN9HAaIIUAcwBFIGqG6vePdPR2bMvbN68ujp+/nqlG4KNPOBm2ZvntG3z0X3rFoLaDa2psIZOEChJVcjQDpajbB9E2ER5BmPQYrnJs8oy+Bo2XdzuTV3YxIALQgHdUSkBj2qiT0fH2sEgLCprjjWAzjjEv7q4Ibfd6rD8KeegaYjp5kKNaoC4gTxk0o4eKmSzgUISxL2dlbiW0tQCOTXag6A5XdKev79A6kU0FinmaSR48caLADQ5YqrCzCeaPgA6369/OUDIZAWMEgJLcWvCPhod8Kt7xLmP+J/WTAGBeFYGOUnaeFePJtg/gMICCFghCKEvycohAiUhFII2NjmAEBdXK6BFxWNwOy7a3/18Z5fbr5gyPcW7Xsf7ZuOGSeBkogLMiygJgGlkEQAEpC85Qi9uRUsrYC6XO4Keu2VaUoVcK4gIUcfLIqap3X5yU5DnKDJZj6w/Invr+69PXvZoB/ct6xxL87Z+wE1mTBqxFJVy0BQTRCw5mzYVBo2QNH8aUBVgiyzGfWaY8E9VCEADAEVBzqFWgu6CHHDcQkOfwyNnFVQBXnQ3qycF0qZzzTfyLhz/o+3O1ReXPvD766sqUH/d98RFUdNBwUQQLqdkWQQ7944+9GRYf3eUG23hOoFqkF3QZDOP8/CxxEIoA5xJLCNIA454FBA1gVkHUVDVcT0ylOb6TW241mXjV3ELKrDMNZyd1GnrtyMWwKgAMyf5k8++u/rPrhy9KS7Fl4ztte1K9ZQG3Oi6VRMOCKZIlKJbLhx/mM70cZkdmc4dvhYZ0SYy8GBEJRCgwKALYPV0lHAApBw789yLz1+Xu3m362ZPX4kGFSI1DcFzlJos4qgQ6V0nfhass04F89L35seOqu6AhJmHcBShFUtid6Vyb2VswwccKEAwAtPDZr01rzNT948BKioEGkIjaMhXD1Ueo5sO9E7OADIdD2LQT0UqnCqeZ/zMGzkrf/Ms3sUvUBaX3GbAxIEgN8+0u/+pS99NPX6sUAqgEQWSBoEmfBw2wHIE2HV0gdaeIenZ1QRW4+kqqamdQ30HDnFlP5FRaQLHu32841LV44feR2Qi4CmCDkyaPN8oEONSVpFJ6WBiBR2SBpxsM55TZQ99VMA7rp3anLxrrrfdJ2yp/cJggEw+57h8/9n8Zxhg64DenTG+R07pm1bA3j/v98+mk3iUCoDiDFOqV4NqrCxtQBgy7j+FIAfjzyn6YpeVbeM6FfzBjDiU4e9eVNvWbV32dJrxtVi38XnJdu8KrFt5uVHNy1fMLKiG44l0mJoAgchnAJx5Me4svEt+sCUeXjj8hEV3YY//PLr+abS2QzAjLtHrZj20Jt9Nh/AkULbRQ+EreYWn5c2zRy7aeuSuYO790MuGRiRhHE0QGQlUWDmpAAYwaz8L2DgpMqhg3+wckUBBFkC8dpjVzatnSLFY+GWx5Nt6Q9c9/TEjbuWzBvS8zLYdNKIoUKdMQDgFCePQh0rYGxO8foSF/3lHUOHX/vDDUsAQPVETbQVDbtDywJH8RzLFT+9+c0tC+Zcc96lQJMN8EnW+1z5TtwigMBBq9IKzVmueA06aPIlo2p/tGkR0Cvwi/dpUxCjv4XO09/UZ3re9nZ3lMxVAWDV47es2rH0d9d+s5YYfGX3LgDQPv0ZAFSREKfIpJSJOIslr0KH3ttv9DfGTPxXP2Jrm4bP93blPmmo01uvmnjphg5/M78jTjRzrJj27d8f275x2t+N6RADwMyhPLkJUSEKAla1Mg1G9Tnu2AX06Desb1syXqDf3JO2uw/qH85owJkD/3rchv737Ti3+Zjbruj/j0/s1580b28ZAP1BWFUJB22fgdYfBj7cw7bfevNUn6VpCIHgI9ezX23vt0c8uqR/OUsAsP2bEp0SACklsj51UmoQAGDU5g5coFjJ400OYTa0B7e56j6jRq27dd6GofnuVk22ZQBShK35lIpIACY4ftoAJGsgsc8U6eJQ31vjEr2vumTljTPX33yyeS0f5ghR5zMwnwIV6h6HTlst1CXgHATqoAJQNXLLn3e4csiAudc9+tK9pZHBCUJsGYAArsSqUtXndmHDafOBI/vC40wiXxCAVgQQF0Vu8TLgukk3Pj3ue794zI+MVcr2otZqowQAEqpKEQPWfQTtPmDCIFu/Z0Z8vAG5hrQmqrqpMULSQGDgnF/cGAOoVdI6dbGN4iaqRoxtEwwBCmGjHAiDoF0Fwvjs2NbF/cIgUJCEAk5V21dQ6upDN3tRUr4z9fsPBJKumfeLu+92ZT7Rok3/w0J9Z/8B1/9oQ2ytwggIGxvNnCGs6gJoPhaQXqH5AkpZ3cJfIi2omIAt48ACCEPg6F6HOIzUSLGSRweqCFDXJGrTgUwYDbw1+93FL07/5zE4MldbBTBlqa4/+KEOqGuInFUI1dcjrALOiioUzmcaWgBSWKhYVIGyLJ6V7LEI1/9QfTlGaCl0oI8bDn478vIwYF0WqokE+30DOHAEGw68v//Ot6d2f6dFHwgTXkrO+nqN07zUVEHGFFomxDEQlUBUAqqYEy4nhkojjoaOBv4SOAa0NIz9LywFMYgYUAdVqFMqitVGzWtMtUOGzDVpvGMrMHkcBvS9tNuNrfoAFQwtkYsCFzuFeNMo5KZFYZcyv2LiWpR3oZqqILXYTxYrS8wXfQQqBI1YMSyd9AuPJAAR4ZF6xF/rhmDMQOC5f9nyyPM/n/ZTAGwRwJAuOG+LAz5pkMBab8tBXt1hCBgBTMIbiSuU3srrNwTo4CvNZYFXNV9hzE/RAMgFQM4CR/YGCBtjDQLHokDytbswhK3KmOD6EcSchxfetXrWDTP9ipXSIoD/XLT/n/YfqutxcOf7UcJEcaJdRkwiUwENTEV1Z6dKZA8fg/NFf1AIdf6kq+qIOFYGApAK56AkTEKUJOLI7+bJdEoDUc3u3Yo4JHqNvmlsu07J7rl6X07M1yapEGutMeMmMlo1d/WE1bNuWOC5/CsBDulp21k/L139wOEFvS7rfP3Hu0MHqiippDgJAnPRFWg8tPbVwc/+/Zj1fvTtBJ759PuBcrrrJaUm/OlHDVToX2K4OB8uU8CssmPtbSu1zP6BZ4dRb1vm26SZeaUzwNYPYrwx+y1g2dUKADXnd+pkGwClU6jAKTVTFZiuF+LgjiWvDFn00I1b81CLzAOnIbv6c+k7L+ua3GE38Eh9FFtF0LlLColqbNu1aFbt+hm378GJb0+L9FnviVul8S8oX5zQ8ivS8S+UtNHamOaUOwKTjQkVmHN7ppAzWLv8iftH/O+aJxvzQ770d9InpTEzde3fzlOdukZ1wnO6uGbgEwUhfGWs5KT0o1d056+3qF5157rZZc3mz17w/5PunaUyZ4vuHPaTLc9/Xub/D61PrC9fCdQYAAAAAElFTkSuQmCC"></div><head>
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="baidu-site-verification" content="code-7nivAemV0f">
+    <meta name="generator" content="Hugo 0.54.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Go语言基础之net/http | 李文周的博客</title>
+    <meta property="og:title" content="Go语言基础之net/http - 李文周的博客">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content="2017-06-26T23:00:10+08:00">
+        
+        
+    <meta property="article:modified_time" content="2017-06-26T23:00:10+08:00">
+        
+    <meta name="Keywords" content="Go,Go 教程,Go 语言教程,李文周,七米">
+    <meta name="description" content="李文周的Blog Go语言 socket 网络编程 TCP UDP net http go">
+        
+    <meta name="author" content="李文周">
+    <meta property="og:url" content="https://www.liwenzhou.com/posts/Go/go_http/">
+    <link rel="shortcut icon" href="https://www.liwenzhou.com/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/normalize.css">
+    
+        <link rel="stylesheet" href="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/prism.css">
+    
+    <link rel="stylesheet" href="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/style.css">
+    <script src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/hm.js"></script><script type="text/javascript" src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/jquery.js"></script>
+
+    
+
+
+    
+    
+        <link rel="stylesheet" href="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/sidebar_menu.css">
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?e0a55b64495e292a238b463a78dd56da";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+
+<body><div id="MathJax_Message" style="display: none;"></div>
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.liwenzhou.com/">
+                        李文周的博客
+                    </a>
+                
+                <p class="description">Go 语言教程 Go语言学习QQ群：645090316 微信公众号：李文周</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="" href="https://www.liwenzhou.com/">首页</a>
+                    
+                    <a href="https://www.liwenzhou.com/archives/" title="归档">归档</a>
+                    
+                    <a href="https://www.liwenzhou.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div id="body">
+    <div class="container">
+        <div class="col-group">
+
+            <div class="col-8" id="main">
+                <div class="res-cons">
+                    <article class="post">
+                        <header>
+                            <h1 class="post-title">Go语言基础之net/http</h1>
+                        </header>
+                        <date class="post-meta meta-date">
+                            2017年6月26日
+                        </date>
+                        
+                        <div class="post-meta meta-category">
+                            |
+                            
+                                <a href="https://www.liwenzhou.com/categories/Golang">Golang</a>
+                            
+                        </div>
+                        
+                        
+                        <div class="post-meta">
+                            <span id="busuanzi_container_page_pv" style="display: inline;">
+                                本文总阅读量<span id="busuanzi_value_page_pv">11822</span>次
+                            </span>
+                        </div>
+                        
+                        <div class="post-content">
+                            <p>Go语言内置的<code>net/http</code>包十分的优秀，提供了HTTP客户端和服务端的实现。</p>
+
+<h2 id="autoid-0-0-0">net/http介绍</h2>
+
+<p>Go语言内置的<code>net/http</code>包提供了HTTP客户端和服务端的实现。</p>
+
+<h3 id="autoid-0-1-0">HTTP协议</h3>
+
+<p>超文本传输协议（HTTP，HyperText Transfer Protocol)是互联网上应用最为广泛的一种网络传输协议，所有的WWW文件都必须遵守这个标准。设计HTTP最初的目的是为了提供一种发布和接收HTML页面的方法。</p>
+
+<h2 id="autoid-0-1-1">HTTP客户端</h2>
+
+<h3 id="autoid-0-2-0">基本的HTTP/HTTPS请求</h3>
+
+<p>Get、Head、Post和PostForm函数发出HTTP/HTTPS请求。</p>
+
+<pre class="line-numbers language-go"><code class=" language-go">resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"http://example.com/"</span><span class="token punctuation">)</span>
+<span class="token operator">...</span>
+resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">Post</span><span class="token punctuation">(</span><span class="token string">"http://example.com/upload"</span><span class="token punctuation">,</span> <span class="token string">"image/jpeg"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>buf<span class="token punctuation">)</span>
+<span class="token operator">...</span>
+resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">PostForm</span><span class="token punctuation">(</span><span class="token string">"http://example.com/form"</span><span class="token punctuation">,</span>
+	url<span class="token punctuation">.</span>Values<span class="token punctuation">{</span><span class="token string">"key"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">"Value"</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">"123"</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>程序在使用完response后必须关闭回复的主体。</p>
+
+<pre class="line-numbers language-go"><code class=" language-go">resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"http://example.com/"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+	<span class="token comment">// handle error</span>
+<span class="token punctuation">}</span>
+<span class="token keyword keyword-defer">defer</span> resp<span class="token punctuation">.</span>Body<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+body<span class="token punctuation">,</span> err <span class="token operator">:=</span> ioutil<span class="token punctuation">.</span><span class="token function">ReadAll</span><span class="token punctuation">(</span>resp<span class="token punctuation">.</span>Body<span class="token punctuation">)</span>
+<span class="token comment">// ...</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="autoid-0-2-1">GET请求示例</h3>
+
+<p>使用<code>net/http</code>包编写一个简单的发送HTTP请求的Client端，代码如下：</p>
+
+<pre class="line-numbers language-go"><code class=" language-go"><span class="token keyword keyword-package">package</span> main
+
+<span class="token keyword keyword-import">import</span> <span class="token punctuation">(</span>
+	<span class="token string">"fmt"</span>
+	<span class="token string">"io/ioutil"</span>
+	<span class="token string">"net/http"</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword keyword-func">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"https://www.liwenzhou.com/"</span><span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"get failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token keyword keyword-return">return</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword keyword-defer">defer</span> resp<span class="token punctuation">.</span>Body<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	body<span class="token punctuation">,</span> err <span class="token operator">:=</span> ioutil<span class="token punctuation">.</span><span class="token function">ReadAll</span><span class="token punctuation">(</span>resp<span class="token punctuation">.</span>Body<span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"read from resp.Body failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token keyword keyword-return">return</span>
+	<span class="token punctuation">}</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Print</span><span class="token punctuation">(</span><span class="token function">string</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>将上面的代码保存之后编译成可执行文件，执行之后就能在终端打印<code>liwenzhou.com</code>网站首页的内容了，我们的浏览器其实就是一个发送和接收HTTP协议数据的客户端，我们平时通过浏览器访问网页其实就是从网站的服务器接收HTTP数据，然后浏览器会按照HTML、CSS等规则将网页渲染展示出来。</p>
+
+<h3 id="autoid-0-2-2">带参数的GET请求示例</h3>
+
+<p>关于GET请求的参数需要使用Go语言内置的<code>net/url</code>这个标准库来处理。</p>
+
+<pre class="line-numbers language-go"><code class=" language-go"><span class="token keyword keyword-func">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	apiUrl <span class="token operator">:=</span> <span class="token string">"http://127.0.0.1:9090/get"</span>
+	<span class="token comment">// URL param</span>
+	data <span class="token operator">:=</span> url<span class="token punctuation">.</span>Values<span class="token punctuation">{</span><span class="token punctuation">}</span>
+	data<span class="token punctuation">.</span><span class="token function">Set</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span> <span class="token string">"小王子"</span><span class="token punctuation">)</span>
+	data<span class="token punctuation">.</span><span class="token function">Set</span><span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">,</span> <span class="token string">"18"</span><span class="token punctuation">)</span>
+	u<span class="token punctuation">,</span> err <span class="token operator">:=</span> url<span class="token punctuation">.</span><span class="token function">ParseRequestURI</span><span class="token punctuation">(</span>apiUrl<span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"parse url requestUrl failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+	u<span class="token punctuation">.</span>RawQuery <span class="token operator">=</span> data<span class="token punctuation">.</span><span class="token function">Encode</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// URL encode</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>u<span class="token punctuation">.</span><span class="token function">String</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span>u<span class="token punctuation">.</span><span class="token function">String</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"post failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token keyword keyword-return">return</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword keyword-defer">defer</span> resp<span class="token punctuation">.</span>Body<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	b<span class="token punctuation">,</span> err <span class="token operator">:=</span> ioutil<span class="token punctuation">.</span><span class="token function">ReadAll</span><span class="token punctuation">(</span>resp<span class="token punctuation">.</span>Body<span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"get resp failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token keyword keyword-return">return</span>
+	<span class="token punctuation">}</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token function">string</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>对应的Server端HandlerFunc如下：</p>
+
+<pre class="line-numbers language-go"><code class=" language-go"><span class="token keyword keyword-func">func</span> <span class="token function">getHandler</span><span class="token punctuation">(</span>w http<span class="token punctuation">.</span>ResponseWriter<span class="token punctuation">,</span> r <span class="token operator">*</span>http<span class="token punctuation">.</span>Request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword keyword-defer">defer</span> r<span class="token punctuation">.</span>Body<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	data <span class="token operator">:=</span> r<span class="token punctuation">.</span>URL<span class="token punctuation">.</span><span class="token function">Query</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	answer <span class="token operator">:=</span> <span class="token string">`{"status": "ok"}`</span>
+	w<span class="token punctuation">.</span><span class="token function">Write</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>answer<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="autoid-0-2-3">Post请求示例</h3>
+
+<p>上面演示了使用<code>net/http</code>包发送<code>GET</code>请求的示例，发送<code>POST</code>请求的示例代码如下：</p>
+
+<pre class="line-numbers language-go"><code class=" language-go"><span class="token keyword keyword-package">package</span> main
+
+<span class="token keyword keyword-import">import</span> <span class="token punctuation">(</span>
+	<span class="token string">"fmt"</span>
+	<span class="token string">"io/ioutil"</span>
+	<span class="token string">"net/http"</span>
+	<span class="token string">"strings"</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment">// net/http post demo</span>
+
+<span class="token keyword keyword-func">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	url <span class="token operator">:=</span> <span class="token string">"http://127.0.0.1:9090/post"</span>
+	<span class="token comment">// 表单数据</span>
+	<span class="token comment">//contentType := "application/x-www-form-urlencoded"</span>
+	<span class="token comment">//data := "name=小王子&amp;age=18"</span>
+	<span class="token comment">// json</span>
+	contentType <span class="token operator">:=</span> <span class="token string">"application/json"</span>
+	data <span class="token operator">:=</span> <span class="token string">`{"name":"小王子","age":18}`</span>
+	resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">Post</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> contentType<span class="token punctuation">,</span> strings<span class="token punctuation">.</span><span class="token function">NewReader</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"post failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token keyword keyword-return">return</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword keyword-defer">defer</span> resp<span class="token punctuation">.</span>Body<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	b<span class="token punctuation">,</span> err <span class="token operator">:=</span> ioutil<span class="token punctuation">.</span><span class="token function">ReadAll</span><span class="token punctuation">(</span>resp<span class="token punctuation">.</span>Body<span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"get resp failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token keyword keyword-return">return</span>
+	<span class="token punctuation">}</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token function">string</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>对应的Server端HandlerFunc如下：</p>
+
+<pre class="line-numbers language-go"><code class=" language-go"><span class="token keyword keyword-func">func</span> <span class="token function">postHandler</span><span class="token punctuation">(</span>w http<span class="token punctuation">.</span>ResponseWriter<span class="token punctuation">,</span> r <span class="token operator">*</span>http<span class="token punctuation">.</span>Request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword keyword-defer">defer</span> r<span class="token punctuation">.</span>Body<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	<span class="token comment">// 1. 请求类型是application/x-www-form-urlencoded时解析form数据</span>
+	r<span class="token punctuation">.</span><span class="token function">ParseForm</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>PostForm<span class="token punctuation">)</span> <span class="token comment">// 打印form数据</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>PostForm<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> r<span class="token punctuation">.</span>PostForm<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"age"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token comment">// 2. 请求类型是application/json时从r.Body读取数据</span>
+	b<span class="token punctuation">,</span> err <span class="token operator">:=</span> ioutil<span class="token punctuation">.</span><span class="token function">ReadAll</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>Body<span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"read request.Body failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token keyword keyword-return">return</span>
+	<span class="token punctuation">}</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token function">string</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+	answer <span class="token operator">:=</span> <span class="token string">`{"status": "ok"}`</span>
+	w<span class="token punctuation">.</span><span class="token function">Write</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>answer<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="autoid-0-2-4">自定义Client</h3>
+
+<p>要管理HTTP客户端的头域、重定向策略和其他设置，创建一个Client：</p>
+
+<pre class="line-numbers language-go"><code class=" language-go">client <span class="token operator">:=</span> <span class="token operator">&amp;</span>http<span class="token punctuation">.</span>Client<span class="token punctuation">{</span>
+	CheckRedirect<span class="token punctuation">:</span> redirectPolicyFunc<span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> client<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"http://example.com"</span><span class="token punctuation">)</span>
+<span class="token comment">// ...</span>
+req<span class="token punctuation">,</span> err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">NewRequest</span><span class="token punctuation">(</span><span class="token string">"GET"</span><span class="token punctuation">,</span> <span class="token string">"http://example.com"</span><span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">)</span>
+<span class="token comment">// ...</span>
+req<span class="token punctuation">.</span>Header<span class="token punctuation">.</span><span class="token function">Add</span><span class="token punctuation">(</span><span class="token string">"If-None-Match"</span><span class="token punctuation">,</span> <span class="token string">`W/"wyzzy"`</span><span class="token punctuation">)</span>
+resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> client<span class="token punctuation">.</span><span class="token function">Do</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span>
+<span class="token comment">// ...</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="autoid-0-2-5">自定义Transport</h3>
+
+<p>要管理代理、TLS配置、keep-alive、压缩和其他设置，创建一个Transport：</p>
+
+<pre class="line-numbers language-go"><code class=" language-go">tr <span class="token operator">:=</span> <span class="token operator">&amp;</span>http<span class="token punctuation">.</span>Transport<span class="token punctuation">{</span>
+	TLSClientConfig<span class="token punctuation">:</span>    <span class="token operator">&amp;</span>tls<span class="token punctuation">.</span>Config<span class="token punctuation">{</span>RootCAs<span class="token punctuation">:</span> pool<span class="token punctuation">}</span><span class="token punctuation">,</span>
+	DisableCompression<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+client <span class="token operator">:=</span> <span class="token operator">&amp;</span>http<span class="token punctuation">.</span>Client<span class="token punctuation">{</span>Transport<span class="token punctuation">:</span> tr<span class="token punctuation">}</span>
+resp<span class="token punctuation">,</span> err <span class="token operator">:=</span> client<span class="token punctuation">.</span><span class="token function">Get</span><span class="token punctuation">(</span><span class="token string">"https://example.com"</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>Client和Transport类型都可以安全的被多个goroutine同时使用。出于效率考虑，应该一次建立、尽量重用。</p>
+
+<h2 id="autoid-0-2-6">服务端</h2>
+
+<h3 id="autoid-0-3-0">默认的Server</h3>
+
+<p>ListenAndServe使用指定的监听地址和处理器启动一个HTTP服务端。处理器参数通常是nil，这表示采用包变量DefaultServeMux作为处理器。</p>
+
+<p>Handle和HandleFunc函数可以向DefaultServeMux添加处理器。</p>
+
+<pre class="line-numbers language-go"><code class=" language-go">http<span class="token punctuation">.</span><span class="token function">Handle</span><span class="token punctuation">(</span><span class="token string">"/foo"</span><span class="token punctuation">,</span> fooHandler<span class="token punctuation">)</span>
+http<span class="token punctuation">.</span><span class="token function">HandleFunc</span><span class="token punctuation">(</span><span class="token string">"/bar"</span><span class="token punctuation">,</span> <span class="token keyword keyword-func">func</span><span class="token punctuation">(</span>w http<span class="token punctuation">.</span>ResponseWriter<span class="token punctuation">,</span> r <span class="token operator">*</span>http<span class="token punctuation">.</span>Request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Fprintf</span><span class="token punctuation">(</span>w<span class="token punctuation">,</span> <span class="token string">"Hello, %q"</span><span class="token punctuation">,</span> html<span class="token punctuation">.</span><span class="token function">EscapeString</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>URL<span class="token punctuation">.</span>Path<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+log<span class="token punctuation">.</span><span class="token function">Fatal</span><span class="token punctuation">(</span>http<span class="token punctuation">.</span><span class="token function">ListenAndServe</span><span class="token punctuation">(</span><span class="token string">":8080"</span><span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="autoid-0-3-1">默认的Server示例</h3>
+
+<p>使用Go语言中的<code>net/http</code>包来编写一个简单的接收HTTP请求的Server端示例，<code>net/http</code>包是对net包的进一步封装，专门用来处理HTTP协议的数据。具体的代码如下：</p>
+
+<pre class="line-numbers language-go"><code class=" language-go"><span class="token comment">// http server</span>
+
+<span class="token keyword keyword-func">func</span> <span class="token function">sayHello</span><span class="token punctuation">(</span>w http<span class="token punctuation">.</span>ResponseWriter<span class="token punctuation">,</span> r <span class="token operator">*</span>http<span class="token punctuation">.</span>Request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Fprintln</span><span class="token punctuation">(</span>w<span class="token punctuation">,</span> <span class="token string">"Hello 沙河！"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword keyword-func">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	http<span class="token punctuation">.</span><span class="token function">HandleFunc</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">,</span> sayHello<span class="token punctuation">)</span>
+	err <span class="token operator">:=</span> http<span class="token punctuation">.</span><span class="token function">ListenAndServe</span><span class="token punctuation">(</span><span class="token string">":9090"</span><span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">)</span>
+	<span class="token keyword keyword-if">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"http server failed, err:%v\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token keyword keyword-return">return</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>将上面的代码编译之后执行，打开你电脑上的浏览器在地址栏输入<code>127.0.0.1:9090</code>回车，此时就能够看到如下页面了。
+<img src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/hello.png" alt="hello页面"></p>
+
+<h3 id="autoid-0-3-2">自定义Server</h3>
+
+<p>要管理服务端的行为，可以创建一个自定义的Server：</p>
+
+<pre class="line-numbers language-go"><code class=" language-go">s <span class="token operator">:=</span> <span class="token operator">&amp;</span>http<span class="token punctuation">.</span>Server<span class="token punctuation">{</span>
+	Addr<span class="token punctuation">:</span>           <span class="token string">":8080"</span><span class="token punctuation">,</span>
+	Handler<span class="token punctuation">:</span>        myHandler<span class="token punctuation">,</span>
+	ReadTimeout<span class="token punctuation">:</span>    <span class="token number">10</span> <span class="token operator">*</span> time<span class="token punctuation">.</span>Second<span class="token punctuation">,</span>
+	WriteTimeout<span class="token punctuation">:</span>   <span class="token number">10</span> <span class="token operator">*</span> time<span class="token punctuation">.</span>Second<span class="token punctuation">,</span>
+	MaxHeaderBytes<span class="token punctuation">:</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">20</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+log<span class="token punctuation">.</span><span class="token function">Fatal</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span><span class="token function">ListenAndServe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+                        <hr>
+                        <p>
+                            <img src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/wxgzh_qrcode.jpg" alt="扫码关注微信公众号">
+                        </p>
+                        </div>
+                        
+                        <div id="gitalk-container"></div>
+
+                        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="https://www.liwenzhou.com/posts/Go/15_socket/">Go语言基础之网络编程</a></li>
+        
+        <li><a href="https://www.liwenzhou.com/posts/Go/14_concurrence/">Go语言基础之并发</a></li>
+        
+        <li><a href="https://www.liwenzhou.com/posts/Go/13_reflect/">Go语言基础之反射</a></li>
+        
+        <li><a href="https://www.liwenzhou.com/posts/Go/12_interface/">Go语言基础之接口</a></li>
+        
+        <li><a href="https://www.liwenzhou.com/posts/Go/11_package/">Go语言基础之包</a></li>
+        
+    </ul>
+</div>
+
+
+                        <div class="post-meta meta-tags">
+                            
+                            <ul class="clearfix">
+                                
+                                <li><a href="https://www.liwenzhou.com/tags/Golang">Golang</a></li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </article>
+                    
+    
+
+    
+    
+                </div>
+            </div>
+            <div id="secondary">
+    <section class="widget">
+        
+<div id="search" accept-charset="utf-8" _lpchecked="1">
+  <ul id="s-u" class="search-result"></ul>
+  <input id="s-k" type="text" autocomplete="off" name="key" maxlength="20" placeholder="搜索一下">
+  <button id="s-b" type="button" class="submit icon-search"></button>
+</div>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">我亲自录制的视频课程</h3>
+        <a href="https://study.163.com/course/courseMain.htm?courseId=1210171207&amp;share=2&amp;shareId=480000002229610"><img src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/goweb2.png" width="250"></a>
+        <h3 class="widget-title">微信扫码支持一下</h3>
+        <img src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/zanshang_qr.jpg" width="256" height="239">
+    </section>
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/go_menu/" title="【置顶】Go语言学习之路/Go语言教程">【置顶】Go语言学习之路/Go语言教程</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/priority_in_go_select/" title="Go语言在select语句中实现优先级">Go语言在select语句中实现优先级</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/deploy_go_app/" title="部署Go语言项目的 N 种方法">部署Go语言项目的 N 种方法</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/ratelimit/" title="常用限流策略——漏桶与令牌桶介绍">常用限流策略——漏桶与令牌桶介绍</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/benchmark_tool/" title="常用的HTTP服务压测工具介绍">常用的HTTP服务压测工具介绍</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/gin_swagger/" title="使用swagger生成接口文档">使用swagger生成接口文档</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/makefile/" title="为Go项目编写Makefile">为Go项目编写Makefile</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/validator_usages/" title="validator库参数校验若干实用技巧">validator库参数校验若干实用技巧</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/read_gin_sourcecode/" title="gin框架源码解析">gin框架源码解析</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/posts/Go/use_zap_in_gin/" title="使用zap接收gin框架默认的日志并配置日志归档">使用zap接收gin框架默认的日志并配置日志归档</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Development/">Development(14)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Django/">Django(3)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Front-end/">Front-end(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Golang/">Golang(75)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/JavaScript/">JavaScript(1)</a>
+    </li>
+    
+    <li>
+        <a href="https://www.liwenzhou.com/categories/Python/">Python(13)</a>
+    </li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://www.liwenzhou.com/tags/Development/">Development</a>
+    
+    <a href="https://www.liwenzhou.com/tags/Django/">Django</a>
+    
+    <a href="https://www.liwenzhou.com/tags/Golang/">Golang</a>
+    
+    <a href="https://www.liwenzhou.com/tags/Python/">Python</a>
+    
+    <a href="https://www.liwenzhou.com/tags/about/">about</a>
+    
+    <a href="https://www.liwenzhou.com/tags/front-end/">front-end</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://geektutu.com/" title="致力于分享有趣的技术实践">极客兔兔-有趣的技术实践</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://draveness.me/golang/" title="灯塔">draveness-Go语言设计与实现</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/liwenzhou/" title="Python全栈之路">Q1mi-Python全栈之路</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.cnblogs.com/zhaof" title="Python/Go语言之路">赵凡的博客</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://resn.cnblogs.com/" title="R_e-博客园">R_e-博客园</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="http://roddypy.com/" title="罗迪's Blog">罗迪's Blog</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">微信公众号</h3>
+        <img src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/qrcode_for_gzh.jpg" width="258" height="258">
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.liwenzhou.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+        </div>
+    </div>
+</div>
+<footer id="footer">
+    <div class="container">
+        © 2020 <a href="https://www.liwenzhou.com/">李文周的博客 By 李文周</a>.本站博客未经授权禁止转载.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io/" target="_blank">Hugo</a>.
+        <a href="http://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/rujews/maupassant-hugo" target="_blank">maupassant</a>.<a href="http://www.beian.miit.gov.cn/">京ICP备15037996号-1</a>.
+        
+    </div>
+</footer>
+
+
+    <script type="text/javascript" src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/page.js" async="true"></script>
+    <script type="text/javascript" src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/prism.js" async="true"></script>
+    <script src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/MathJax.js" async=""></script>
+    <link rel="stylesheet" href="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/gitalk.css">
+    <script src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/gitalk.js"></script>
+
+<a id="rocket" href="#top" class="show"></a>
+<script type="text/javascript" src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/totop.js" async="true"></script>
+
+
+
+<script type="text/javascript" src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/busuanzi.js" async=""></script>
+
+
+
+
+  <script src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/bootstrap.js"></script>
+
+  <script src="Go%E8%AF%AD%E8%A8%80%E4%B9%8Bnet_http_files/post_category.js"></script>
+
+
+
+<div id="sideToolbar" style="display: block;"><div class="sideCatalogBg" id="sideCatalog" style="visibility: visible;"><div id="sideCatalog-catalog"><ul class="nav" style="width:225px;zoom:1"><li class="h2Offset"><span>0.1&nbsp;&nbsp;</span><a href="#autoid-0-0-0" title="net/http介绍">net/http介绍</a></li><li class="h3Offset"><span>0.1.1&nbsp;&nbsp;</span><a href="#autoid-0-1-0" title="HTTP协议">HTTP协议</a></li><li class="h2Offset"><span>0.2&nbsp;&nbsp;</span><a href="#autoid-0-1-1" title="HTTP客户端">HTTP客户端</a></li><li class="h3Offset active"><span>0.2.1&nbsp;&nbsp;</span><a href="#autoid-0-2-0" title="基本的HTTP/HTTPS请求">基本的HTTP/HTTPS请求</a></li><li class="h3Offset"><span>0.2.2&nbsp;&nbsp;</span><a href="#autoid-0-2-1" title="GET请求示例">GET请求示例</a></li><li class="h3Offset"><span>0.2.3&nbsp;&nbsp;</span><a href="#autoid-0-2-2" title="带参数的GET请求示例">带参数的GET请求示例</a></li><li class="h3Offset"><span>0.2.4&nbsp;&nbsp;</span><a href="#autoid-0-2-3" title="Post请求示例">Post请求示例</a></li><li class="h3Offset"><span>0.2.5&nbsp;&nbsp;</span><a href="#autoid-0-2-4" title="自定义Client">自定义Client</a></li><li class="h3Offset"><span>0.2.6&nbsp;&nbsp;</span><a href="#autoid-0-2-5" title="自定义Transport">自定义Transport</a></li><li class="h2Offset"><span>0.3&nbsp;&nbsp;</span><a href="#autoid-0-2-6" title="服务端">服务端</a></li><li class="h3Offset"><span>0.3.1&nbsp;&nbsp;</span><a href="#autoid-0-3-0" title="默认的Server">默认的Server</a></li><li class="h3Offset"><span>0.3.2&nbsp;&nbsp;</span><a href="#autoid-0-3-1" title="默认的Server示例">默认的Server示例</a></li><li class="h3Offset"><span>0.3.3&nbsp;&nbsp;</span><a href="#autoid-0-3-2" title="自定义Server">自定义Server</a></li></ul></div></div><a href="javascript:void(0);" id="sideCatalogBtn" class="sideCatalogBtnDisable"></a></div></body></html>

@@ -1,0 +1,23 @@
+maven √
+mongodb √
+ruby
+vx app √
+activeMQ √
+less
+tomcat  √
+jvm √
+.net
+php
+unity3D
+ps √
+ai √
+pr √
+mysql 
+android
+nodejs  √
+webpack  √
+go √
+opencv
+
+图像深度检测
+手语视频解析

@@ -1,0 +1,18 @@
+﻿<Window x:Class="WpfDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:user="clr-namespace:WpfControlLibrary;assembly=WpfControlLibrary"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfDemo"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel VerticalAlignment="Center">
+            <user:colorPicker Name="picker" Width="400" Height="100" colValue="Black" ColorChanged="picker_ColorChanged"></user:colorPicker>
+            <TextBlock Text="{Binding ElementName=picker, Path=colValue}" Width="400"></TextBlock>
+            <TextBlock Text="this color is #FF000000" Name="colorText" Width="400"></TextBlock>
+        </StackPanel>
+    </Grid>
+</Window>
+ 
