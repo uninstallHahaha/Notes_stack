@@ -1,0 +1,72 @@
+解压ipvsadm
+
+制作内核软连接 ln -s /usr/src/kernels/2.6.32-431.e16.x86_64 /usr/src/linux  --->ipvsadm会去/usr/src/linux这个目录下去找内核文件
+
+回到ipvsadm解压目录安装 make && make install
+
+确认ipvsadm安装成功 
+ipvsadm 
+lsmod | grep -i ip_vs
+
+没安装成功的话, modprobe ip_vs 启动模块
+
+添加模块开机自动启动
+echo "/sbin/modprobe ip_vs" >>/etc/rc.local  ------->  >> 符号为追加到
+
+配置ipvs虚拟服务器地址
+ipvsadm -A -t 192.168.2.100:80 -s rr
+
+配置ipvs真正服务器
+ipvsadm -a -t 192.168.2.100:80 -r 192.168.2.101 -g -w 2
+ipvsadm -a -t 192.168.2.100:80 -r 192.168.2.102 -g -w 2
+
+查看ipvs配置
+ipvsadm -L
+
+配置lvs服务器的VIP
+ifconfig eth0:0 192.168.2.100 broadcast 192.168.2.100 netmask 255.255.255.255
+
+配置lvs服务器上的路由规则
+/sbin/route add -host 192.168.2.100 dev eth0:0
+
+
+配置真正服务器VIP(DR模式)
+新建脚本
+#! /bin/sh
+vip=192.168.2.100
+case $1 in             #------>$1表示执行脚本时传进的第一个参数
+
+start)
+
+    ifconfig lo:0 $vip broadcast $vip netmask 255.255.255.255 up
+    /sbin/route add -host $vip dev lo:0
+    echo "1" >/proc/sys/net/ipv4/conf/lo/arp_ignore   #-------->修改该系统变量为1,开启arp忽略
+    echo "2" >/proc/sys/net/ipv4/conf/lo/arp_announce
+    echo "1" >/proc/sys/net/ipv4/conf/all/arp_ignore
+    echo "2" >/proc/sys/net/ipv4/conf/all/arp_announce
+    sysctl -p->/dev/null 2>&1
+    echo "start OK!"
+    exit 0
+;;
+
+stop)
+
+    ifconfig lo:0 down
+    /sbin/route del $vip >/dev/null 2>&1
+    echo "0" >/proc/sys/net/ipv4/conf/lo/arp_ignore
+    echo "0" >/proc/sys/net/ipv4/conf/lo/arp_announce
+    echo "0" >/proc/sys/net/ipv4/conf/all/arp_ignore
+    echo "0" >/proc/sys/net/ipv4/conf/all/arp_announce
+    echo "stop OK!"
+    exit 1
+;;
+*)
+    echo "Usage: $0 {start|stop}"     #--------->$0为该脚本的名称
+;;
+esac
+
+执行脚本 sh xxx.sh start
+
+启动后端服务器的nginx
+
+访问VIP

@@ -1,0 +1,38 @@
+1.解压包(当前位置/usr/local/)
+    tar xzf keepalived....tar.gz
+
+2.进入解压出来的文件夹进行安装(解压出来的是安装包)
+    cd keepalived-2.0.16 &&
+    ./configure && make && make install
+    -->使用./configure --prefix=/usr/local/keepalived配置安装到哪里,然后下面两步cp的文件就会出现在安装目录下的sbin和etc中
+    ***./configure的时候偶报了个错, configure: error: libnfnetlink headers missing”, 安装yum install -y libnfnetlink-devel
+    或者
+    ***下载libnfnetlink和libnfnetlink-devel的rpm文件并安装, 使用rpm -ivh libnfnetlink-XXX.rpm命令安装
+
+3.复制keepalived的启动文件到系统启动文件中(/etc/rc.d/init.d/这下面放的程序会开机自启)
+    cp /usr/local/etc/rc.d/init.d/keepalived /etc/rc.d/init.d/
+
+4.复制keepalived的配置文件到系统配置文件中(/etc/sysconfig/下面是系统配置文件)
+    cp /usr/local/etc/sysconfig/keepalived /etc/sysconfig/
+
+5.将keepalived的启动二进制文件复制到/usr/sbin/下(/usr/local/sbin/keepalived是安装keepalived时候自动生成的, /usr/sbin/放用户安装的用于系统管理的命令)
+    cp /usr/local/sbin/keepalived /usr/sbin/
+
+6.新建配置目录(当前位置/usr/local/keepalived-2.0.16/)
+    mkdir -p /etc/keepalived 
+
+7.在配置目录中添加配置文件
+    cd /etc/keepalived &&
+    vim keepalived.conf
+    写配置文件...
+
+8.启动keepalived (/etc/init.d/是个软链接到/etc/rc.d/init.d/)
+    /etc/init.d/keepalived restart
+
+9.验证是否启动成功
+    tail -fn 100 /var/log/messages (查看系统日志,出现transition to master state 和 netlink  reflector reports IP 192.168.xxx.xxx addressed, 成为了master和注册了一个vip地址)
+
+10.进行对VIP的访问
+
+11.停止keepalived
+    /etc/init.d/keepalived stop

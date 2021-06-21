@@ -56,6 +56,10 @@ jupyter切换kernel
    python -m ipykernel install --user --name 要加入到kernel的环境名称 --display-name "jupyter界面中显示的kernel名称"
    ```
 
+   >   要加入到kernel的环境名称 : 这个一般是base
+   >
+   >   jupyter界面中显示的kernel名称: 这个一般写当前环境的名称
+
 5. 重启jupyter
 
 6. 即可在kernel选项中切换kernel
