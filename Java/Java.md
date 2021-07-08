@@ -64,6 +64,28 @@
 
 
 
+*   数组和Array之间的转换?
+
+    数组转Array 
+
+    ​	`Array.asList(数组)` , 这种方法创建的Array对象指向原数组, 所以只能查改, 不能增删, 如果想要创建新的List对象 `new ArrayList<T>(Array.asList(数组))`
+
+    Array 转数组
+
+    ```java
+    List<String> list = new ArrayList<>();
+    String[] arr = new String[list.size()];
+    l
+    ```
+
+    
+
+    
+
+
+
+
+
 * 数据库连接池 ?
 
   ​	建立数据库连接是很耗时的操作 , 首先得加载数据库驱动程序到内存中, 然后与数据库建立网络连接, 然后才能执行语句, 用完之后还得释放连接, 如果没有释放连接, 那么数据库的对应的连接资源就不会被释放, 从而造成内存泄露.
