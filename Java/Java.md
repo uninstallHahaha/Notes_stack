@@ -75,7 +75,7 @@
     ```java
     List<String> list = new ArrayList<>();
     String[] arr = new String[list.size()];
-    l
+    list.toArray(arr);
     ```
 
     
