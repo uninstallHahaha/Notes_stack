@@ -497,7 +497,7 @@ stringtable的应用
 
 #### 线程安全
 
-线程安全问题可以通过 synchronized 和 CAS技术来实现
+线程安全问题可以通过 synchronized 和 CAS技术 来实现
 
 ###### synchronized 
 
