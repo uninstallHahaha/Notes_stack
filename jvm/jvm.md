@@ -1,5 +1,35 @@
 # JVM
 
+***JVM***
+
+```english
+	A JVM implementation is a computer program that meets the requirements of the JVM specification. An instance of a JVM is an implementation running in a process that executes a computer program compiled into Java bytecode.
+```
+
+***JRE***
+
+```english
+	Java Runtime Environment (JRE) is a software package that contains what is required to run a Java program. It includes a Java Virtual Machine implementation together with an implementation of the Java Class Library. 
+```
+
+***JDK***
+
+```
+	Java Development Kit (JDK) is a superset of a JRE and contains tools for Java programmers, e.g. a javaccompiler. 
+```
+
+
+
+>   JVM本质就是一个程序
+>
+>   用来运行java代码 (不是, 只要能够编译成.class文件的语言代码都可以)
+>
+>   JVM本质是解析.class字节码指令的程序
+
+
+
+
+
 #### 内存结构
 
 
@@ -8,7 +38,7 @@
 
 
 
-###### 程序计数器(PC Register)
+##### 程序计数器(PC Register)
 
 > java源码 --编译--> 二进制字节码(jvm指令) --解释器--> 机器码 ----> cpu执行
 >
@@ -19,6 +49,8 @@
 > 程序计数器是线程所私有的 : java支持多线程, 即同时在多个线程中执行不同的代码, 每一个线程都私有地拥有一个程序计数器, 当线程用完cpu分配给它的时间片后, 会将当前程序运行到的位置存到自己私有的程序寄存器中, 待到再次得到执行权, 就从自己的程序计数器中获取到程序运行的位置继续运行.
 
 
+
+##### 栈
 
 ###### 虚拟机栈(JVM Stacks)
 
@@ -61,7 +93,9 @@
 
 
 
-###### 堆
+##### 堆
+
+###### 对象实例
 
 > 通过new 创建的对象都会放到堆中
 >
@@ -75,21 +109,7 @@
 
 > 在对象不被回收的情况下, 无限创建对象 会导致堆内存溢出
 
-
-
-###### 方法区
-
-> 存放类的字段, 方法 和 运行时常量池
->
-> 1.8以前叫 永久代, 1.8以后叫 元空间
->
-> 在java1.8及以后, 该区域直接使用物理内存空间, 就是主机的内存
->
-> java1.8 以及以后 , 通过运行参数 -XX:MaxMetaspaceSize=8m 来设置大小
->
-> java1.8 以前 , 通过运行参数 -XX:MaxPermSize=8m 来设置大小
-
-常量池
+###### 常量池
 
 > 用于存放java程序编译成为 class 对象后每一步java指令所使用的 值
 
@@ -126,6 +146,28 @@ stringtable的应用
 > 1️⃣ 如果使用 new String 的方式来创建它们, 那么这些字符串会一个不差地被创建为新的 String 对象被存到堆中
 >
 > 2️⃣ 如果将这些字符串 通过调用 intern() 放入 stringtable 中, 然后将该方法返回的值即它在 stringtable 中地址存到 List 中, 因为 stringtable 不会存重复数据的特性, 所以这就相当于使用了更少的空间存储了更多的数据, 极大地降低了内存的使用 
+
+
+
+
+
+
+
+##### 方法区
+
+> 存放类的字段, 方法 和 运行时常量池
+>
+> 1.8以前叫 永久代, 1.8以后叫 元空间
+>
+> 在java1.8及以后, 该区域直接使用物理内存空间, 就是主机的内存
+>
+> java1.8 以及以后 , 通过运行参数 -XX:MaxMetaspaceSize=8m 来设置大小
+>
+> java1.8 以前 , 通过运行参数 -XX:MaxPermSize=8m 来设置大小
+
+
+
+
 
 
 
