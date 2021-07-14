@@ -64,13 +64,13 @@
 
 
 
-*   数组和Array之间的转换?
+*   ***list*** 和 ***数组*** 之间的转换?
 
-    数组转Array 
+    ***list*** 转 ***数组*** 
 
     ​	`Array.asList(数组)` , 这种方法创建的Array对象指向原数组, 所以只能查改, 不能增删, 如果想要创建新的List对象 `new ArrayList<T>(Array.asList(数组))`
 
-    Array 转数组
+    ***数组*** 转 ***list***
 
     ```java
     List<String> list = new ArrayList<>();
