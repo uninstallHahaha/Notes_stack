@@ -1,127 +1,141 @@
-> ### Redis
+### Redis
 
-* ##### Redis配置
+##### Redis配置
 
-  1. 将解压出来的文件夹下的 `redis.conf `文件 拷贝到 Redis安装完成的文件夹下与 `bin` 文件夹同级
-  2. 如果想使得自定义的配置文件生效, 则在启动服务时应加上配置文件路径 ` ./bin/redis-server ./redis.conf`
-  3. 配置项
-     1. daemonize yes  设置为守护进程运行模式
-     2. bind 127.0.0.1   设置访问地址为本机, 仅限本机可访问本服务器, 注释掉则清除访问限制
-     3. port 6379     设置访问的端口
-     4. database 16 设置为可支持同时使用16个数据库
-     5. save <second> <changes>  设置在second时间内,如果修改次数达到changes,则持久化数据
-     6. dbfilename dump.rdb  设置本地持久化文件的名称
-     7. dir ./  设置本地持久化文件的存放位置( 默认当前目录 )
-     8. requirepass xxxxxx  设置连接到redis服务器的密码 , 设置密码后应使用 `AUTH <password>`命令来连接
-     9. maxclients 10000 设置同一时间的最大客户端连接数
-     10. maxmemory <bytes>  设置最大内存使用量, 超过时会删除快过期的key上的数据
+1. 将解压出来的文件夹下的 `redis.conf `文件 拷贝到 Redis安装完成的文件夹下与 `bin` 文件夹同级
+2. 如果想使得自定义的配置文件生效, 则在启动服务时应加上配置文件路径 ` ./bin/redis-server ./redis.conf`
+3. 配置项
+   1. daemonize yes  设置为守护进程运行模式
+   2. bind 127.0.0.1   设置访问地址为本机, 仅限本机可访问本服务器, 注释掉则清除访问限制
+   3. port 6379     设置访问的端口
+   4. database 16 设置为可支持同时使用16个数据库
+   5. save <second> <changes>  设置在second时间内,如果修改次数达到changes,则持久化数据
+   6. dbfilename dump.rdb  设置本地持久化文件的名称
+   7. dir ./  设置本地持久化文件的存放位置( 默认当前目录 )
+   8. requirepass xxxxxx  设置连接到redis服务器的密码 , 设置密码后应使用 `AUTH <password>`命令来连接
+   9. maxclients 10000 设置同一时间的最大客户端连接数
+   10. maxmemory <bytes>  设置最大内存使用量, 超过时会删除快过期的key上的数据
 
-* ##### 服务端的操作
+##### 服务端的操作
 
-  * 服务端的关闭
-    * 直接杀进程(数据丢失)
-      1. 查询pid `ps -ef | grep -i redis`
-      2. 关闭进程 `kill -9 <pid>`
-    * 数据保存,正常关闭
-      1. 在客户端执行 `shutdown`
+* 服务端的关闭
+  * 直接杀进程(数据丢失)
+    1. 查询pid `ps -ef | grep -i redis`
+    2. 关闭进程 `kill -9 <pid>`
+  * 数据保存,正常关闭
+    1. 在客户端执行 `shutdown`
 
-* ##### 客户端的使用
+##### 客户端的使用
 
-  1. 连接服务端`./redis-cli [-h host] [-p port] -a password`
-     * -h host 默认为本机
-     * -p port 为连接端口, 默认为6379
-     * -a password 为连接密码
-  2. `keys <pattern>`  按照模式查询
-     1. `keys *` 查询所有键
-     2. `keys ?` ?代表一个字符
-  3. `set <key> <value>`  设置键值对, 覆盖, 无视类型
-  4. 删除key `del[key...]`,  返回删除成功的数目
-  5. 获取序列化之后的值 `dump <key>` ( key会被序列化后存到硬盘上 )
-  6. 是否存在 `exists <key>` , 存在则返回1,否则返回0
-  7. 设置key的过期时间 `expire <key> <seconds>`
-     * 存放限时活动的信息
-     * 网站定时更新的数据
-     * 手机验证码
-     * 限制网站访问频率
-  8. 返回key的剩余生存时间 `ttl <key>`,  -1为永久,-2为无效. 默认为永久
-  9. 移除过期时间,设置key为永久 `persist <key>`
-  10. 切换数据库 `select <number>` , 切换到number下标的数据库
-  11. 从当前数据库中随机返回一个key `random <key>`
-  12. 重命名key `rename <oldname> <newname>`
-  13. 移动key到另一个数据库 `move <key> <ind>`  , 移动key到下标为ind的数据库中
-  14. 获得key的类型 `type <key>`
-  15. `flushdb` 清空数据库
+1. 连接服务端`./redis-cli [-h host] [-p port] -a password`
+   * -h host 默认为本机
+   * -p port 为连接端口, 默认为6379
+   * -a password 为连接密码
+2. `keys <pattern>`  按照模式查询
+   1. `keys *` 查询所有键
+   2. `keys ?` ?代表一个字符
+3. `set <key> <value>`  设置键值对, 覆盖, 无视类型
+4. 删除key `del[key...]`,  返回删除成功的数目
+5. 获取序列化之后的值 `dump <key>` ( key会被序列化后存到硬盘上 )
+6. 是否存在 `exists <key>` , 存在则返回1,否则返回0
+7. 设置key的过期时间 `expire <key> <seconds>`
+   * 存放限时活动的信息
+   * 网站定时更新的数据
+   * 手机验证码
+   * 限制网站访问频率
+8. 返回key的剩余生存时间 `ttl <key>`,  -1为永久,-2为无效. 默认为永久
+9. 移除过期时间,设置key为永久 `persist <key>`
+10. 切换数据库 `select <number>` , 切换到number下标的数据库
+11. 从当前数据库中随机返回一个key `random <key>`
+12. 重命名key `rename <oldname> <newname>`
+13. 移动key到另一个数据库 `move <key> <ind>`  , 移动key到下标为ind的数据库中
+14. 获得key的类型 `type <key>`
+15. `flushdb` 清空数据库
+
+
+
+### Redis特性
+
+* 单个键最大512M
+
+* 使用命名规范来建立数据关联性
+
+  * 统一的规范: user:123:password
+
+* ***数据类型***
+
+  > #### *string*
+
+  * 二进制安全: 数据传输过程中无编码和解码的操作, 不会出错
   
+  * `setnx key value`  只有key不存在的时候才赋值
   
+      返回修改值的个数, 可用于分布式锁
   
-* ### Redis特性
-
-  * 单个键最大512M
-
-  * 使用命名规范来建立数据关联性
-
-    * 统一的规范: user:123:password
-
-  * ***数据类型***
-
-    > #### *string*
-
-    * 二进制安全: 数据传输过程中无编码和解码的操作, 不会出错
-    * `setnx key value`  只有key不存在的时候才赋值
-    * `set key value` 赋值
-    * `get key` 获取字符串类型的值, 如果值不是字符串类型, 返回错误
-    * `getrange key start end`  获取范围内的子字符串, 包括头尾
-    * `getset key value` 赋值, 如果之前存在,返回之前的值, 不存在则返回nil
-    * `strlen key` 获取字符串长度
-    * `append key value` 字符串拼接
-    * `incr key` 值自增1, 如果不存在则先初始化为0再自增
-    * `incrby key num` 值自增num
-    * `decr key` 值自减1
-    * `decrby key num` 值自减num
-    * 应用场景
-      1. 字符串存储
-      2. 图片存储
-      3. 计数器
-
-    > #### *hash ( 对象 )*
-
-    * `hset key field value` 赋值( 键, 属性, 值 )
-    * `hmset key field value [field1 value1 ...]` 同时存储一个对象的多个属性
-    * `hget key field` 取值 ( 键, 属性 )
-    * `hmget key field [field1 ...] ` 同时取一个对象中多个属性的值
-    * `hgetall key`  获取一个对象中所有属性的值
-    * `hkeys key` 获取对象中所有的键
-    * `hlen key`  获取对象中键的数量
-    * `hdel key field [field1 ...]` 删除一个对象中的一个或多个属性, 属性删完后对象就会被释放
-    * `del key` 直接删除对象
-    * `hsetnx key field value`  属性不存在时赋值
-    * `hincrby key field num` 对象整型属性自增num
-    * `hincrbyfloat key field num` 对象浮点数属性自增num
-    * `hexists key field`  查看对象是否存在属性, R1&0
-    * 应用场景:
-      1. 存储对象
-    
-    > ### *list( linkedlist)*
-    
-    * `lpush key value [value1...]`  将一个或多个数值插入到列表头部( 往左侧添加 )
-    * `rpush key value [value2...]`  将一个或多个数值插入到列表的尾部( 往右侧添加 ) 
-    * `lpushx key value` 将一个值插入到已存在的列表 *头部*, 如果列表不存在, 操作无效
-    * `rpushx key value` 将一个值插入到已存在的列表 *尾部* , 如果列表不存在, 操作无效
-    * `llen key` 返回列表长度
-    * `lindex key index` 返回下标为index的值
-    * `lrange key start end`  返回范围内的数值 ( -1为最后一个元素, -2位倒数第二个元素, 以此类推 )
-    * `lpop key` 左一出栈
-    * `rpop key` 右一出栈
-    * `blpop key1 [key2...] timeout` 待到key中有数据时左一出栈,  或者超时退出
-    * `brpop key1 [key2...] timeout` 待到key中有数据时右一出栈,  或者超时退出
-    * `ltrim key start end` 修剪list只剩区间内元素
-    * `lset key index value` 修改key中下标为index的值为value
-    * `linsert key <before|after> word value` 在key中的word元素的<前|后>插入value
-    * `rpoplpush from to` 从from列表中右出栈一个元素作为to列表的左进栈元素, 返回值为被操作的元素 , 使用 `rpoplpush l1 l1` 实现循环列表
-    * 应用场景:
-      1. 对大量的数据进行增减操作
-      2. 使用范围返回命令实现分页功能
-      3. 使用右出左进函数和两个任务列表来实现任务队列功能
+  * `set key value` 赋值
+  
+  * `get key` 获取字符串类型的值, 如果值不是字符串类型, 返回错误
+  
+  * `getrange key start end`  获取范围内的子字符串, 包括头尾
+  
+  * `getset key value` 赋值, 如果之前存在,返回之前的值, 不存在则返回nil
+  
+  * `strlen key` 获取字符串长度
+  
+  * `append key value` 字符串拼接
+  
+  * `incr key` 值自增1, 如果不存在则先初始化为0再自增
+  
+  * `incrby key num` 值自增num
+  
+  * `decr key` 值自减1
+  
+  * `decrby key num` 值自减num
+  
+  * 应用场景
+    1. 字符串存储
+    2. 图片存储
+    3. 计数器
+  
+  > #### *hash ( 对象 )*
+  
+  * `hset key field value` 赋值( 键, 属性, 值 )
+  * `hmset key field value [field1 value1 ...]` 同时存储一个对象的多个属性
+  * `hget key field` 取值 ( 键, 属性 )
+  * `hmget key field [field1 ...] ` 同时取一个对象中多个属性的值
+  * `hgetall key`  获取一个对象中所有属性的值
+  * `hkeys key` 获取对象中所有的键
+  * `hlen key`  获取对象中键的数量
+  * `hdel key field [field1 ...]` 删除一个对象中的一个或多个属性, 属性删完后对象就会被释放
+  * `del key` 直接删除对象
+  * `hsetnx key field value`  属性不存在时赋值
+  * `hincrby key field num` 对象整型属性自增num
+  * `hincrbyfloat key field num` 对象浮点数属性自增num
+  * `hexists key field`  查看对象是否存在属性, R1&0
+  * 应用场景:
+    1. 存储对象
+  
+  > ### *list( linkedlist)*
+  
+  * `lpush key value [value1...]`  将一个或多个数值插入到列表头部( 往左侧添加 )
+  * `rpush key value [value2...]`  将一个或多个数值插入到列表的尾部( 往右侧添加 ) 
+  * `lpushx key value` 将一个值插入到已存在的列表 *头部*, 如果列表不存在, 操作无效
+  * `rpushx key value` 将一个值插入到已存在的列表 *尾部* , 如果列表不存在, 操作无效
+  * `llen key` 返回列表长度
+  * `lindex key index` 返回下标为index的值
+  * `lrange key start end`  返回范围内的数值 ( -1为最后一个元素, -2位倒数第二个元素, 以此类推 )
+  * `lpop key` 左一出栈
+  * `rpop key` 右一出栈
+  * `blpop key1 [key2...] timeout` 待到key中有数据时左一出栈,  或者超时退出
+  * `brpop key1 [key2...] timeout` 待到key中有数据时右一出栈,  或者超时退出
+  * `ltrim key start end` 修剪list只剩区间内元素
+  * `lset key index value` 修改key中下标为index的值为value
+  * `linsert key <before|after> word value` 在key中的word元素的<前|后>插入value
+  * `rpoplpush from to` 从from列表中右出栈一个元素作为to列表的左进栈元素, 返回值为被操作的元素 , 使用 `rpoplpush l1 l1` 实现循环列表
+  * 应用场景:
+    1. 对大量的数据进行增减操作
+    2. 使用范围返回命令实现分页功能
+    3. 使用右出左进函数和两个任务列表来实现任务队列功能
 
 
 
