@@ -64,7 +64,9 @@
 
 * ***数据类型***
 
-  > #### *string*
+  
+
+#### *string*
 
   * 二进制安全: 数据传输过程中无编码和解码的操作, 不会出错
   
@@ -96,9 +98,11 @@
     1. 字符串存储
     2. 图片存储
     3. 计数器
-  
-  > #### *hash ( 对象 )*
-  
+
+
+
+#### *hash ( 对象 )*
+
   * `hset key field value` 赋值( 键, 属性, 值 )
   * `hmset key field value [field1 value1 ...]` 同时存储一个对象的多个属性
   * `hget key field` 取值 ( 键, 属性 )
@@ -114,9 +118,11 @@
   * `hexists key field`  查看对象是否存在属性, R1&0
   * 应用场景:
     1. 存储对象
-  
-  > ### *list( linkedlist)*
-  
+
+
+
+#### *list( linkedlist)*
+
   * `lpush key value [value1...]`  将一个或多个数值插入到列表头部( 往左侧添加 )
   * `rpush key value [value2...]`  将一个或多个数值插入到列表的尾部( 往右侧添加 ) 
   * `lpushx key value` 将一个值插入到已存在的列表 *头部*, 如果列表不存在, 操作无效
@@ -139,145 +145,322 @@
 
 
 
-* ### *在JAVA中使用Redis*
 
-  1. 在项目中引入jedis的jar包 ( 也可使用pom直接引入 ) ( jedis相当于一个客户端 )
 
-  2. 在redis服务端的防火墙中开启6379端口  ( 同时注意在redis的启动设置中设置为其他ip可访问 )
+  #### set
 
-     ```shell
-     #查看当前防火墙开放的端口
-     >firewall-cmd --list-ports
-     #开启6379端口
-     >firewall-cmd --zone=public --add-port=6379/tcp --permanent
-     #重启防火墙使设置生效
-     >firewall-cmd --reload
-     ```
+  * 无序不可重复的string集合
+  * `sadd key val1 [val2...]` 添加
+  * `scard key` 集合大小
+  * `smembers key` 返回所有元素
+  * `sismember key val` 判断是否存在val ( 1&0 )
+  * `srandmember key [count]` 返回一个或count个随机的元素
+  * `srem key member1 [member2...]` 从key中删除一个或多个元素
+  * `spop key [count]` 从key中随机删除一个或多个元素并返回
+  * `smov key1 key2 val` 将key1中的val移动到key2中
+  * `sdiff s1 [s2]` 返回s1和s2的差集
+  * `sinter s1 [s2]` 返回s1和s2的交集
+  * `sunion s1 [s2]` 返回s1和s2的并集
+  * `sdiffstore target key1 key2` 返回key1和key2的差集并保存在target中
+  * `sinterstore target s1 s2` 返回s1和s2的交集并保存在target中
+  * `sunionstore target s1 s2` 返回s1和s2的交集并保存在target中
+  * 应用场景
+    * 两个集合的差集,并集和交集
+        1. 共同关注, 共同喜好, 共同好友
+        2. 利用唯一性, 统计访问网络的独立IP
 
-  3. 在java中使用jedis连接redis服务器
 
-     ```java
-     public void main(){
-         //redis服务器地址
-         String host = "xxx.xxx.xxx.xxx";
-         //redis服务器端口号
-         int port = 6379;
-         Jedis jedis = new Jedis( host, port );
-         //输入密码
-         jedis.auth("******");
-         
-         //测试是否连接成功, 打印出PANG则为连接成功
-         System.out.printf( jedis.ping() );
-         
-         //记得关闭连接
-         jedis.close();
-     }
-     ```
 
-  4. jedis的API ( 在redis中的命令与jedis实例的方法一一对应 )
 
-     ```java
-     //例子
-     //测试string的操作
-     @Test
-     public void t1(){
-         Jedis jedis = new Jedis("xxx.xxx.xxx.xxx", 6379);
-         jedis.auth("******");
-         
-         jedis.set("strName", "这是一个字符串");
-         System.out.printl(jedis.get("strName"));
-         
-         jedis.close();
-     }
-     ```
 
-     开发实例: 使用redis减轻数据库的访问压力
+#### zset
 
-     ```java
-     //需求 : 先从redis中查询, 如果查询到则返回数据, 未查询到则从数据库中查询并存在redis中
-     @Test
-     public void t2(){
-         Jedis jedis = new Jedis("xxx.xxx.xxx.xxx",6379);
-         jedis.auth("******");
-         
-         //要查询的key
-         String key = "name";
-         
-         if(jedis.exists(key)){
-             //从redis中查到了
-             System.out.printl(jedis.get(key));
-         }else{
-             //没从redis中查到
-             //从数据库中查询
-             //...
-             String result = "zhangsan";
-             //存到redis中
-             jedis.set("name",result);
-         }
-         
-         jedis.close();
-     }
-     
-     ```
+* 有序不可重复的string集合
+* 根据元素的score值( double类型 ) 来进行排序
+* `zadd key score1 val1 [score2 val2...]` 添加元素 (要score和val对应 )
+* `zcard key` 返回元素个数
+* `zrange key start end` 返回范围内的元素( 根据score从小到大排序 ) 
+* `zcount key min max` 返回score在[min,max]内的元素
+* `zrank key member` 返回key中member的索引
+* `zrevrange key start end` 从大到小返回范围内的元素
+* `zrem key val1 [val2...]` 从key中删除元素
+* `zremrangebyrank key start end` 从排名区间内删除元素( 第一名是0 )
+* `zremrangebyscore key min max` 根据score的大小删除范围内的元素
+* 应用场景
+    1. 排行榜
+    2. 时间线
+    3. 使用score作为任务队列的权重( 优先度 )
 
-* ### *在java中使用redis连接池 (连接池:  统一管理和释放连接)*
 
-  #### *redis连接池的使用*
 
-  ```java
-  public void main(){
-      //设置连接池配置对象
-      JedisPoolConfig poolConfig = new JedisPoolConfig();
-      poolConfig.setMaxTotal(5);  //设置最大同时连接数
-      poolConfig.setMaxIdle(1);  //设置没人连接的时候保留几个连接, 最大空闲数
-      
-      //新建池子对象
-      JedisPool pool = new JedisPool(poolConfig, "xxx.xxx.xxx.xxx", 6379);
-      
-      //从池子中拿连接
-      Jedis jedis = pool.getResouce();
-      jedis.auth("******");
-      
-      //测试连接
-      System.out.printl(jedis.ping());
-  }
-  ```
 
-  ##### *封装jedis连接池的工具类*
 
-  ```java
-  public class JedisPoolUtil{
-      
-      private static final JedisPool pool;
-      
-      static//静态块, 只加载一次
-      {
-          JedisPoolConfig poolConfig = new JedisPoolConfig();
-          poolConfig.setMaxTotal(5);
-          poolConfig.setMaxIdle(1);
-          //其他配置...
-          pool = new JedisPool(poolConfig, "xxx.xxx.xxx.xxx",6379);
-      }
-      
-      //获取连接
-      public static Jedis getJedis(){
-          Jedis jedis = pool.getResource();
-          jedis.auth("******");
-          return jedis;
-      }
-      //关闭连接
-      public static void close(Jedis jedis){
-          jedis.close();
-          return;
-      }
-  }
-  ```
+### Redis发布订阅
 
-* ### *使用spring-data整合的redis工具类 - 在springmvc项目中使用*
+* publish(发布) -> channel(频道) -> client(客户端)
+* 命令 ( 以下命令执行在客户端中 )
+    * `subscribe channel [channel2...]`  订阅频道 ( 频道名称随便写 )
+    * `publish channel message` 向channel中发送message
+    * `unsubscribe channel [channel2...]` 取消订阅
+    * `psubscribe pattern [pattern2...]` 根据模式订阅频道
+    * `punsubscribe pattern [pattern2...]` 根据模式退订频道
+* 应用场景:
+    * 博客, 公众号
+    * 实时聊天系统
 
-  #### ( 该jar包整合了包括连接池管理在内及其他关于redis数据存取的操作 )
 
-  #### ( 由于jedis中对hash类型也就是对象类型的操作中都是用map类型在操作, 代码实现比较繁琐且重复, 所以要对jedis基础方法再封装 )
+
+
+
+
+
+### Redis 多数据库
+
+* 命令
+    * `select index` 切换数据库
+    * `move key index` 将key移动到索引为index的数据库中
+    * `flushdb`  清空当前库
+    * `flushall` 清空所有库
+* 缓存预热: 在项目上线前清空redis数据库, 然后访问一遍系统, 使数据加载到redis数据库中。
+
+
+
+
+
+### Redis事务
+
+* `multi` 开始录入事务队列
+* `exec` 执行事务队列
+* `discard` 放弃当前事务队列
+
+```shell
+#使用事务队列实现转账功能
+
+#事务队列开始
+>multi
+ok
+#将操作放入事务队列中
+>get account:a
+queued
+>get account:b
+queued
+>decrby account:a 50
+queued
+>incrby account:b 50
+queued
+#执行
+>exec
+```
+
+* 事务执行中, 如果命令执行报错, 其他命令会正常执行 ( 运行时错误 )
+* 事务执行中, 如果命令本身出错, 整个事务都不会执行 ( 语法错误 )
+* `watch key [key2...]` 监视key, 如果在监视状态下开启事务, 在事务未执行时key被其他客户端修改, 那么这个事务不会执行成功, 会返回nil. 在开启监视后, 如果exec或者discard先被执行, 则监视自动取消. ( 监视的有效期为一个事务 )
+
+* `unwatch` 取消对所有key的监视
+* 应用场景
+    1. 商品秒杀
+    2. 转账
+
+
+
+
+
+
+
+### Redis数据淘汰策略
+
+>   配置文件 redis.conf 
+
+* 当数据达到配置的最大内存使用量时, 会根据淘汰策略进行淘汰, 如果没有设置, 则报错out of memory
+* `maxmemory 512G`设置最大内存 
+
+
+
+
+
+
+
+### Redis持久化 
+
+>   保存为本地文件
+
+RDB方式: 默认的持久化方法, 以二进制的方法将内存数据快照为数据文件dump.rdb
+
+* 快照产生条件:
+    1. 正常关闭 `shutdown`
+    2. 到达策略安排的操作次数 `save 900 1`
+* 优点: 存储速度快, 还原速度快
+* 缺点: 照快照时候会占用内存, 小内存机器不适合, 如果是非正常关闭 , 会导致未做快照的数据丢失 
+
+
+
+AOF方式: 将操作的命令保存到 appendonly.aof 文件中, 使用保存的命令恢复数据
+
+* 优点: 能保证数据不丢失
+* 缺点: 会占用过多的硬盘空间
+* 配置文件:
+    * `appendonly yes`  启用aof
+    * `appendfsync always`  收到命令就持久化
+    * `appendfsync everysec` 每秒都做持久化
+    * `appendfsync no` 完全依赖os, 性能最好, 但是持久化没保证
+
+
+
+
+
+
+
+
+
+### *在JAVA中使用Redis*
+
+1. 在项目中引入jedis的jar包 ( 也可使用pom直接引入 ) ( jedis相当于一个客户端 )
+
+2. 在redis服务端的防火墙中开启6379端口  ( 同时注意在redis的启动设置中设置为其他ip可访问 )
+
+   ```shell
+   #查看当前防火墙开放的端口
+   >firewall-cmd --list-ports
+   #开启6379端口
+   >firewall-cmd --zone=public --add-port=6379/tcp --permanent
+   #重启防火墙使设置生效
+   >firewall-cmd --reload
+   ```
+
+   
+
+3. 在java中使用jedis连接redis服务器
+
+   ```java
+   public void main(){
+       //redis服务器地址
+       String host = "xxx.xxx.xxx.xxx";
+       //redis服务器端口号
+       int port = 6379;
+       Jedis jedis = new Jedis( host, port );
+       //输入密码
+       jedis.auth("******");
+       
+       //测试是否连接成功, 打印出PANG则为连接成功
+       System.out.printf( jedis.ping() );
+       
+       //记得关闭连接
+       jedis.close();
+   }
+   ```
+
+   
+
+4. jedis的API ( 在redis中的命令与jedis实例的方法一一对应 )
+
+   ```java
+   //例子
+   //测试string的操作
+   @Test
+   public void t1(){
+       Jedis jedis = new Jedis("xxx.xxx.xxx.xxx", 6379);
+       jedis.auth("******");
+       
+       jedis.set("strName", "这是一个字符串");
+       System.out.printl(jedis.get("strName"));
+       
+       jedis.close();
+   }
+   ```
+
+   开发实例: 使用redis减轻数据库的访问压力
+
+   ```java
+   //需求 : 先从redis中查询, 如果查询到则返回数据, 未查询到则从数据库中查询并存在redis中
+   @Test
+   public void t2(){
+       Jedis jedis = new Jedis("xxx.xxx.xxx.xxx",6379);
+       jedis.auth("******");
+       
+       //要查询的key
+       String key = "name";
+       
+       if(jedis.exists(key)){
+           //从redis中查到了
+           System.out.printl(jedis.get(key));
+       }else{
+           //没从redis中查到
+           //从数据库中查询
+           //...
+           String result = "zhangsan";
+           //存到redis中
+           jedis.set("name",result);
+       }
+       
+       jedis.close();
+   }
+   
+   ```
+   
+   
+
+### *在java中使用redis连接池*
+
+>   连接池:  统一管理和释放连接
+
+#### *redis连接池的使用*
+
+```java
+public void main(){
+    //设置连接池配置对象
+    JedisPoolConfig poolConfig = new JedisPoolConfig();
+    poolConfig.setMaxTotal(5);  //设置最大同时连接数
+    poolConfig.setMaxIdle(1);  //设置没人连接的时候保留几个连接, 最大空闲数
+    
+    //新建池子对象
+    JedisPool pool = new JedisPool(poolConfig, "xxx.xxx.xxx.xxx", 6379);
+    
+    //从池子中拿连接
+    Jedis jedis = pool.getResouce();
+    jedis.auth("******");
+    
+    //测试连接
+    System.out.printl(jedis.ping());
+}
+```
+
+##### *封装jedis连接池的工具类*
+
+```java
+public class JedisPoolUtil{
+    
+    private static final JedisPool pool;
+    
+    static//静态块, 只加载一次
+    {
+        JedisPoolConfig poolConfig = new JedisPoolConfig();
+        poolConfig.setMaxTotal(5);
+        poolConfig.setMaxIdle(1);
+        //其他配置...
+        pool = new JedisPool(poolConfig, "xxx.xxx.xxx.xxx",6379);
+    }
+    
+    //获取连接
+    public static Jedis getJedis(){
+        Jedis jedis = pool.getResource();
+        jedis.auth("******");
+        return jedis;
+    }
+    //关闭连接
+    public static void close(Jedis jedis){
+        jedis.close();
+        return;
+    }
+}
+```
+
+### *在springmvc项目中使用Redis*
+
+>   使用spring-data整合的redis工具类 
+
+>    该jar包整合了包括连接池管理在内及其他关于redis数据存取的操作
+
+>   由于jedis中对hash类型也就是对象类型的操作中都是用map类型在操作, 代码实现比较繁琐且重复, 所以要对jedis基础方法再封装
 
 1. 引入jedis基础包和spring家的工具包
 
@@ -292,6 +475,8 @@
        private static final long serialVersionUID = .......;
    }
    ```
+
+   
 
 3. 编写spring-data-redis的配置文件
 
@@ -325,10 +510,14 @@
        </bean>
    ```
 
+   
+
 4. 配置完成, 使用spring家的jedis工具包
 
-   ###  *string类型的操作*
-   
+
+
+#### *string类型的操作*
+
    ```java
    //测试关于string类型的操作
    //mvc中的实现层
@@ -357,10 +546,10 @@
        }
    }
    ```
-   
-   > #### *由于RedisTemplate在对数据进行存储的时候默认给key和value前都加序列化标志字符串, 而且使用的是jdk的序列化方法, 给操作带来不便. 所以应当在配置文件中对RedisTemplate对象的序列化方法属性进行自定义配置*
+
+   > *由于RedisTemplate在对数据进行存储的时候默认给key和value前都加序列化标志字符串, 而且使用的是jdk的序列化方法, 给操作带来不便. 所以应当在配置文件中对RedisTemplate对象的序列化方法属性进行自定义配置*
    >
-   > ##### ↓  ↓  ↓  ↓  ↓
+   > ↓  ↓  ↓  ↓  ↓
 
 ```xml
 <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
@@ -383,9 +572,9 @@
 </bean>
 ```
 
-#### **!!! 在RedisTemplate实例中, 不能通过set函数的重载方法直接设置key的有效期, 会设置失败, 应当先创建key然后使用 expire()函数 单独设置有效期.**
+>   **!!! 在RedisTemplate实例中, 不能通过set函数的重载方法直接设置key的有效期, 会设置失败, 应当先创建key然后使用 expire()函数 单独设置有效期.**
 
-#### **!!! 在RedisTemplate实例中的方法是通用方法, 在opsForXXX()实例中的方法是特定数据类型的方法**
+>   **!!! 在RedisTemplate实例中的方法是通用方法, 在opsForXXX()实例中的方法是特定数据类型的方法**
 
 > ##### 案例: 限制用户的登录失败频率
 >
@@ -393,7 +582,7 @@
 
 
 
-### *hash类型的操作*
+#### *hash类型的操作*
 
 * redisTemplate中对hash的存储方式与手动存储hash对象不同
 
@@ -434,9 +623,13 @@
   }
   ```
 
-  ### *对redisTemplate.opsForHash()关于泛型的优化*
+  
 
-  #### >>> 使用resource绑定HashOpertions类型的对象为redisTemplate.opsForHash()返回的对象
+  
+
+#### *对redisTemplate.opsForHash()关于泛型的优化*
+
+>   使用resource绑定HashOpertions类型的对象为redisTemplate.opsForHash()返回的对象
 
   ```java
   public class UserServiceImpl implements UserService{
@@ -467,8 +660,10 @@
   }
   ```
 
-  ### List类型的操作
-  
+
+
+  #### List类型的操作
+
   ```java
   public class UsersImpl{
       
@@ -484,139 +679,10 @@
       //...
   }
   ```
-  
-  ### set
-  
-  * 无序不可重复的string集合
-  * `sadd key val1 [val2...]` 添加
-  * `scard key` 集合大小
-  * `smembers key` 返回所有元素
-  * `sismember key val` 判断是否存在val ( 1&0 )
-  * `srandmember key [count]` 返回一个或count个随机的元素
-  * `srem key member1 [member2...]` 从key中删除一个或多个元素
-  * `spop key [count]` 从key中随机删除一个或多个元素并返回
-  * `smov key1 key2 val` 将key1中的val移动到key2中
-  * `sdiff s1 [s2]` 返回s1和s2的差集
-  * `sinter s1 [s2]` 返回s1和s2的交集
-  * `sunion s1 [s2]` 返回s1和s2的并集
-  * `sdiffstore target key1 key2` 返回key1和key2的差集并保存在target中
-  * `sinterstore target s1 s2` 返回s1和s2的交集并保存在target中
-  * `sunionstore target s1 s2` 返回s1和s2的交集并保存在target中
-  * 应用场景
-    * 两个集合的差集,并集和交集
-      1. 共同关注, 共同喜好, 共同好友
-      2. 利用唯一性, 统计访问网络的独立IP
 
 
 
-### zset
 
-* 有序不可重复的string集合
-* 根据元素的score值( double类型 ) 来进行排序
-* `zadd key score1 val1 [score2 val2...]` 添加元素 (要score和val对应 )
-* `zcard key` 返回元素个数
-* `zrange key start end` 返回范围内的元素( 根据score从小到大排序 ) 
-* `zcount key min max` 返回score在[min,max]内的元素
-* `zrank key member` 返回key中member的索引
-* `zrevrange key start end` 从大到小返回范围内的元素
-* `zrem key val1 [val2...]` 从key中删除元素
-* `zremrangebyrank key start end` 从排名区间内删除元素( 第一名是0 )
-* `zremrangebyscore key min max` 根据score的大小删除范围内的元素
-* 应用场景
-  1. 排行榜
-  2. 时间线
-  3. 使用score作为任务队列的权重( 优先度 )
-
-
-
-### Redis发布订阅
-
-* publish(发布) -> channel(频道) -> client(客户端)
-* 命令 ( 以下命令执行在客户端中 )
-  * `subscribe channel [channel2...]`  订阅频道 ( 频道名称随便写 )
-  * `publish channel message` 向channel中发送message
-  * `unsubscribe channel [channel2...]` 取消订阅
-  * `psubscribe pattern [pattern2...]` 根据模式订阅频道
-  * `punsubscribe pattern [pattern2...]` 根据模式退订频道
-* 应用场景:
-  * 博客, 公众号
-  * 实时聊天系统
-
-
-
-### Redis 多数据库
-
-* 命令
-  * `select index` 切换数据库
-  * `move key index` 将key移动到索引为index的数据库中
-  * `flushdb`  清空当前库
-  * `flushall` 清空所有库
-* 缓存预热: 在项目上线前清空redis数据库, 然后访问一遍系统, 使数据加载到redis数据库中。
-
-
-
-### Redis事务
-
-* `multi` 开始录入事务队列
-* `exec` 执行事务队列
-* `discard` 放弃当前事务队列
-
-```shell
-#使用事务队列实现转账功能
-
-#事务队列开始
->multi
-ok
-#将操作放入事务队列中
->get account:a
-queued
->get account:b
-queued
->decrby account:a 50
-queued
->incrby account:b 50
-queued
-#执行
->exec
-```
-
-* 事务执行中, 如果命令执行报错, 其他命令会正常执行 ( 运行时错误 )
-* 事务执行中, 如果命令本身出错, 整个事务都不会执行 ( 语法错误 )
-* `watch key [key2...]` 监视key, 如果在监视状态下开启事务, 在事务未执行时key被其他客户端修改, 那么这个事务不会执行成功, 会返回nil. 在开启监视后, 如果exec或者discard先被执行, 则监视自动取消. ( 监视的有效期为一个事务 )
-
-* `unwatch` 取消对所有key的监视
-* 应用场景
-  1. 商品秒杀
-  2. 转账
-
-
-
-### Redis数据淘汰策略配置 ( redis.conf )
-
-* 当数据达到配置的最大内存使用量时, 会根据淘汰策略进行淘汰, 如果没有设置, 则报错out of memory
-* `maxmemory 512G`设置最大内存 
-
-
-
-### Redis持久化  ( 保存为本地文件 )
-
-* RDB方式: 默认的持久化方法, 以二进制的方法将内存数据快照为数据文件dump.rdb
-* 快照产生条件:
-  1. 正常关闭 `shutdown`
-  2. 到达策略安排的操作次数 `save 900 1`
-* 优点: 存储速度快, 还原速度快
-* 缺点: 照快照时候会占用内存, 小内存机器不适合, 如果是非正常关闭 , 会导致未做快照的数据丢失 
-
-
-
-* AOF方式: 将操作的命令保存到 appendonly.aof 文件中, 使用保存的命令恢复数据
-* 优点: 能保证数据不丢失
-* 缺点: 会占用过多的硬盘空间
-* 配置文件:
-  * `appendonly yes`  启用aof
-  * `appendfsync always`  收到命令就持久化
-  * `appendfsync everysec` 每秒都做持久化
-  * `appendfsync no` 完全依赖os, 性能最好, 但是持久化没保证
 
 
 
