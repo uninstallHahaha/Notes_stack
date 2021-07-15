@@ -284,13 +284,24 @@ queued
 
 >   保存为本地文件
 
-RDB方式: 默认的持久化方法, 以二进制的方法将内存数据快照为数据文件dump.rdb
+RDB方式: 默认的持久化方法, 持久化数据为二进制文件dump.rdb
 
 * 快照产生条件:
     1. 正常关闭 `shutdown`
-    2. 到达策略安排的操作次数 `save 900 1`
+    2. 到达策略安排的操作次数 `save 900 1`, 即900 sec 之内至少操作一次数据
 * 优点: 存储速度快, 还原速度快
 * 缺点: 照快照时候会占用内存, 小内存机器不适合, 如果是非正常关闭 , 会导致未做快照的数据丢失 
+
+
+
+```
+# By default Redis asynchronously dumps the dataset on disk. This mode is
+# good enough in many applications, but an issue with the Redis process or
+# a power outage may result into a few minutes of writes lost (depending on
+# the configured save points).
+```
+
+>   RDB方式备份中间有空档, 非正常退出redis必丢这期间写的数据, 可以使用AOF方式实时记录数据操作
 
 
 
@@ -686,17 +697,23 @@ public class JedisPoolUtil{
 
 
 
-### Redis数据与数据库数据的一致性问题
+### Redis可能出现的问题
+
+###### 缓存穿透问题
 
 * ***缓存穿透问题***  : 在redis中查不到就去数据库中查询, 在数据库中查询不到结果就不会设置redis数据. 这种机制会导致如果要查询的数据在数据库中不存在, 那么总是会去数据库中查询. 
 * ***解决方法***  :  改为在数据库中查询不到就在redis中设置为空, 那么下次再来查询的时候使用的就是redis中的数据.不会总是进入数据库查询.
 
 
 
+###### 缓存雪崩问题
+
 * ***缓存雪崩问题***  :  如果某时间点redis中的数据大量过期, 那么用户的请求都会落到数据库中, 从而造成数据库崩溃.
 * ***解决方法***  :  尽量让缓存失效时间平局平均分布; 手动缓存预热;  限制流量;  使用队列访问的方法;
 
 
+
+###### 热点key问题
 
 * ***热点key问题***  :  如果某个key访问热度很高, 那么在它失效的时候 , 会产生大量的线程来构建缓存, 从而造成系统崩溃.
 * ***解决方法***  :  
