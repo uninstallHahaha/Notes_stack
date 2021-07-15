@@ -875,6 +875,8 @@ public class JedisPoolUtil{
    #其中包含每个节点的ID, 集群通过节点ID实现对每个节点的辨识
    ```
 
+   
+
 2. 在该节点下对key进行存储
 
    ( 显示被重定向到另外一个节点 )
@@ -890,6 +892,8 @@ public class JedisPoolUtil{
    > get name
    #会显示被重定向到存储这个数据的节点
    ```
+   
+   
 
 
 
@@ -905,6 +909,8 @@ public class JedisPoolUtil{
    #重启防火墙使设置生效
    > firewall-cmd --reload
    ```
+
+   
 
 2. ***java连接集群示例***
 
