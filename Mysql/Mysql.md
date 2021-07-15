@@ -571,6 +571,8 @@ case 分支
 > end as 别名
 > from 表名;
 > ```
+>
+> 
 
 
 
@@ -849,6 +851,8 @@ create table 表名(
   	列名 enum(val, val, val)
   );
   ```
+  
+  
 
 ###### set类型
 
@@ -1282,6 +1286,8 @@ drop trigger trigger_name;
 > #设置日志文件存储格式
 > binlog_format=MIXED
 > ```
+>
+> 
 
 查看二进制日志文件
 
@@ -1303,6 +1309,8 @@ drop trigger trigger_name;
 >    #设置二进制日志过期时间为3天
 >    --expire_logs_days=3
 >    ```
+>    
+>    
 
 ###### 查询日志
 
@@ -1318,6 +1326,8 @@ drop trigger trigger_name;
 > #设置查询日志文件名, 不配置默认为host_name.log
 > general_log_file=file_name
 > ```
+>
+> 
 
 查看查询日志
 
