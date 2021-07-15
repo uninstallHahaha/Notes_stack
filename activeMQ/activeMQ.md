@@ -10,7 +10,7 @@
 
 
 
-![](F:\#NOTES\ING\activeMQ\jms架构规范.png)
+![](./jms架构规范.png)
 
 
 
