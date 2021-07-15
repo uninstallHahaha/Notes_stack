@@ -239,6 +239,8 @@ create table [if not exists] tablename(
 );
 ```
 
+
+
 ```mysql
 #修改表
 
@@ -260,12 +262,16 @@ alter table 表名 drop foreign key 外键名;
 alter table 表名 rename to 新表名;
 ```
 
+
+
 ```mysql
 #删除表, 不存在则报错
 drop table 表名;
 #删除表, 不存在也不报错
 drop table if exists 表名;
 ```
+
+
 
 ```mysql
 #表复制
@@ -309,7 +315,13 @@ rollback to 保存点名称;
 
 事务引发的并发问题
 
-> 不可重复读 和 幻读 区别主要在于 不可重复读 针对 update 和 delete 操作, 幻读 针对 insert 操作
+> 不可重复读 和 幻读 区别主要在于 
+>
+> 不可重复读 针对 update , 前后两次读取的值不同
+>
+> 幻读 针对 insert 和 delete 操作, 前后两次读取的记录数量不同
+>
+> 脏读 是第一次读到了将要被丢弃的数据
 
 脏读
 
@@ -1374,7 +1386,6 @@ limit n
 ```mysql
 select * from student where name regexp '正则表达式';
 ```
-
 
 
 
