@@ -63,6 +63,8 @@
     }
     ```
 
+    
+    
 3. 执行即可启动嵌入式的activemq
 
 
@@ -111,6 +113,8 @@
         con.close();    
     }
     ```
+
+    
 
 4. 运行以上生产者代码 , 在acmq的前端页面查看发出的消息
 
@@ -474,6 +478,8 @@ nio使用更加底层的连接方式 , 可同时支持更多的client连接到�
     <transportConnector name="nio" uri="nio://0.0.0.0:61618?trace=true"/>
     ```
 
+    
+
 2. 将连接acmq服务的地址由 `tcp://ip:61616` 改为 `nio://ip:61618`
 
 ###### 配置acmq同时支持nio协议和其他多协议
@@ -483,6 +489,8 @@ nio使用更加底层的连接方式 , 可同时支持更多的client连接到�
     ```xml
     <transportConnector name="auto+nio" uri="auto+nio://0.0.0.0:61608?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600&amp;org.apache.activemq.transport.nio.SelectorManager.corePoolSize=20&amp;org.apache.activemq.transport.nio.SelectorManager.maximumPoolSize=50"/>
     ```
+
+    
 
 2. 此时既可以创建tcp类型的连接 , 又可以创建nio类型的连接
 
@@ -530,6 +538,8 @@ nio使用更加底层的连接方式 , 可同时支持更多的client连接到�
     <!--createTableOnStartup设置是否在启动的时候创建数据表,默认为true,一般是在第一次启动使用true后,之后把true改为false-->
     ```
 
+    
+
     ```xml
     <!--这一段同样放到activemq.xml中,但是要放在beans标签里面-->
     <!--数据库连接池设置,在上面被引用-->
@@ -544,6 +554,8 @@ nio使用更加底层的连接方式 , 可同时支持更多的client连接到�
     </bean>
     ```
 
+    
+
 3. 在数据库中创建对应的数据库
 
 4. 启动activemq, 会自动在数据库中创建三张表 , ACTIVEMQ_MSGS(队列消息) , ACTIVEMQ_ACKS(订阅消息) , ACTIVEMQ_LOCK(在集群环境下,记录master节点信息)
@@ -553,6 +565,8 @@ nio使用更加底层的连接方式 , 可同时支持更多的client连接到�
     ```java
     messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
     ```
+
+    
 
 6. 发送消息后在数据库中查看持久化结果
 
@@ -573,6 +587,8 @@ nio使用更加底层的连接方式 , 可同时支持更多的client连接到�
                                           dataDirectory="activemq-data"/>
     </persistenceFactory>
     ```
+
+    
 
 2. 重启activemq生效
 
@@ -616,12 +632,14 @@ nio使用更加底层的连接方式 , 可同时支持更多的client连接到�
         <broker xmlns="..." brokerName="acmqBroker" dataDirectory="...">...</broker>
         ```
 
+        
+
     6. 修改三个服务 activemq.xml 中的持久化配置为 levelDB 同时使用zookeeper集群
-
-    7. 修改三个服务 activemq.xml 中前台端口(连接端口)
     
-    8. 启动zookeeper集群
+    7. 修改三个服务 activemq.xml 中前台端口(连接端口)
 
+    8. 启动zookeeper集群
+    
     9. 启动三个acmq服务
     
     10. 让zookeeper连接到acmq集群中的任意一台来连接整个acmq集群
@@ -663,6 +681,8 @@ nio使用更加底层的连接方式 , 可同时支持更多的client连接到�
     ```xml
     <broker ... schedulerSupport="true"></broker>
     ```
+
+    
 
 2. 在代码中设置message的延时或定时或间隔属性
 
