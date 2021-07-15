@@ -91,6 +91,7 @@
   * tail -f 跟踪输出
   
 * <span style="color:cyan">top 任务管理器</span>
+  
   * top中会显示交换空间的信息
   * 交换空间: 在硬盘上开辟一块区域( 通常和内存大小相同 ), 当内存用满时, 使用交换空间作为内存进行操作, 防止系统崩溃, 但是同时会拖慢系统的性能, 所以在云服务器上无交换空间
   
@@ -127,6 +128,7 @@
 * shutdown -h now 关机
 
 * <span style="color:cyan">tar -zcvf <压缩结果名> <压缩目标> 压缩</span>
+  
   * 压缩结果格式:  名字.压缩方式.压缩算法 ( hello.tar.gz -> tar压缩方式,gzip算法 )
   * -c 压缩
   * -x 解压
@@ -166,6 +168,8 @@
    deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse
    ```
 
+   
+
 3. 根据数据源更新软件列表 apt-get update
 
 
@@ -198,6 +202,8 @@
      #其他配置...
      ```
 
+     
+     
   3. 重启ssh服务  service ssh restart
 
 #### 用户组
@@ -220,7 +226,7 @@
    -rw------- 1 root root 127 Jul 18 15:18 .bash_history
    #权限标识有十位
    #第一位 - 代表是文件 ,d 代表是文件夹, l 代表软链接
-   #后9位分为三部分 , 所属组权限 , 所属用户权限 , 其他用户权限 
+   #后9位分为三部分 , 所属用户权限 , 所属组权限 , 其他用户权限 
    #一组权限有三位, - 代表没有权限, r 代表读权限, w 代表写权限, x 代表可执行权限, 可执行代表对shell脚本的执行权限
    #第一个root 为当前组
    #第二个root 为当前用户
