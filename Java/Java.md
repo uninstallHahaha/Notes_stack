@@ -68,11 +68,11 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 
 ###### ***list*** 和 ***数组*** 之间的转换?
 
-***list*** 转 ***数组*** 
+ ***数组*** 转 ***list*** 
 
 ​	`Array.asList(数组)` , 这种方法创建的Array对象指向原数组, 所以只能查改, 不能增删, 如果想要创建新的List对象 `new ArrayList<T>(Array.asList(数组))`
 
-***数组*** 转 ***list***
+***list*** 转 ***数组***  
 
 ```java
 List<String> list = new ArrayList<>();
@@ -117,6 +117,40 @@ list.toArray(arr);
 线程安全版本的 hashMap , 数据结构同 hashMap
 
 hashMap 允许null, hashTable 不允许 null
+
+
+
+
+
+###### 多线程
+
+创建线程: 
+
+​	继承 Thread 或者实现 Runnable, 本质上 Thread 就是实现了 Runnable 的一个示例类
+
+​	如果继承 Thread, 那么直接 new 该对象即可, 如果实现 Runnable, 那么需要将该对象示例作为参数传递给 new Thread(Runnable)
+
+​	所以, 使用 Runnable 方式创建的多个线程都是使用同一个 Runnable 对象, 此时这些个线程之间就共享同一份数据, 更加有利于多线程之间的数据共享, 但是同时也可能造成数据操作混乱, 此时应当结合同步代码块来完成
+
+线程状态: 创建 , 就绪, 运行, 阻塞, 终止
+
+调用 start() 后进入就绪状态, 等待cpu分配时间片
+
+调用 join() 强制让该线程插队运行
+
+在线程的 run 方法里面调用 Thread.sleep(n) 使该线程暂时休眠n毫秒
+
+调用 interrupt() 强制终止该线程
+
+​	线程后台执行, 默认创建的线程都是前台执行, 也就是只要有一个前台线程没有执行完, java进程就不会结束, 可以调用 setDaemon() 设置线程为后台执行, 此时该线程不影响java进程的结束
+
+setPriority(x) 设置线程优先级, 优先级越高越容易被先执行
+
+Thread.currentThread().yield() 当前线程暂停执行, 礼让其他线程
+
+
+
+
 
 
 
