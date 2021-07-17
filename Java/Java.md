@@ -124,7 +124,7 @@ hashMap 允许null, hashTable 不允许 null
 
 ###### 多线程
 
-创建线程: 
+***创建线程以及操作线程***
 
 ​	继承 Thread 或者实现 Runnable, 本质上 Thread 就是实现了 Runnable 的一个示例类
 
@@ -146,7 +146,19 @@ hashMap 允许null, hashTable 不允许 null
 
 setPriority(x) 设置线程优先级, 优先级越高越容易被先执行
 
-Thread.currentThread().yield() 当前线程暂停执行, 礼让其他线程
+Thread.yield() 当前线程让出cpu资源, 礼让其他同优先度线程, 但是可能因为再次被cpu选中执行而礼让无效
+
+***synchronized代码块***
+
+​	synchronized代码块接收一个对象作为参数(锁对象), 凡是使用同一个对象作为锁对象的, 不能同时执行这段代码, 这实现了多线程同步
+
+`锁对象.wait()`  使得当前拥有该锁对象的线程让出cpu并且释放锁
+
+`锁对象.notify()` 通知其他随机 某个 使用该锁对象的线程恢复到就绪状态, 但是当前线程不会立即让出cpu, 直至同步代码块执行完毕, 或者手动wait()让出cpu
+
+`锁对象.notifyAll()`  通知其他所有使用该对象作为锁对象的线程恢复到就绪状态, 同样当前线程不会立即让出cpu除非执行完同步代码块, 或者手动wait()
+
+
 
 
 
