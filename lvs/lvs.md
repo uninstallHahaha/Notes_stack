@@ -29,7 +29,6 @@ ifconfig eth0:0 192.168.2.100 broadcast 192.168.2.100 netmask 255.255.255.255
 配置lvs服务器上的路由规则
 /sbin/route add -host 192.168.2.100 dev eth0:0
 
-
 配置真正服务器VIP(DR模式)
 新建脚本
 #! /bin/sh
