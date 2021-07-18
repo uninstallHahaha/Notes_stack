@@ -20,7 +20,10 @@ Collections提供了如下几个静态方法。
 ###### Vector、ArrayList、LinkedList ?
 
 1、Vector：
-	Vector与ArrayList一样，也是通过数组实现的，不同的是它支持线程的同步，即某一时刻只有一个线程能够写Vector，避免多线程同时写而引起的不一致性，但实现同步需要很高的花费，因此，访问它比访问ArrayList慢。
+
+​	<span style="color:cyan;">线程安全版本的</span> ArrayList
+
+​	Vector与ArrayList一样，也是通过数组实现的，不同的是它支持线程的同步，即某一时刻只有一个线程能够写Vector，避免多线程同时写而引起的不一致性，但实现同步需要很高的花费，因此，访问它比访问ArrayList慢
 
 2、ArrayList：
 	a. 当操作是在一列数据的后面添加数据而不是在前面或者中间，并需要随机地访问其中的元素时，使用ArrayList性能比较好。
@@ -43,7 +46,7 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 	e. 遍历使用的是Iterator迭代器；
 
 2、HashTable：
-	a. 是线程安全的；
+	a. <span style="color:cyan;">是线程安全的</span>；
 	b. 无论是key还是value都不允许有null值的存在；在HashTable中调用Put方法时，如果key为null，直接抛出NullPointerException异常；
 	c. 遍历使用的是Enumeration列举；
 
@@ -51,6 +54,22 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 	a. 基于HashMap实现，无容量限制；
 	b. 是非线程安全的；
 	c. 不保证数据的有序；
+
+
+
+
+
+
+
+###### Properties?
+
+​	java自带的读取 .Properties配置文件 的类, 继承自 HashTable, <span style="color:cyan">线程安全</span>
+
+​	其他语言也各自有自己的配置文件格式, 比如 python的 .ini 文件
+
+
+
+
 
 
 
@@ -62,7 +81,7 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 
 ​	StringBuffer 内部实现同 StringBulider , 唯一不同的是操作都是线程安全的, 所以使用多线程执行大量拼接操作时选这个
 
-​	相同情况下使用 StringBuilder 相比使用 StringBuffer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险, 因此实际中更加推荐直接使用 StringBuffer
+​	相同情况下使用 StringBuilder 相比使用 StringBuffer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险, 因此实际中更加 <span style="color:cyan;">推荐直接使用 StringBuffer</span>
 
 
 
@@ -220,7 +239,9 @@ Thread.yield() 当前线程让出cpu资源, 礼让其他同优先度线程, 但�
 
 ​	假设要操作的对象是 ArrayList, 那么它是线程不安全的, 此时如果使用读写锁, 那么读的时候不能写, 写的时候不能读
 
-​	为了提高读写吞吐量, 可以使用 copyonwrite的方法, 写的时候复制一个数组副本, 先改这个副本, 然后再把副本复制回原数组, 这样就不必使用读写锁, 读线程读原数组, 写线程写副本数组, 此时只需使用 volatile 修饰原数组, 即当其发生变化时通知读线程 即可, 这种方法就能够提高读写吞吐量.
+​	为了提高读写吞吐量, 可以使用 copyonwrite的方法, 写的时候复制一个数组副本, 先改这个副本, 然后再把副本复制回原数组, 这样就不必使用读写锁, 读线程读原数组, 写线程写副本数组
+
+​	此时只需使用 volatile 修饰原数组, 即当其发生变化时强制清除其他线程中该数组的缓存, 这样就能够即提高读写吞吐量又不会导致数据在多个线程中不一致.
 
 
 
