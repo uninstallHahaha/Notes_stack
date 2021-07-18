@@ -766,95 +766,102 @@ TODO : 使用线程 ThreadLocal 与连接进行绑定的方式, 实现在业务�
 
 静态代理直接写死编译到 .class文件中
 
-* #### 基于接口的动态代理  
+#### 基于接口的动态代理  
 
-  * 经销商和生产厂商实现同一个接口 
-  * 使用JDK官方提供的Proxy类下的newProxyInstance方法获取一个代理对象
+* 经销商和生产厂商实现同一个接口 
+* 使用JDK官方提供的Proxy类下的newProxyInstance方法获取一个代理对象
 
-  ```java
-  //背景:
-  //用于实现代理的共同接口 IProduct{sale() & afterSale()}
-  //生产厂家对象: Product im IProduct
-  public void static main(){
-  
-      final Product product = new Product();
-      
-  	//使用Proxy下的方法获取一个代理对象
-      //参数一: 被代理对象的类加载器
-      //参数二: 被代理对象的接口
-      //参数三: 代理对象对原方法进行扩展的操作
-  	IProduct productProxy = (IProduct) Proxy.newProxyInstance(
-      	product.getClass().getClassLoader(),
-      	product.getClass().getInterfaces(),
-      	new InvocationHandler(){
-              //执行被代理对象的任何接口方法都会经过该方法
-              //参数一: 当前代理对象
-              //参数二: 当前执行的方法
-              //参数三: 当前执行方法所需的参数
-      		@Override
-      		public Object invoke(Object proxy, 
-                           Method method, Object[] args)throws Throwable{
-          		//对原方法进行扩展的代码...
-                  //参数: 执行哪个对象的这个方法, 传入的参数是什么
-         			return method.invoke(product, args); 
-      		}
-  	});
-      
-      //调用代理对象的方法
-      productProxy.sale(...);
-          
-  }
-  ```
+```java
+//背景:
+//用于实现代理的共同接口 IProduct{sale() & afterSale()}
+//生产厂家对象: Product im IProduct
+public void static main(){
 
-  
-
-* #### 基于子类的动态代理
-
-  1. 引入jar包 `cglib`, 然后确认 asm 包已经被引入
-  2. 使用cglib库中的Enhancer对象下的create方法创建代理对象
-
-  ```java
-  //背景: 以上述为基础
-  //将IProduct接口删除
-  //Product不再实现该接口
-  
-  public static void main(){
-      
-      final Product product;
-      
-      //参数一: 被代理对象的字节码
-      //参数二: 处理方法对象, 应传入一个Callback类型的对象, 通常传入为该类型子类的MethodInterceptor类型的对象
-      Product cglibProductProxy = (Product) Enhancer.create(product.getClass(),new MethodInterceptor(){
-          //所有被代理对象的任何方法都会经过此方法
-          //参数一: 代理对象
-          //参数二: 执行的方法
-          //参数三: 方法的参数
-          //参数四: MethodProxy类型的代理对象
-          //返回值: 使用method执行方法的返回值作为返回值即可
-          @Override
-          public Object intercept(
-              Object proxy, Method method, 
-              Object[] args,MethodProxy methodProxy)throws Throwable{
-              //对原方法进行增强的代码...
-              return method.invoke(product, args);
-          }
-      });
-      
-      //此时可以调用代理对象的方法
-      cglibProductProxy.sale();
-  }
-  ```
-
-  
-
-* #### 动态代理在spring中的应用
-
-  * 使用 `连接池+连接与线程绑定+服务器线程机制+线程在用完后会直接放回池中而不是关闭,从而导致我们还需要手动清除线程上的连接绑定的问题`  的情况下, 使用动态代理对线程绑定连接的方法进行增强
-  * 使用request对象的方法获取数据出现的乱码问题, 使用动态代理对其各个方法进行增强, 从而省去每次都写重复的转码代码 
+    final Product product = new Product();
+    
+	//使用Proxy下的方法获取一个代理对象
+    //参数一: 被代理对象的类加载器
+    //参数二: 被代理对象的接口
+    //参数三: 代理对象对原方法进行扩展的操作
+	IProduct productProxy = (IProduct) Proxy.newProxyInstance(
+    	product.getClass().getClassLoader(),
+    	product.getClass().getInterfaces(),
+    	new InvocationHandler(){
+            //执行被代理对象的任何接口方法都会经过该方法
+            //参数一: 当前代理对象
+            //参数二: 当前执行的方法
+            //参数三: 当前执行方法所需的参数
+    		@Override
+    		public Object invoke(Object proxy, 
+                         Method method, Object[] args)throws Throwable{
+        		//对原方法进行扩展的代码...
+                //参数: 执行哪个对象的这个方法, 传入的参数是什么
+       			return method.invoke(product, args); 
+    		}
+	});
+    
+    //调用代理对象的方法
+    productProxy.sale(...);
+        
+}
+```
 
 
 
-### 创建service的工厂类, 提供返回  *service代理对象*  的方法, 并且在该代理对象中实现对service方法的  *事务控制*  , 通过注解配置使得使用service对象的地方  **自动注入代理对象** , 从而实现  *业务层控制事务*  且  *无需*  写过多的事务控制代码...
+#### 基于子类的动态代理
+
+1. 引入jar包 `cglib`, 然后确认 asm 包已经被引入
+2. 使用cglib库中的Enhancer对象下的create方法创建代理对象
+
+```java
+//背景: 以上述为基础
+//将IProduct接口删除
+//Product不再实现该接口
+
+public static void main(){
+    
+    final Product product;
+    
+    //参数一: 被代理对象的字节码
+    //参数二: 处理方法对象, 应传入一个Callback类型的对象, 通常传入为该类型子类的MethodInterceptor类型的对象
+    Product cglibProductProxy = (Product) Enhancer.create(product.getClass(),new MethodInterceptor(){
+        //所有被代理对象的任何方法都会经过此方法
+        //参数一: 代理对象
+        //参数二: 执行的方法
+        //参数三: 方法的参数
+        //参数四: MethodProxy类型的代理对象
+        //返回值: 使用method执行方法的返回值作为返回值即可
+        @Override
+        public Object intercept(
+            Object proxy, Method method, 
+            Object[] args,MethodProxy methodProxy)throws Throwable{
+            //对原方法进行增强的代码...
+            return method.invoke(product, args);
+        }
+    });
+    
+    //此时可以调用代理对象的方法
+    cglibProductProxy.sale();
+}
+```
+
+
+
+#### 动态代理在spring中的应用
+
+* 使用 `连接池+连接与线程绑定+服务器线程机制+线程在用完后会直接放回池中而不是关闭,从而导致我们还需要手动清除线程上的连接绑定的问题`  的情况下, 使用动态代理对线程绑定连接的方法进行增强
+
+* 解决乱码
+
+    使用request对象的方法获取数据出现的乱码问题, 使用动态代理对其各个方法进行增强, 从而省去每次都写重复的转码代码 
+
+* 用户验证
+
+* 事物控制
+
+
+
+TODO : 创建service的工厂类, 提供返回  *service代理对象*  的方法, 并且在该代理对象中实现对service方法的  *事务控制*  , 通过注解配置使得使用service对象的地方  **自动注入代理对象** , 从而实现  *业务层控制事务*  且  *无需*  写过多的事务控制代码...
 
 
 
