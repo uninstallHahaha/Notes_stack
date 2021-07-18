@@ -359,6 +359,48 @@ class Single {
 
 
 
+###### 线程池
+
+共六种线程池, 如下图
+
+![image-20210718135047565](Java.assets/image-20210718135047565.png)
+
+*   FixedThreadPool
+
+    ​	固定线程数量的线程池, 其中的线程一开始就创建好, 然后也不会销毁, 如果某个线程发生意外, 那么立马会再创建新的补上
+
+*   SingleThreadExecutor
+
+    ​	只有一个线程的线程池, 保证所有任务队列执行, 而且某个时间点只执行一个任务
+
+    ![image-20210718135629298](Java.assets/image-20210718135629298.png)
+
+*   CachedThreadPool
+
+    ​	线程个数0~max, 当前存在的线程会被复用, 线程隔一段时间不用就会被回收
+
+*   ScheduledThreadPool
+
+    ​	该线程池里的线程用来执行定时任务或者周期任务
+
+*   SingleThreadScheduledExecutor
+
+    ​	该线程池里的线程用来执行定时任务或者周期任务, 且只有一个线程
+
+*   ForkJoinPool
+
+    ​	jdk1.7新加入的类型, 该线程池中的所有线程共同执行一个任务, 把任务拆分为多个子任务来并行执行, 提高原任务的执行速度
+
+
+
+
+
+
+
+
+
+
+
 ##### Redis
 
 ###### redis 数据类型 ?
