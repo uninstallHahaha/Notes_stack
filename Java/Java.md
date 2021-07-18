@@ -315,6 +315,38 @@ Thread.yield() 当前线程让出cpu资源, 礼让其他同优先度线程, 但�
 
 
 
+###### 双重判断的单例模式
+
+​	在传统的 lazy式创建单例对象的方法中, 如果创建对象代码不是同步代码, 那么在多线程的情况下很可能创建多个实例出来, 但是如果加上同步, 又会陷入性能低下的境地
+
+​	对于这种情况, 可以选择使用双重判断加同步的方式来创建实例
+
+```java
+class Single {
+    private static Single single;
+
+    private Single() { super(); }
+
+    public static Single getInstance() {
+        // 第一次判断为空, 那么就获取锁
+        if (single==null){
+            synchronized (Single.class){
+                // 拿到锁后再次判断是否为空
+                // 为了检查在拿到锁之前其他线程是否已经创建了实例
+                if(single==null){
+                    single = new Single();
+                }
+            }
+        }
+        return single;
+    }
+}
+```
+
+
+
+
+
 
 
 

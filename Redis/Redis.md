@@ -748,7 +748,7 @@ public class JedisPoolUtil{
 
 
 
-### Redis高级
+### Redis 高可用
 
 * 实际开发中, 只有一台redis服务器是不够的的
 * 实现高可用和高并发: 
@@ -757,9 +757,18 @@ public class JedisPoolUtil{
 
 
 
-#### Redis主从复制
+#### Redis 主从模式
+
+主从模式就是数据冗余, 每个节点都存一样的数据
+
+>   ​	sentinel 通过定时向 master发送心跳检测 来确认其状态, 当超过设置的间隔没有收到回应时, 则认为 master 已经完蛋
+>
+>   ​	此时如果 sentinel 集群中多数都认为 master 已经完蛋, 那么就进行重新故障迁移, 也就是选新的 master 出来
+
+![image-20210718110547387](Redis.assets/image-20210718110547387.png)
 
 * 一主多从, 读写分离, 提高并发, 但是, 主宕机时会导致崩盘
+* 为了防 止master 完蛋时崩盘, 需要使用 sentinal 监控集群状态
 * 主从配置: 
   * 主数据库不需要配置
   * 从服务器启动时使用命令 `./bin.redis-server ./redis.conf --port 6380 --slaveof 127.0.0.1 6379` ( 此时从服务器使用端口6380. 主服务器也在本机, 使用端口6379 )
@@ -768,7 +777,13 @@ public class JedisPoolUtil{
 
 
 
-### Redis-cluster 集群 ( 无中心的水平扩展 )
+### Redis-cluster 集群
+
+>   ​	redis-cluster 是 redis3.0 以后才有的功能
+>
+>   ​	这种方式是 redis 的分布式部署方法, 数据分片存储在每个节点, 存储数据时使用 key 的 hash 余以 总槽数, 得到该 key 应当存到哪个节点上
+>
+>   ​	每个分片节点都应当有从节点, 用来备份主节点的数据, 这样才能在实现分布式的前提下保持高可用
 
 * 特点:
   * 所有节点互连, 二进制传输数据
@@ -897,7 +912,9 @@ public class JedisPoolUtil{
 
 
 
-#### 设置redis集群可由外部ip访问 ( 来自其他ip的java程序的请求 ) ( 设置系统的端口防火墙 )
+#### 设置redis集群可由外部ip访问
+
+>   来自其他ip的java程序的请求, 也就是设置系统的端口防火墙
 
 1. 开放端口 ( 以下命令只能在Centos7以上执行 )
 
