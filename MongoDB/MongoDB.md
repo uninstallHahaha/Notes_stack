@@ -6,6 +6,8 @@
 >
 > 库 (库) -> 集合 (表) -> 文档 (字段)
 
+​	本质是 js 程序, 操作数据都是使用 js 语法, 其中的记录本质就是 json 对象, 因此随意随意扩展字段, 非关系型数据库, 更加接近高级语言面向对象特性, 省去了维护数据库的时间, 但是没有事务
+
 
 
 ###### 安装和启动服务
@@ -31,6 +33,8 @@
    storage:
    	dbPath: 设置数据库存放位置, 就使用第二步中创建的路径
    ```
+
+   
 
 4. 在 bin 目录命令行中 `mongod -f ../config/mongod.conf`  或者  `mongod --config ../config/mongod.conf`
 
@@ -62,6 +66,8 @@
        fork : true
    ```
 
+   
+
 6. 启动数据库服务 `/usr/local/mongodb/bin/mongod -f /mongodb/single/mongod.conf`
 
 7. 查看服务进程 `ps -ef |grep mongod`
@@ -76,6 +82,8 @@
    #禁用防火墙
    systemctl disable firewalld
    ```
+
+   
 
 9. 如果想关闭服务  直接`kill -2 进程号`
 
@@ -258,6 +266,8 @@
    vim /mongodb/replica/myrs_27017/mongod.conf
    ```
 
+   
+
    ```yml
    systemlog:
    	#设置日志输出到文件里
@@ -285,12 +295,16 @@
        replSetName: myrs
    ```
 
+   
+
 2. 启动主节点
 
    ```shell
    #先切换到mondodb的bin目录
    mongod -f /mongodb/replica/myrs_27017/mongod.conf
    ```
+
+   
 
 3. 使用以上两步使用另外两个端口 分别创建两个节点并启动
 
@@ -304,6 +318,8 @@
       /usr/local/mongodb/bin/mongo --port=27017
       ```
 
+      
+
    2. 在连接成功之后的客户端中 执行初始化  `rs.initiate()` 这种不传配置参数的初始化将会使用默认的配置
 
    3. 执行完初始化后, 会返回一个初始化结果, 此时 命令行中显示的是 处于 `myrs:SECONDARY` 状态, 即副本节点, 然后按下 enter , 会变为 `myrs:PRIMARY` 即主节点
@@ -311,7 +327,7 @@
    4. 此时执行  `rs.conf()` 可查看配置信息 , `rs.status()` 查看群运行的状态 
 
    5.  执行 `rs.add("localhost:27018")` 拉副本节点入群
-
+   
    6.  执行 `rs.add("localhost:27019", true)` 拉仲裁节点入群 , 第二个参数为是否指定该节点为仲裁节点
 
 
@@ -330,6 +346,8 @@
    > db.comment.fing()
    ```
 
+   
+
 2. 使用副本节点读取数据 ( 副本节点只可读 )
 
    ```shell
@@ -346,6 +364,8 @@
    > rs.slaveOk(false)
    ```
 
+   
+
 3. 查看仲裁节点 ( 仲裁节点不存放业务数据, 即使使用了 rs.slaveOk() )
 
    ```shell
@@ -354,6 +374,8 @@
    > rs.slaveOk()
    > show dbs #仲裁节点中只有存放配置信息的 local库
    ```
+   
+   
 
 
 
@@ -367,6 +389,8 @@
    > ps -ef | grep mongo
    > kill -2 <副本节点的进程号>
    ```
+
+   
 
 2. 使用主节点修改数据
 
@@ -422,6 +446,8 @@
        clusterRole: shardsvr
    ```
 
+   
+
 2. 搭建配置服务器的副本集  并初始化( 3个节点 )
 
    > 与分片副本集中唯一不同的是配置文件中集群角色的不同
@@ -434,6 +460,8 @@
        clusterRole: configsvr
    ```
 
+   
+
 3. 创建一个路由节点
 
    > 路由服务的启动用的是bin 下的 mongos
@@ -444,11 +472,15 @@
       > mkdir -p /mongodb/cluster/mongos_27017/log
       ```
 
+      
+
    2. 新建配置文件
 
       ```shell
       vi /mongodb/cluster/mongos_27017/mongos.conf
       ```
+
+      
 
       ```yml
       #跟集群中其他节点唯一不同的是这一部分
@@ -456,6 +488,8 @@
           #设置 配置服务器副本集中各个节点 的地址
           configDB: <配置服务器副本集的名字>/<配置服务器节点1的地址:ip>,<配置服务器节点2的地址:ip>,<配置服务器节点3的地址:ip> 
       ```
+
+      
 
    3. 启动路由器服务
 
@@ -473,6 +507,8 @@
       ```shell
       > sh.addShard("<分片副本集的名字>/<分片副本集节点1的地址:端口>,<分片副本集节点2的地址:端口>,<分片副本集节点3的地址:端口>")
       ```
+
+      
 
    6. 使用  `sh.status()`  查看集群的状态
 
@@ -513,6 +549,8 @@
        > db.comment.count() 
        ```
 
+       
+
    11. 分别再开两个客户端分别连接两个分片副本集的主节点, 查看它们存储的分片数据
 
        ```shell
@@ -520,6 +558,8 @@
        > use testdb
        > db.comment.count()
        ```
+       
+       
 
 4. 再创建一个路由节点 , 操作步骤完全同第一个节点的前 3步, 启动之后就可以使用 , 因为之前路由服务器1已经将配置信息存到了配置服务器中
 
@@ -562,6 +602,8 @@
    > db.createUser({user:"bobo",pwd:"123",roles:[{role:"readWrite", db:"testdb"}]})
    ```
 
+   
+
 4. 现在已经有了一些用户 , 只需要在数据库服务端开启登录验证即可
 
    1. 先干掉原来的数据库服务端 进程
@@ -579,6 +621,8 @@
           #开启登录认证
           authorization: enabled
       ```
+      
+      
 
 5. 然后使用客户端登录数据库
 
@@ -589,6 +633,8 @@
    > use testdb
    > db.auth('bobo',"123")
    ```
+
+   
 
 6. 如果开启了登录认证, 那么使用springData 进行连接时 , 需要在配置文件中指定用户名和密码, compass里连接时也需要指定用户名和密码
 
@@ -613,6 +659,8 @@
    > ll mongo.keyfile
    ```
 
+   
+
 5. 将这个文件复制一份在其他各个节点上
 
 6. 在三个节点的配置文件中指定 keyfile 的路径
@@ -624,6 +672,8 @@
        #开启登录认证
        authorization: enabled
    ```
+
+   
 
 7. 分别干掉三个节点服务的进程, 然后重新开启各个服务
 
