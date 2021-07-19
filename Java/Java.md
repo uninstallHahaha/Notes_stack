@@ -415,6 +415,21 @@ class Single {
 
 
 
+###### NIO
+
+​	三个部分
+
+*   selector : 就是开一个单独的线程轮询监听各个 channel 中是否发生了指定事件
+
+*   channel : 相当于操作系统创建的 socket, 用于与客户端保持连接以及数据传输, 半双工
+
+*   buffer : 通过 channel 传输的数据都会保存到 buffer中, 这个buffer用的内存位于jvm内存空间之外, 属于外挂内存, 服务器的读写数据都要先经过 buffer
+
+
+​    本质思想就是操作系统中的 select 方式, 单独开一个线程轮询所有的 channel(socket), 每当收到感兴趣的事件, 就把数据写到该 channel 对应的 buffer中, 具体代码中的实现就是创建 selector , 然后注册监听 channel, 然后无线轮询问 selector 是否有就绪事件, 有的话就从所有的 channel 中轮询查出来是哪个 channel 来的消息, 最后进行处理.
+
+![image-20210719134336809](Java.assets/image-20210719134336809.png)
+
 
 
 
