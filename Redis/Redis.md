@@ -465,7 +465,7 @@ public class JedisPoolUtil{
 }
 ```
 
-### *在springmvc项目中使用Redis*
+### *在springmvc中使用Redis*
 
 >   使用spring-data整合的redis工具类 
 
@@ -701,6 +701,8 @@ public class JedisPoolUtil{
 
 ### Redis 高可用
 
+>   数据冗余
+
 * 实际开发中, 只有一台redis服务器是不够的的
 * 实现高可用和高并发: 
   * 垂直扩展( 提升单机实力 )
@@ -722,13 +724,22 @@ public class JedisPoolUtil{
 * 为了防 止master 完蛋时崩盘, 需要使用 sentinal 监控集群状态
 * 主从配置: 
   * 主数据库不需要配置
-  * 从服务器启动时使用命令 `./bin.redis-server ./redis.conf --port 6380 --slaveof 127.0.0.1 6379` ( 此时从服务器使用端口6380. 主服务器也在本机, 使用端口6379 )
+  
+  * 从服务器启动时使用命令 
+  
+      `./bin.redis-server ./redis.conf --port 6380 --slaveof 127.0.0.1 6379` 
+  
+      ( 此时从服务器使用端口6380. 主服务器也在本机, 使用端口6379 )
+  
   * `slaveof on one`  使用该命令取消作为从服务器
+  
   * `slaveof <ip> <port>` 使用该命令成为从服务器
 
 
 
 ### Redis-cluster 集群
+
+>   数据分片
 
 >   ​	redis-cluster 是 redis3.0 以后才有的功能
 >
