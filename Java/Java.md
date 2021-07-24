@@ -159,7 +159,7 @@ hashMap 允许null, hashTable 不允许 null
 
 调用 start() 后进入就绪状态, 等待cpu分配时间
 
-调用 join() 强制让该线程插队运行
+调用 join() 强制让该线程插队运行, 并且等待该进程结束或者主动让出cpu, 在两个线程中互相让对方 join 可导致死锁
 
 在线程的 run 方法里面调用 Thread.sleep(n) 使该线程暂时休眠n毫秒
 
