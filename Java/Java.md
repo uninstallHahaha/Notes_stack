@@ -78,13 +78,37 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 
 ###### StringBuffer , StringBulider , String ? 
 
+*   String
+
+![image-20210729141319831](Java.assets/image-20210729141319831.png)
+
 ​	String 内部使用 final char 数组存放字符串数据, 如果要修改字符串, 那么只能重新申请一个 String对象, 所以如果涉及大量的字符串修改 , 字符串拼接的操作, String 类的效率会很低
 
-​	StringBulider 内部使用 char 数组存放字符串数据, 字符串拼接时直接对原数组进行扩容, 这样就省去了创建对象的时间, 不足之处是对数组的操作不是线程安全的, 所以如果涉及大量的字符串修改, 拼接的操作, 还是这个好, 但是如果涉及多线程操作还是使用 StringBuffer
+final 关键字
 
-​	StringBuffer 内部实现同 StringBulider , 唯一不同的是操作都是线程安全的, 所以使用多线程执行大量拼接操作时选这个
+![image-20210729141539525](Java.assets/image-20210729141539525.png)
+
+
+
+*   StringBulider
+
+​	StringBulider 内部使用 char 数组存放字符串数据
+
+![image-20210729141853008](Java.assets/image-20210729141853008.png)
+
+​	字符串拼接时先检查原数组是否足够, 否则重新申请足够长度的数组, 这样就省去了创建对象的时间, 不足之处是对数组的操作不是线程安全的, 所以如果涉及大量的字符串修改, 拼接的操作, 还是这个好, 但是如果涉及多线程操作还是使用 StringBuffer
+
+
+
+*   StringBuffer
+
+![image-20210729142008687](Java.assets/image-20210729142008687.png)
+
+​	StringBuffer 内部重新了一系列操作方法为同步方法, 具体实现完全同 StringBulider , 唯一不同的是操作都是线程安全的, 所以使用多线程执行大量拼接操作时选这个
 
 ​	相同情况下使用 StringBuilder 相比使用 StringBuffer 仅能获得 10%~15% 左右的性能提升，但却要冒多线程不安全的风险, 因此实际中更加 <span style="color:cyan;">推荐直接使用 StringBuffer</span>
+
+
 
 
 
@@ -240,7 +264,7 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 
 
-###### copyonwrite?
+###### copy on write?
 
 ​	针对多线程情况下, 多读少写时 ***提高读写吞吐量*** 的解决方案. 
 
