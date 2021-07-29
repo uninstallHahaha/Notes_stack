@@ -51,9 +51,12 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 	c. 遍历使用的是Enumeration列举；
 
 3、HashSet：
-	a. 基于HashMap实现，无容量限制；
-	b. 是非线程安全的；
-	c. 不保证数据的有序；
+
+​	HashSet 本质就是有一个HashMap的字段, 因为 HashMap 的 key 不可以重复, 所以直接利用这个特性来存数据, 遍历的时候直接遍历该 HashMap 的 key , add 的时候调用 hashmap 的 put 方法, 它会返回之前该 key 对应的值, 如果不存在则返回 null , 那么此时就认为 add 成功, 否则认为 add 失败. 
+
+​	a. 基于HashMap实现
+​	b. 非线程安全
+​	c. 不保证数据的有序, 因为 hashmap 的 key 是无序的
 
 
 
