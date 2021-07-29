@@ -394,37 +394,45 @@ class Single {
 
 ​	线程池减少创建和销毁线程的消耗, 复用线程使得处理任务更加迅速, 而且能控制最大线程数量, 防止挤爆内存, 而且还有针对定时任务的线程池
 
-共六种线程池, 如下图
+​	内置共六种线程池, 如下图, 线程池统一通过 `Executors.newXXX()` 来创建
+
+​	本质上这六种都是在创建 `ThreadPoolExecutor` 实例,  只不过调整了各个参数, 就相当于拿铁, 卡布奇诺之类的
+
+​	当然也可以叫一个浓缩(`ThreadPoolExecutor`), 然后自己定制各个参数
+
+![image-20210729192324092](Java.assets/image-20210729192324092.png)
+
+![image-20210729192341872](Java.assets/image-20210729192341872.png)
 
 ![image-20210718135047565](Java.assets/image-20210718135047565.png)
 
-*   FixedThreadPool
+*   <span style='color:cyan;'>FixedThreadPool</span>
 
     ​	固定线程数量的线程池, 其中的线程一开始就创建好, 然后也不会销毁, 如果某个线程发生意外, 那么立马会再创建新的补上
 
     ​	适合任务较重的情况
 
-*   SingleThreadExecutor
+*   <span style='color:cyan;'>SingleThreadExecutor</span>
 
     ​	只有一个线程的线程池, 保证所有任务队列执行, 而且某个时间点只执行一个任务
 
     ![image-20210718135629298](Java.assets/image-20210718135629298.png)
 
-*   CachedThreadPool
+*   <span style='color:cyan;'>CachedThreadPool</span>
 
     ​	线程个数 0~Integer.MAX_VALUE, 当前存在的线程会被复用, 线程隔一段时间不用就会被回收
 
     ​	适合每个任务都比较小的场景, 否则无限创建的线程将挤爆内存
 
-*   ScheduledThreadPool
+*   <span style='color:cyan;'>ScheduledThreadPool</span>
 
     ​	该线程池里的线程用来执行定时任务或者周期任务
 
-*   SingleThreadScheduledExecutor
+*   <span style='color:cyan;'>SingleThreadScheduledExecutor</span>
 
     ​	该线程池里的线程用来执行定时任务或者周期任务, 且只有一个线程
 
-*   ForkJoinPool
+*   <span style='color:cyan;'>ForkJoinPool</span>
 
     ​	jdk1.7新加入的类型, 该线程池中的所有线程共同执行一个任务, 把任务拆分为多个子任务来并行执行, 提高原任务的执行速度
 
