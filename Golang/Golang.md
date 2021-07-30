@@ -231,6 +231,84 @@ for pos, char := range "日本\x80語" { // \x80 is an illegal UTF-8 encoding
 
 
 
+###### switch
+
+```go
+// as if-else-if-else
+switch {
+    case '0' <= c && c <= '9':
+        return c - '0'
+    case 'a' <= c && c <= 'f':
+        return c - 'a' + 10
+    case 'A' <= c && c <= 'F':
+        return c - 'A' + 10
+}
+```
+
+```go
+// as switch
+switch c {
+    case ' ', '?', '&', '=', '#', '+', '%':
+        return true
+}
+```
+
+```go
+// switch 里面的 break 默认结束 switch , 如果想要结束外层循环, 给外层循环加label
+Loop:
+	for n := 0; n < len(src); n += size {
+		switch {
+            case src[n] < sizeTwo: break Loop
+		}
+	}
+```
+
+```go
+// type switch, 根据类型走不同的分支
+var t interface{}
+t = functionOfSomeType()
+switch t := t.(type) {
+default:
+    fmt.Printf("unexpected type %T\n", t)     // %T prints whatever type t has
+case bool:
+    fmt.Printf("boolean %t\n", t)             // t has type bool
+case int:
+    fmt.Printf("integer %d\n", t)             // t has type int
+case *bool:
+    fmt.Printf("pointer to boolean %t\n", *t) // t has type *bool
+case *int:
+    fmt.Printf("pointer to integer %d\n", *t) // t has type *int
+}
+```
+
+
+
+#### Function
+
+###### Named result parameters 
+
+具名返回参数默认在进入函数时初始化, 在函数中使用 `return` 时, 直接将其作为返回值 , 具名返回值不强制, 但是能够让代码更简洁
+
+>   The return or result "parameters" of a Go function can be given names and used as regular variables, just like the incoming parameters. When named, they are initialized to the zero values for their types when the function begins; if the function executes a `return` statement with no arguments, the current values of the result parameters are used as the returned values.
+
+
+
+###### Defer
+
+defer 语句在当前方法 return 后立即执行, 一般用来关闭资源, 能够防止忘记关闭资源而且开启资源和关闭资源写在一起更加容易维护
+
+>   Go's `defer` statement schedules a function call (the *deferred* function) to be run immediately before the function executing the `defer` returns.
+
+defer 语句先进后出, 也就是先声明的 defer 会在最后执行, 后声明的 defer 会在第一个执行
+
+>   Deferred functions are executed in LIFO order
+
+
+
+
+
+
+
 #### 内置包
 
 ##### os
