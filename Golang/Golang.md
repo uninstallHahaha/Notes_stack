@@ -307,6 +307,95 @@ defer 语句先进后出, 也就是先声明的 defer 会在最后执行, 后声
 
 
 
+#### Data
+
+###### Allocation with `new`
+
+`new(类名)`  为该类型申请一个实例的内存, 并初始化各个属性都为0, 然后返回该实例对应的内存地址
+
+>   `new(T)` allocates zeroed storage for a new item of type `T` and returns its address, a value of type `*T`. In Go terminology, it returns a pointer to a newly allocated zero value of type `T`.
+
+` return &File{fd, name, nil, 0}`
+
+创建一个对象, 并且按照构造方法参数顺序指定各个属性值, 这种方式返回的不是地址, 所以应当在前面使用 `&` 获取到实例的地址 
+
+>   The fields of a composite literal are laid out in order and must all be present
+
+`return &File{fd: fd, name: name}`
+
+也可以指定给部分属性初始化, 其他未指定的属性默认赋值0
+
+>   However, by labeling the elements explicitly as *field*`:`*value* pairs, the initializers can appear in any order, with the missing ones left as their respective zero values. 
+
+也可以使用这种方法初始化各种内置类型如数组, 切片, map
+
+```go
+a := [...]string   {Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
+s := []string      {Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
+m := map[int]string{Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
+```
+
+>   Composite literals can also be created for arrays, slices, and maps, with the field labels being indices or map keys as appropriate
+
+
+
+###### Allocation with `make` 
+
+make 仅用于创建 slices, maps , channels , 因为这三种数据结构必须在初始化内部字段后才能使用, 而使用 new 进行创建, 内部字段将默认初始化为 0 , 此时不能直接使用, 还需要初始化, 所以使用 make 可以更加方便地创建以上类型
+
+>   It creates slices, maps, and channels only, and it returns an *initialized* (not *zeroed*) value of type `T` (not `*T`). The reason for the distinction is that these three types represent, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data (inside an array), the length, and the capacity, and until those items are initialized, the slice is `nil`. For slices, maps, and channels, `make` initializes the internal data structure and prepares the value for use.
+
+```go
+// 创建长度为10, 容量为100的切片
+make([]int, 10, 100)
+```
+
+
+
+
+
+###### Arrays
+
+*   go的数组是值类型, 把一个数组赋值给另外一个数组是复制各个元素
+*   数组作为函数参数传递时, 接收方默认收到的是数组的copy, 也就是在函数中改变数组不会改变原数组
+*   数组的长度也是类型的一部分, `[10]int` 和 `[20]int` 就是两个类型
+
+>   There are major differences between the ways arrays work in Go and C. In Go,
+>
+>   -   Arrays are values. Assigning one array to another copies all the elements.
+>
+>   -   In particular, if you pass an array to a function, it will receive a *copy* of the array, not a pointer to it.
+>
+>   -   The size of an array is part of its type.  The types `[10]int` and `[20]int` are 
+>
+>       distinct.
+
+如果要在函数中修改原数组, 请传递数组指针
+
+>   The value property can be useful but also expensive; if you want C-like behavior and efficiency, you can pass a pointer to the array.
+
+```go
+func Sum(a *[3]float64) (sum float64) {
+    for _, v := range *a {
+        sum += v
+    }
+    return
+}
+
+array := [...]float64{7.0, 8.5, 9.1}
+x := Sum(&array)  // Note the explicit address-of operator
+```
+
+但是这并不好, 请用切片
+
+>   But even this style isn't idiomatic Go. Use slices instead.
+
+
+
+
+
+
+
 
 
 #### 内置包
