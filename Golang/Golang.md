@@ -394,6 +394,46 @@ x := Sum(&array)  // Note the explicit address-of operator
 
 
 
+###### Slices 
+
+slices切片就是数组的指针, slices变量的赋值就是复制地址, 改变slices的元素就是在改变指向数组的元素
+
+>   Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. 
+
+```go
+// 创建slices
+newSlice := make([]byte, 10)
+```
+
+
+
+
+
+###### Two-dimensional slices
+
+>   Go's arrays and slices are one-dimensional. To create the equivalent of a 2D array or slice, it is necessary to define an array-of-arrays or slice-of-slices, like this:
+
+```go
+type Transform [3][3]float64  // A 3x3 array, really an array of arrays.
+type LinesOfText [][]byte     // A slice of byte slices.
+```
+
+因为切片的长度是可变的, 所以二维切片的元素长度也可以是不同的,
+
+>   Because slices are variable-length, it is possible to have each inner slice be a different length. That can be a common situation, as in our `LinesOfText` example: each line has an independent length.
+
+```go
+text := LinesOfText{
+	[]byte("Now is the time"),
+	[]byte("for all good gophers"),
+	[]byte("to bring some fun to the party."),
+}
+```
+
+
+
+
+
 
 
 
