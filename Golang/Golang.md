@@ -2,9 +2,27 @@
 
 
 
+首字母大写的方法可在包外使用
+
+>   ​	In Go, a function whose name starts with a capital letter can be called by a function not in the same package. 
 
 
-​	In Go, a function whose name starts with a capital letter can be called by a function not in the same package. 
+
+一个包中的方法和类型将被编译到一个文件中
+
+>   ​	Go programs are organized into packages. A package is a collection of source files in the same directory that are compiled together. Functions, types, variables, and constants defined in one source file are visible to all other source files within the same package.
+
+
+
+一个模块包含一个或者多个包, 模块文件夹根目录的 `go.mod` 文件中声明了该模块的名称, 在其他地方导入该模块使用该名称
+
+>   A repository contains one or more modules. A module is a collection of related Go packages that are released together. A Go repository typically contains only one module, located at the root of the repository. A file named `go.mod` there declares the module path: the import path prefix for all packages within the module. The module contains the packages in the directory containing its `go.mod` file as well as subdirectories of that directory, up to the next subdirectory containing another `go.mod` file (if any).
+
+
+
+模块的命名不仅仅是标识该模块, 还应当可以指明到那里下载该模块, 比如 `golang.org/x/tools` 这个模块名称就指明了到哪里下载
+
+>   Each module's path not only serves as an import path prefix for its packages, but also indicates where the `go` command should look to download it. For example, in order to download the module `golang.org/x/tools`, the `go` command would consult the repository indicated by `https://golang.org/x/tools` 
 
 
 
