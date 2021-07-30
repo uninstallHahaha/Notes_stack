@@ -2,10 +2,6 @@
 
 
 
-首字母大写的方法可在包外使用
-
->   ​	In Go, a function whose name starts with a capital letter can be called by a function not in the same package. 
-
 
 
 一个包中的方法和类型将被编译到一个文件中
@@ -23,6 +19,211 @@
 模块的命名不仅仅是标识该模块, 还应当可以指明到那里下载该模块, 比如 `golang.org/x/tools` 这个模块名称就指明了到哪里下载
 
 >   Each module's path not only serves as an import path prefix for its packages, but also indicates where the `go` command should look to download it. For example, in order to download the module `golang.org/x/tools`, the `go` command would consult the repository indicated by `https://golang.org/x/tools` 
+
+
+
+
+
+导入其他模块时, 如果要导入的是该模块文件夹中子文件夹的文件, 那么在模块名称后面直接接上路径, 比如 `github.com/google/go-cmp/cmp`, 其中 cmp 是这个模块中的子文件夹
+
+导入内置标准库时不需要写模块名, 直接写子文件夹名称即可
+
+>   A package's import path is its module path joined with its subdirectory within the module. For example, the module `github.com/google/go-cmp` contains a package in the directory `cmp/`. That package's import path is `github.com/google/go-cmp/cmp`. Packages in the standard library do not have a module path prefix.
+
+
+
+
+
+#### Your first program
+
+1.  ```sh
+    mkdir hello
+    cd hello
+    # 初始化 go.mod 文件指定模块名
+    go mod init example.com/user/hello
+    ```
+
+2.  创建入口程序
+
+    ```go
+    package main
+    
+    import "fmt"
+    
+    func main() {
+    	fmt.Println("Hello, world.")
+    }
+    ```
+
+3.  ```sh
+    # go install 命令先编译原文件, 然后将编译结果二进制文件保存到 $HOME/go/bin/ 中
+    go install example.com/user/hello
+    ```
+
+    install 安装到哪里由 go 的环境变量 GOPATH 和 GOBIN 来控制
+
+    >   The install directory is controlled by the `GOPATH` and `GOBIN` . If `GOBIN` is set, binaries are installed to that directory. If `GOPATH` is set, binaries are installed to the `bin` subdirectory of the first directory in the `GOPATH` list. Otherwise, binaries are installed to the `bin` subdirectory of the default `GOPATH` (`$HOME/go` or `%USERPROFILE%\go`).
+
+    通过以下命令设置 GOBIN
+
+    ```sh
+    go env -w GOBIN=/somewhere/else/bin
+    ```
+
+    如果想要取消之前设置的 GOBIN 值
+
+    ```sh
+    go env -u GOBIN
+    ```
+
+
+
+#### Importing packages from remote modules
+
+1.  先import , 因为模块名就代表了下载地址
+
+    ```go
+    package main
+    
+    import (
+    	"fmt"
+    
+    	"example.com/user/hello/morestrings"
+    	"github.com/google/go-cmp/cmp"
+    )
+    
+    func main() {
+    	fmt.Println(morestrings.ReverseRunes("!oG ,olleH"))
+    	fmt.Println(cmp.Diff("Hello World", "Hello Go"))
+    }
+    ```
+
+2.  然后 `go mod tidy` , 会根据模块名下载缺失的模块, 到 `pkg/mod` 中, 这个路径由 `GOPATH` 指定, 同时会移除没有使用到的模块, go mod tidy下载可以同时保存多个版本的模块供不同的项目使用
+
+3.  如果想要删除之前下载的模块 `go clean -modcache`
+
+
+
+#### Test
+
+1.  测试方法应当写到单独的 `xxx_test.go` 文件中
+
+2.  测试方法签名应当为 `func TestXXX(t *testing.T)`
+
+3.  常规下测试方法的逻辑都是, 先整一些测试输入与输出一一对应, 然后循环执行要测试的方法, 输入测试输入, 对比实际输出与期望输出, 如果不一样, 则调用 `t.Errorf("xxx")` 打印错误输出
+
+4.  然后执行 `go test` 进行测试
+
+>    You write a test by creating a file with a name ending in `_test.go` that contains functions named `TestXXX` with signature `func (t *testing.T)`. The test framework runs each such function; if the function calls a failure function such as `t.Error` or `t.Fail`, the test is considered to have failed.
+
+
+
+
+
+#### 命名规范
+
+首字母大写的方法可在包外使用
+
+>   ​	In Go, a function whose name starts with a capital letter can be called by a function not in the same package. 
+
+
+
+包名应当是一个简要的单词, 不要有下划线, 不要有大写, 否则用的时候不好打
+
+>   By convention, packages are given lower case, single-word names; there should be no need for underscores or mixedCaps.
+
+
+
+方法名别整太长, 倒不如直接写在注释里来的方便, 所以方法名尽量精炼
+
+>   Another short example is `once.Do`; `once.Do(setup)` reads well and would not be improved by writing `once.DoOrWaitUntilDone(setup)`. Long names don't automatically make things more readable. A helpful doc comment can often be more valuable than an extra long name.
+
+
+
+Go对字段不提供默认的 get 和 set 方法, 如果一个字段是小写的, 那么意味着在其他包中无法直接访问, 可以手动定义 get 和 set 方法, 但是注意 get 方法不要学 Java 用 get 开头, 应当直接把字段首字母大写作为 get 方法名(首字母大写的方法在包外可访问), 而 set 方法就正常的 setxxx 就行了
+
+>   Go doesn't provide automatic support for getters and setters. There's nothing wrong with providing getters and setters yourself, and it's often appropriate to do so, but it's neither idiomatic nor necessary to put `Get` into the getter's name.  If you have a field called `owner` (lower case, unexported), the getter method should be called `Owner` (upper case, exported), not `GetOwner`. The use of upper-case names for export provides the hook to discriminate the field from the method. A setter function, if needed, will likely be called `SetOwner`.
+
+
+
+
+
+要是命名得用多个单词, 不要学 python 用下划线, 而是应当使用 帕斯特 或者 驼峰
+
+>    Finally, the convention in Go is to use `MixedCaps` or `mixedCaps` rather than underscores to write multiword names.
+
+
+
+
+
+#### 分号
+
+不要写分号, 解析器会自动加上分号, 唯一一点要注意的是, 控制语句后面的花括号不要写在下一行
+
+>   One consequence of the semicolon insertion rules is that you cannot put the opening brace of a control structure (`if`, `for`, `switch`, or `select`) on the next line.  If you do, a semicolon will be inserted before the brace, which could cause unwanted effects.  Write them like this
+
+not like this
+
+```
+if i < f()  // wrong!
+{           // wrong!
+    g()
+}
+```
+
+
+
+#### 控制语句
+
+###### for
+
+```go
+// Like a C for
+for init; condition; post { }
+
+// Like a C while
+for condition { }
+
+// Like a C for(;;)
+for { }
+```
+
+If you're looping over an array, slice, string, or map, or reading from a channel, a `range` clause can manage the loop.
+
+```go
+for key, value := range oldMap {
+    newMap[key] = value
+}
+```
+
+If you only need the first item in the range (the key or index), drop the second:
+
+```go
+for key := range m {
+    if key.expired() {
+        delete(m, key)
+    }
+}
+```
+
+If you only need the second item in the range (the value), use the *blank identifier*, an underscore, to discard the first:
+
+```go
+sum := 0
+for _, value := range array {
+    sum += value
+}
+```
+
+range 也可以遍历 string, 直接得到 字符位置 和 类型为rune的utf-8编码值
+
+>   For strings, the `range` does more work for you, breaking out individual Unicode code points by parsing the UTF-8. Erroneous encodings consume one byte and produce the replacement rune U+FFFD. (The name (with associated builtin type) `rune` is Go terminology for a single Unicode code point. See [the language specification](https://golang.google.cn/ref/spec#Rune_literals) for details.) The loop
+
+```go
+for pos, char := range "日本\x80語" { // \x80 is an illegal UTF-8 encoding
+    fmt.Printf("character %#U starts at byte position %d\n", char, pos)
+}
+```
 
 
 
