@@ -502,9 +502,13 @@ if ok{
 }
 ```
 
+删除 map 中的 (key,value) 可以直接调用内置函数 delete(map, key), 哪怕 key 不存在也没有问题也不会报错
 
+>   To delete a map entry, use the `delete` built-in function, whose arguments are the map and the key to be deleted. It's safe to do this even if the key is already absent from the map.
 
-
+```go
+delete(timeZone, "PDT")  // Now on Standard Time
+```
 
 
 
