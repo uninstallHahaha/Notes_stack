@@ -156,7 +156,7 @@ Go对字段不提供默认的 get 和 set 方法, 如果一个字段是小写的
 
 
 
-#### 分号
+#### Semicolons
 
 不要写分号, 解析器会自动加上分号, 唯一一点要注意的是, 控制语句后面的花括号不要写在下一行
 
@@ -173,7 +173,7 @@ if i < f()  // wrong!
 
 
 
-#### 控制语句
+#### control structures
 
 ###### for
 
@@ -429,6 +429,80 @@ text := LinesOfText{
 	[]byte("to bring some fun to the party."),
 }
 ```
+
+两种创建二维slice的方式:
+
+*   先申请一个二维slice, 然后循环单独给每个元素申请一个slice, 这样的话, 每个slice类型的元素长度都是可变的
+*   先申请一个二维slice, 然后循环将每个元素指向一个已经存在的slice
+
+>   There are two ways to achieve this. One is to allocate each slice independently; the other is to allocate a single array and point the individual slices into it. Which to use depends on your application. If the slices might grow or shrink, they should be allocated independently to avoid overwriting the next line; if not, it can be more efficient to construct the object with a single allocation.
+
+```go
+// Allocate the top-level slice.
+picture := make([][]uint8, YSize) // One row per unit of y.
+// Loop over the rows, allocating the slice for each row.
+for i := range picture {
+	picture[i] = make([]uint8, XSize)
+}
+```
+
+```go
+// Allocate the top-level slice, the same as before.
+picture := make([][]uint8, YSize) // One row per unit of y.
+// Allocate one large slice to hold all the pixels.
+pixels := make([]uint8, XSize*YSize) // Has type []uint8 even though picture is [][]uint8.
+// Loop over the rows, slicing each row from the front of the remaining pixels slice.
+// 每次循环指向一个已经存在的slice
+for i := range picture {
+	picture[i], pixels = pixels[:XSize], pixels[XSize:]
+}
+```
+
+
+
+
+
+
+
+###### Map
+
+*   map 是引用类型, 作为参数传递后, 改变其值就是在改变原 map 的值
+
+*   map 的 key 可以是任何定义了 equality 操作的类型, 但是 slice就不行, 因为 slice不能 equlity操作
+
+>   The key can be of any type for which the equality operator is defined, such as integers, floating point and complex numbers, strings, pointers, interfaces (as long as the dynamic type supports equality), structs and arrays. Slices cannot be used as map keys, because equality is not defined on them. Like slices, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller.
+
+```go
+// 创建 map
+var timeZone = map[string]int{
+    "UTC":  0*60*60,
+    "EST": -5*60*60,
+    "CST": -6*60*60,
+    "MST": -7*60*60,
+    "PST": -8*60*60,
+}
+// 从 map 中取值
+offset := timeZone["EST"]
+```
+
+从map 中取不存在的 key , 会返回 value 类型的默认零值, 比如 integer 返回 0, bool 返回false
+
+>   An attempt to fetch a map value with a key that is not present in the map will return the zero value for the type of the entries in the map.  For instance, if the map contains integers, looking up a non-existent key will return `0`.
+
+那么当取值到 0 时, 如何知道是这个 key 不存在呢, 还是本身 value 就是 0, 此时可以用两个变量接收 map 的取值, 第一个是接收到的 value , 第二个是bool类型, 该 key 是否存在于 map 中
+
+>   For obvious reasons this is called the “comma ok” idiom. In this example, if `tz` is present, `seconds` will be set appropriately and `ok` will be true; if not, `seconds` will be set to zero and `ok` will be false.
+
+```go
+m := map[string]int{}
+// 用两个变量接收map的取值
+val, ok := m["age"]
+if ok{
+    fmt.Printf("value is %v", val)
+}
+```
+
+
 
 
 
