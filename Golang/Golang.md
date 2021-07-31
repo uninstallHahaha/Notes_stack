@@ -645,6 +645,55 @@ func (s Sequence) Swap(i, j int) {
 
 
 
+###### type assertions
+
+类型断言语法 `value.(typeName)` 
+
+如果只用一个变量接收断言语句结果, 那么接收到的值是原变量的值,  如果类型断言失败, 程序直接 crash , 例如 `str := value.(string)`
+
+如果用两个变量接收断言语句结果, 那么第一个返回值是被断言变量的值, 第二个是是否通过了类型断言, 例如 `str, ok := value.(string)`
+
+
+
+
+
+
+
+#### Unused imports and variables
+
+导入了但是没有使用的包, 声明了但是没有使用的变量, 将会导致编译不通过
+
+如果想要使得编译通过, 用 下划线 临时地接收它们, 使其可以编译通过, 实际开发中应当避免未使用的导入和声明
+
+```go
+package main
+
+import (
+    "fmt"
+    "io"
+    "log"
+    "os"
+)
+
+var _ = fmt.Printf // For debugging; delete when done.
+var _ io.Reader    // For debugging; delete when done.
+
+func main() {
+    fd, err := os.Open("test.go")
+    if err != nil {
+        log.Fatal(err)
+    }
+    // TODO: use fd.
+    _ = fd
+}
+```
+
+如果因为想要执行其 init 方法而想要导入某个包, 应当使用 下划线 重命名该导入的包, 这样就不会编译不通过
+
+```go
+import _ "net/http/pprof"
+```
+
 
 
 
