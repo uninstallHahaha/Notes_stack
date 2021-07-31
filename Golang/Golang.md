@@ -512,6 +512,143 @@ delete(timeZone, "PDT")  // Now on Standard Time
 
 
 
+###### Append
+
+Append内置函数用于给 slice 加上新元素, 因为加上新元素后 slice 指向的数组可能改变, 所以要返回新的 slice
+
+>   What `append` does is append the elements to the end of the slice and return the result.  The result needs to be returned because, as with our hand-written `Append`, the underlying array may change. 
+
+```go
+func append(slice []T, elements ...T) []T
+```
+
+```go
+x := []int{1,2,3}
+x = append(x, 4, 5, 6)
+fmt.Println(x)
+```
+
+slice 拼接 slice 使用 ... 解包
+
+>   But what if we wanted to do what our `Append` does and append a slice to a slice?  Easy: use `...` at the call site, just as we did in the call to `Output` above. 
+
+```go
+x := []int{1,2,3}
+y := []int{4,5,6}
+x = append(x, y...)
+fmt.Println(x)
+```
+
+
+
+
+
+
+
+###### Constants
+
+常量在编译时就被创建, 所以常量只能是基本类型, 比如 numbers, char, string, bool , 而且常量的定义只能是常量表达式, 不能调用其他包中的方法, 因为编译时不会加载其他包.
+
+>   Constants in Go are just that—constant. They are created at compile time, even when defined as locals in functions, and can only be numbers, characters (runes), strings or booleans. Because of the compile-time restriction, the expressions that define them must be constant expressions, evaluatable by the compiler.  For instance, `1<<3` is a constant expression, while `math.Sin(math.Pi/4)` is not because the function call to `math.Sin` needs to happen at run time.
+
+
+
+
+
+###### Variables
+
+这里说的变量是全局变量, 定义在方法外边
+
+>    Variables can be initialized just like constants but the initializer can be a general expression computed at run time.
+
+```go
+var (
+    home   = os.Getenv("HOME")
+    user   = os.Getenv("USER")
+    gopath = os.Getenv("GOPATH")
+)
+```
+
+
+
+
+
+###### The init function
+
+init方法在当前文件中所有全局变量都初始化完成后自动执行, 相当于 python 包中的 init 文件, 一个go文件可以包含多个 init 函数, 从上到下依次执行
+
+一般 init 方法用来检验全局变量的值
+
+>   Finally, each source file can define its own niladic `init` function to set up whatever state is required.  (Actually each file can have multiple `init` functions.) And finally means finally: `init` is called after all the variable declarations in the package have evaluated their initializers, and those are evaluated only after all the imported packages have been initialized.
+
+```go
+func init() {
+    if user == "" {
+        log.Fatal("$USER not set")
+    }
+}
+```
+
+
+
+
+
+###### Pointers vs. Values
+
+​	如果一个类型的方法接收实例的地址用来改变原实例内容
+
+​	那么在调用的时候可以直接 `实例.方法()` 进行调用
+
+​	编译器会自动传递该实例的地址作为参数 
+
+​	而不需要手动取地址, 然后调用方法, 像这样一样 `(&实例).方法()` 
+
+```go
+// 首先有一个自定义类型 ByteSlice
+type ByteSlice []byte
+// 然后定义该类型的引用传递方法
+func (p *ByteSlice) Write(data []byte) (n int, err error) {
+    slice := *p
+    // Again as above.
+    *p = slice
+    return len(data), nil
+}
+// 如果想要调用该方法, 直接通过实例调用即可, 无须手动 & 取地址
+bs := ByteSlice{}
+bs.Write(make([]byte, 0))
+```
+
+
+
+###### Interface
+
+对于一个类型, 只要实现了某个接口的所有方法, 就被认为是实现了该接口, 无须显示书写实现哪个接口
+
+```go
+// 这是一个类型
+type Sequence []int
+
+// 实现了 sort.Interface 所有的方法, 就认为实现了该接口
+// Methods required by sort.Interface.
+func (s Sequence) Len() int {
+    return len(s)
+}
+func (s Sequence) Less(i, j int) bool {
+    return s[i] < s[j]
+}
+func (s Sequence) Swap(i, j int) {
+    s[i], s[j] = s[j], s[i]
+}
+```
+
+
+
+
+
+
+
+
+
 
 
 
