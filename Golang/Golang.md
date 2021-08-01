@@ -700,6 +700,80 @@ import _ "net/http/pprof"
 
 
 
+#### Goroutines
+
+>    A goroutine has a simple model: it is a function executing concurrently with other goroutines in the same address space.  It is lightweight, costing little more than the allocation of stack space. And the stacks start small, so they are cheap, and grow by allocating (and freeing) heap storage as required.
+
+在方法的调用语句前面加上 `go` 关键字就会开启一个 goroutine 执行这个方法调用, 也可以直接执行一个匿名方法, 就像是在命令行中后台运行了一条命令
+
+>   Prefix a function or method call with the `go` keyword to run the call in a new goroutine. When the call completes, the goroutine exits, silently.  (The effect is similar to the Unix shell's `&` notation for running a command in the background.)
+
+```go
+go list.Sort()  // run list.Sort concurrently; don't wait for it.
+```
+
+```go
+func Announce(message string, delay time.Duration) {
+    go func() {
+        time.Sleep(delay)
+        fmt.Println(message)
+    }()  // Note the parentheses - must call the function.
+}
+```
+
+
+
+但是单单能开启一个 goroutine 去执行任务是不够的, 此时还不能知道这个 goroutine 执行到那里了, 任务是否执行完毕了, 那么就需要使用 channels
+
+>   These examples aren't too practical because the functions have no way of signaling completion.  For that, we need channels.
+
+
+
+
+
+#### Channels
+
+channels 通过 make 来创建, 引用类型
+
+不指定 size 时, 默认 buffer 大小为0
+
+>   Like maps, channels are allocated with `make`, and the resulting value acts as a reference to an underlying data structure. If an optional integer parameter is provided, it sets the buffer size for the channel. The default is zero, for an unbuffered or synchronous channel.
+
+```go
+ci := make(chan int)            // unbuffered channel of integers
+cj := make(chan int, 0)         // unbuffered channel of integers
+cs := make(chan *os.File, 100)  // buffered channel of pointers to Files
+```
+
+不带 buffer 的 channel 能够实现两个 goroutine 的数据交流和同步执行, 比如
+
+>   Unbuffered channels combine communication—the exchange of a value—with synchronization—guaranteeing that two calculations (goroutines) are in a known state.
+
+```go
+c := make(chan int)  // Allocate a channel.
+// Start the sort in a goroutine; when it completes, signal on the channel.
+go func() {
+    list.Sort()
+    c <- 1  // Send a signal; value does not matter.
+}()
+doSomethingForAWhile()
+<-c   // Wait for sort to finish; discard sent value.
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #### 内置包
