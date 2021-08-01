@@ -793,6 +793,69 @@ func Serve(queue chan *Request) {
 }
 ```
 
+虽然上面这个实现确实能够控制同时处理的访问并发量
+
+但是只要请求一来, 就会直接创建一个 goroutine
+
+尽管某一时刻只有限定数量的 goroutine 在执行, 但是这些 goroutine 总是会被创建出来而占用资源
+
+如果同时来的请求非常多, 那么将会创建很多的 goroutine 而占用很多不必要的资源
+
+>   This design has a problem, though: `Serve` creates a new goroutine for every incoming request, even though only `MaxOutstanding` of them can run at any moment. As a result, the program can consume unlimited resources if the requests come in too fast. We can address that deficiency by changing `Serve` to gate the creation of the goroutines.
+
+所以, 应当这样改进一下
+
+```go
+func Serve(queue chan *Request) {
+    for req := range queue {
+        // 2. 不要直接让goroutine使用各个goroutine都直接可操作的 req 对象, 这样可能因为某个goroutine修改它而造成数据混乱, 所以应当让goroutine使用当前req对象的复制, 这份复制仅仅当前goroutine可操作, 这样就能保证数据不被意外修改
+        req := req // Create new instance of req for the goroutine.
+        // 1. 每来一个请求先加入通道, 加的进去才给它创建 goroutine , 这样就能避免创建多余的goroutine
+        sem <- 1
+        go func() {
+            process(req)
+            <-sem
+        }()
+    }
+}
+```
+
+
+
+
+
+
+
+#### Panic
+
+>   there is a built-in function `panic` that in effect creates a run-time error that will stop the program (but see the next section).  The function takes a single argument of arbitrary type—often a string—to be printed as the program dies.
+
+手动调用内置函数 `panic()` 并给定任意类型参数使得程序中断, 一般给定的参数是字符串用来表明产生中断的原因
+
+
+
+
+
+#### Recover
+
+内置函数 recover 能够阻断因为 panic 造成的方法出栈, 也就是阻断程序因为 panic 的强制退出
+
+引发 panic 后, 只有 defer 的语句会照常执行, 所以只能把 recover 放到 defer 中使用 
+
+>   A call to `recover` stops the unwinding and returns the argument passed to `panic`.  Because the only code that runs while unwinding is inside deferred functions, `recover` is only useful inside deferred functions.
+
+```go
+func safelyDo(work *Work) {
+    // 在方法中其他操作都执行完后, 判断是否产生了 panic , 是则用 revocer 接收, 避免退出程序
+    defer func() {
+        if err := recover(); err != nil {
+            log.Println("work failed:", err)
+        }
+    }()
+    do(work)
+}
+```
+
 
 
 
