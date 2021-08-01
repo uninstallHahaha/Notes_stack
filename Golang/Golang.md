@@ -760,13 +760,38 @@ doSomethingForAWhile()
 <-c   // Wait for sort to finish; discard sent value.
 ```
 
+​	接收通道值的接收方会一直阻塞, 直到通道中出现值, 此时会将该值从通道中取出然后自身结束阻塞.
 
+​	如果是不带 buffer 的通道, 那么发送方将会一直阻塞直到接收方收到值
 
+​	如果是带 buffer 的通道, 那么发送方将会阻塞直到成功将值加入到通道, 这意味着如果通道已经满了, 那么发送方就得等了, 直到某个接收方从通道中接走一个值, 才能向通道中加入值
 
+>   Receivers always block until there is data to receive. If the channel is unbuffered, the sender blocks until the receiver has received the value. If the channel has a buffer, the sender blocks only until the value has been copied to the buffer; if the buffer is full, this means waiting until some receiver has retrieved a value.
 
+使用通道控制并发访问量
 
+>   A buffered channel can be used like a semaphore, for instance to limit throughput.  In this example, incoming requests are passed to `handle`, which sends a value into the channel, processes the request, and then receives a value from the channel to ready the “semaphore” for the next consumer. The capacity of the channel buffer limits the number of simultaneous calls to `process`.
 
+```go
+var sem = make(chan int, MaxOutstanding)
 
+// 4. 在每个 goroutine 处理请求时, 都加入到 sem 通道中, 如果 sem 已经满了, 则意味着当前请求需要等待其他请求处理完毕, 这样就实现了并发访问量的控制
+func handle(r *Request) {
+    sem <- 1    // Wait for active queue to drain.
+    process(r)  // May take a long time.
+    <-sem       // Done; enable next request to run.
+}
+
+// 1. 首先请求加入到 queue 通道中
+func Serve(queue chan *Request) {
+    // 2. 然后无限遍历从 queue 中取出请求
+    for {
+        req := <-queue
+        // 3. 对于每个请求创建一个 goroutine 去执行
+        go handle(req)  // Don't wait for handle to finish.
+    }
+}
+```
 
 
 
