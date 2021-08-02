@@ -862,6 +862,136 @@ func safelyDo(work *Work) {
 
 
 
+#### Built-in functions
+
+###### Close
+
+*   close(c) 关闭通道
+*   不能用来关闭仅接收的通道
+*   向正在关闭的通道发送消息或者关闭正在关闭的通道会引发 panic
+*   关闭指向nil的通道会引发panic
+*   使用两个变量接收通道值时, 第二个参数为该通道是否已关闭
+
+>   For a channel `c`, the built-in function `close(c)` records that no more values will be sent on the channel. It is an error if `c` is a receive-only channel. Sending to or closing a closed channel causes a [run-time panic](https://golang.google.cn/ref/spec#Run_time_panics). Closing the nil channel also causes a [run-time panic](https://golang.google.cn/ref/spec#Run_time_panics). After calling `close`, and after any previously sent values have been received, receive operations will return the zero value for the channel's type without blocking. The multi-valued [receive operation](https://golang.google.cn/ref/spec#Receive_operator) returns a received value along with an indication of whether the channel is closed.
+
+
+
+
+
+###### Length and capacity
+
+```excel
+Call      Argument type    Result
+
+len(s)    string type      string length in bytes
+          [n]T, *[n]T      array length (== n)
+          []T              slice length
+          map[K]T          map length (number of defined keys)
+          chan T           number of elements queued in channel buffer
+
+cap(s)    [n]T, *[n]T      array length (== n)
+          []T              slice capacity
+          chan T           channel buffer capacity
+```
+
+
+
+
+
+###### Allocation
+
+>   The built-in function `new` takes a type `T`, allocates storage for a [variable](https://golang.google.cn/ref/spec#Variables) of that type at run time, and returns a value of type `*T` [pointing](https://golang.google.cn/ref/spec#Pointer_types) to it. The variable is initialized as described in the section on [initial values](https://golang.google.cn/ref/spec#The_zero_value).
+
+```go
+type S struct { a int; b float64 }
+new(S)
+```
+
+
+
+
+
+###### Making slices, maps and channels
+
+>   The built-in function `make` takes a type `T`, which must be a slice, map or channel type, optionally followed by a type-specific list of expressions. It returns a value of type `T` (not `*T`). The memory is initialized as described in the section on [initial values](https://golang.google.cn/ref/spec#The_zero_value).
+
+```go
+Call             Type T     Result
+
+make(T, n)       slice      slice of type T with length n and capacity n
+make(T, n, m)    slice      slice of type T with length n and capacity m
+
+make(T)          map        map of type T
+make(T, n)       map        map of type T with initial space for approximately n elements
+
+make(T)          channel    unbuffered channel of type T
+make(T, n)       channel    buffered channel of type T, buffer size n
+```
+
+
+
+
+
+
+
+###### Appending to and copying slices
+
+>   The built-in functions `append` and `copy` assist in common slice operations. For both functions, the result is independent of whether the memory referenced by the arguments overlaps.
+
+append 时如果容量不足, 则对指向的数组扩容, 否则直接加在原数组上
+
+>   If the capacity of `s` is not large enough to fit the additional values, `append` allocates a new, sufficiently large underlying array that fits both the existing slice elements and the additional values. Otherwise, `append` re-uses the underlying array.
+
+```go
+s0 := []int{0, 0}
+s1 := append(s0, 2)                // append a single element     s1 == []int{0, 0, 2}
+s2 := append(s1, 3, 5, 7)          // append multiple elements    s2 == []int{0, 0, 2, 3, 5, 7}
+s3 := append(s2, s0...)            // append a slice              s3 == []int{0, 0, 2, 3, 5, 7, 0, 0}
+s4 := append(s3[3:6], s3[2:]...)   // append overlapping slice    s4 == []int{3, 5, 7, 2, 3, 5, 7, 0, 0}
+
+var t []interface{}
+t = append(t, 42, 3.1415, "foo")   //                             t == []interface{}{42, 3.1415, "foo"}
+
+var b []byte
+b = append(b, "bar"...)            // append string contents      b == []byte{'b', 'a', 'r' }
+```
+
+copy 第一个参数是目的地, 第二个参数是原数组, 返回copy元素的数量
+
+>   The function `copy` copies slice elements from a source `src` to a destination `dst` and returns the number of elements copied.
+
+```go
+var a = [...]int{0, 1, 2, 3, 4, 5, 6, 7}
+var s = make([]int, 6)
+var b = make([]byte, 5)
+n1 := copy(s, a[0:])            // n1 == 6, s == []int{0, 1, 2, 3, 4, 5}
+n2 := copy(s, s[2:])            // n2 == 4, s == []int{2, 3, 4, 5, 4, 5}
+n3 := copy(b, "Hello, World!")  // n3 == 5, b == []byte("Hello")
+```
+
+
+
+
+
+#### Import
+
+| Import declaration  | Local name of Sin |
+| ------------------- | ----------------- |
+| import   "lib/math" | math.Sin          |
+| import m "lib/math" | m.Sin             |
+| import . "lib/math" | Sin               |
+| import _ "lib/math" |                   |
+
+
+
+
+
+#### Select
+
+TODO
+
+
+
 
 
 #### 内置包
