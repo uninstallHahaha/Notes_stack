@@ -139,6 +139,12 @@
   
 * <span style="color:cyan">tar -zxvf <压缩包名>  解压缩</span>
 
+* <span style="color:cyan">grep</span> 
+
+  `grep 正则1 正则2`  从正则2匹配的文件中查找匹配正则1的行
+  
+  `ls | grep 正则`  接在管道符后面的grep， 接收前面的输出，查找出符合正则的行
+  
   
 
 
