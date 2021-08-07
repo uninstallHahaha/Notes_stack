@@ -145,7 +145,17 @@
   
   `ls | grep 正则`  接在管道符后面的grep， 接收前面的输出，查找出符合正则的行
   
-  
+* <span style="color:cyan">echo</span>  显示字符串
+
+    `echo 'string'`  显示字符串
+
+    `echo -e 'string\n'` 开启转义显示字符串
+
+    `echo 'string' > xxx.txt`  将字符串覆盖输出到指定文件
+
+    `echo 'string' >> xxx.txt`  将字符串追加输出到指定文件
+
+
 
 
 
