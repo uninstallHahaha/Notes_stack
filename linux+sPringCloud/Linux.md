@@ -139,7 +139,7 @@
   
 * <span style="color:cyan">tar -zxvf <压缩包名>  解压缩</span>
 
-* <span style="color:cyan">grep</span> 
+* <span style="color:cyan">grep</span>  匹配查找命令
 
   `grep 正则1 正则2`  从正则2匹配的文件中查找匹配正则1的行
   
