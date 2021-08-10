@@ -828,7 +828,24 @@ static void radix(int[] arr) {
 
     
 
-    
-
-
+```java
+static void shell(int[] arr) {
+    int step = arr.length / 2;
+    while (step > 0) {
+        // ### use insert function to sort the select sublist
+        // iterate all sublist
+        for (int start = 0; start < step; start++) {
+            // sort sublist with insert function
+            for (int loc = start; loc < arr.length; loc += step) {
+                for (int cur = loc; cur > start; cur -= step) {
+                    if (arr[cur] < arr[cur - step]) 
+                        swap(arr, cur, cur - step);
+                }
+            }
+        }
+        // update step
+        step /= 2;
+    }
+}
+```
 
