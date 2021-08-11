@@ -66,7 +66,48 @@ myisam和innodb对比
 
 ​		当写入数据时，会先写入Buffer  Pool的页面，并把这样的页面标记为dirty，并放到专门的flush  list上，这些修改的数据页会在后续某个时刻被刷新到磁盘中（这一过程称为刷脏，由其他后台线程负责） 
 
+​		这样设计的好处是可以把大量的磁盘I/O转成内存读写，并且把对一个页面的多次修改merge成一次I/O操作（刷脏一次刷入整个页面），避免每次读写操作都访问磁盘，从而大大提升了数据库的性能
+
 ![image-20210811102659225](Mysql高级.assets/image-20210811102659225.png)
+
+如何保证数据的持久化？
+
+>   ​		也就是说，在用户执行了submit并收到成功的返回后，之前所做的修改应当都能够保存到数据库中
+
+​		通过前面的介绍，我们知道InnoDB使用 Buffer Pool 来提高读写的性能。但是 Buffer Pool  是在内存的，是易失性的，如果一个事务提交了事务后，MySQL突然宕机，且此时Buffer  Pool中修改的数据还没有刷新到磁盘中的话，就会导致数据的丢失，事务的持久性就无法保证。
+
+​		为了解决这个问题，InnoDB引入了  redo log来实现数据修改的持久化。当数据修改时，InnoDB除了修改Buffer Pool中的数据，还会在redo log  记录这次操作，并保证redo  log早于对应的页面落盘（一般在事务提交的时候），也就是常说的WAL。若MySQL突然宕机了且还没有把数据刷回磁盘，重启后，MySQL会通过已经写入磁盘的redo log来恢复没有被刷新到磁盘的数据页。
+
+实现原理：redo log
+
+​		为了提高性能，和数据页类似，redo log 也包括两部分：一是内存中的日志缓冲(redo  log buffer)，该部分日志是易失性的；二是磁盘上的重做日志文件(redo log file)，该部分日志是持久的。redo  log是物理日志，记录的是数据库中物理页的情况 。
+
+​		当数据发生修改时，InnoDB不仅会修改Buffer  Pool中的数据，也会在redo log buffer记录这次操作；当事务提交时，会对redo log buffer进行刷盘，记录到redo  log file中。如果MySQL宕机，重启时可以读取redo log  file中的数据，对数据库进行恢复。这样就不需要每次提交事务都实时进行刷脏了。
+
+![image-20210811104115290](Mysql高级.assets/image-20210811104115290.png)
+
+注意点：
+
+-    写数据的过程：Buffer Pool -> redo log buffer -> redo log 
+
+    ​		(其中 buffer pool落盘由单独的线程在随机时间完成)
+
+-   redo日志比数据页先写回磁盘：事务提交的时候，会把redo log buffer写入redo log file，写入成功才算提交成功，而Buffer Pool的数据由后台线程在后续某个时刻写入磁盘。
+
+-   刷脏的时候一定会保证对应的redo log已经落盘了，也即是所谓的WAL（预写式日志），否则会有数据丢失的可能性。
+
+
+
+<span style='color:cyan;'>综上所述，innodb在执行dml时的步骤为</span>
+
+1.  写 buffer pool
+2.  写 redo log buffer
+3.  待到用户 submit
+4.  写 redo log buffer(内存) 到 redo log(硬盘)
+5.  上一步成功submit调用则返回ok，否则返回失败，意思就是必须等到 redo log 记录完毕才算成功
+6.  此时用户收到的反馈是所做修改已经保存，哪怕此时系统崩溃，硬盘上也保存了redo log， 待到下次 mysql 重启时，会先检查是否有需要 redo 的内容，有则 redo 这些内容，保证了数据的持久性
+
+
 
 
 
