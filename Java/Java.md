@@ -159,11 +159,29 @@ list.toArray(arr);
 
 ​	综上, 因为是数组存储, 所以查找, 修改, 删除速度为 O(1), 效率很高, 除非hash冲突很多导致链表很长.
 
+<span style='color:cyan;'>Hashmap如何实现线程安全？</span>
+
+*   直接使用 HashTable , 本质上是把所有HashMap的方法都加上synchronized
+*   直接使用 java.util.collections.synchronizedMap， 本质上是对所有HashMap的方法用synchronized再包装一层
+*   <span style='color:cyan;'>直接使用 java.util.concurrent.concurrentHashMap，尽量减少了加synchronized的代码，只在关键的写操作时加synchronized，推荐用这个</span>
+
+HashMap版本变化？
+
+*   1.8之前，存储结构为 list+link
+
+*   1.8之后，存储结构为 <span style='color:cyan;'>list+link+tree</span>，list中元素是link或者tree，当该位置元素个数小于指定个数时，使用link存储，大于指定个数时，改为tree存储，为了能够提高查询效率，具体由 `MIN_TREEIFY_CAPACITY` 字段控制，默认是64
+
+    ![image-20210811154730324](Java.assets/image-20210811154730324.png)
 
 
-###### hashTable ?
 
-线程安全版本的 hashMap , 数据结构同 hashMap
+
+
+
+
+###### HashTable ?
+
+线程安全版本的 hashMap , 整个类完全同 HashMap，唯一的区别就是在所有方法前面都加上一个 `synchronized`
 
 hashMap 允许null, hashTable 不允许 null
 
@@ -211,15 +229,21 @@ suspend() 暂停线程, 以及 resume() 继续线程, 但是不恰当的暂停�
 
 Thread.currentThread() 获取到当前正在执行的线程实例
 
-***synchronized代码块***
+
+
+###### ***synchronized代码块***
+
+>   wait , notify , notifyall 只能在 synchronized 代码块中使用
 
 ​	synchronized代码块接收一个对象作为参数(锁对象), 凡是使用同一个对象作为锁对象的, 不能同时执行这段代码, 这实现了多线程同步
 
-`锁对象.wait()`  使得当前拥有该锁对象的线程让出cpu并且释放锁
+`锁对象.wait()`  使得当前拥有该锁对象的线程让出cpu并且<span style='color:cyan;'>释放锁</span>
 
-`锁对象.notify()` 通知其他随机 某个 使用该锁对象的线程恢复到就绪状态, 但是当前线程不会立即让出cpu, 直至同步代码块执行完毕, 或者手动wait()让出cpu
+`锁对象.notify()` 通知其他随机 某个 使用该锁对象的线程恢复到就绪状态, <span style='color:cyan;'>但是当前线程不会立即让出cpu, 直至同步代码块执行完毕, 或者手动wait()让出cpu</span>
 
-`锁对象.notifyAll()`  通知其他所有使用该对象作为锁对象的线程恢复到就绪状态, 同样当前线程不会立即让出cpu除非执行完同步代码块, 或者手动wait()
+`锁对象.notifyAll()`  通知其他所有使用该对象作为锁对象的线程恢复到就绪状态, <span style='color:cyan;'>同样当前线程不会立即让出cpu除非执行完同步代码块, 或者手动wait()</span>
+
+<span style='color:cyan;'>注意，在synchronized代码块中，使用 sleep 不会释放锁，醒来后继续持有锁执行</span>
 
 ###### 如果想要多个进程交替打印
 
@@ -319,7 +343,7 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 1.  java.concurrent.atomic 包下的类型是对所有基本类型的原子性封装
 
-    每种类型都提供各种原子性的操作方法, 直接使用这些类型就可以避免非原子性操作带来的意外
+    每种类型都提供各种原子性的操作方法, 直接使用这些类型就可以避免非原子性操作带来的意外，这些类型都是使用的乐观锁机制（CAS）
 
     比如, 这个 AtomicInteger
 
@@ -478,6 +502,27 @@ class Single {
 
 
 
+###### Java线程安全
+
+1.  互斥同步锁（悲观锁）
+
+    *   synchronized 关键字是java语言层面支持的同步方法，同一时刻只能有一个线程进入同步代码
+    *   reentrantLock 是一个利用synchronized封装的锁类，通过标识字段的状态来表示锁的状态
+
+2.  非阻塞同步锁（乐观锁）
+
+    ​		利用CAS（compare and swap）机器指令来实现锁的方式，不需要加锁，在更新数据时判断当前数据的状态是否等于之前记录的状态，等于则认为本次更新有效，否则认为本次操作无效，自旋指定时间后再次尝试更新
+
+    ​		J.U.C 包中的 Atomic 类方法都是乐观锁机制
+
+
+
+
+
+
+
+
+
 ###### 对象锁和类锁
 
 对象锁
@@ -511,6 +556,79 @@ class Single {
 ***公平锁***: 各个线程尝试拿锁时直接进入拿锁队列, 如果自己是队头就拿到锁, 排队拿锁比较公平, 但是因为铁定每次都会切换线程而触发上下文切换而导致系统吞吐量较低
 
 ***非公平锁***: 各个线程直接尝试拿锁, 拿不到就自旋后再拿, 哪个能拿到锁完全是随机的, 所以不公平, 如果某线程能连续多次拿到锁, 那么就不用切换上下文, 省去一些时间, 但是可能某些线程会饿死
+
+
+
+
+
+
+
+###### 可重入锁和不可重入锁
+
+​		首先，使用的是互斥锁，也就是同一时间只能有一个线程持有锁，这通常需要定义一个锁对象，然后通过修改锁对象内的字段来判断当前是否可以获取锁
+
+​		可以像这样实现
+
+```java
+public class Lock{  
+    // 这个字段用来标识当前是否可以获取锁
+    private boolean isLocked = false;
+    // 同步方法获取锁，其实就是改变字段状态，保证了只能有一个线程获取锁成功
+    public synchronized void lock()  
+        throws InterruptedException{  
+        while(isLocked){  
+            wait();  
+        }  
+        isLocked = true;  
+    }  
+ 	// 同步方法释放锁，其实也是改变字段状态，释放锁后通知其他线程苏醒继续获取锁
+    public synchronized void unlock(){  
+        isLocked = false;  
+        notify();  
+    }  
+}  
+```
+
+​		这种锁的定义方法，假设一个线程获取到了锁，在它未调用unlock释放锁之前，任何一个线程包括它自己再次调用 lock 都不会获取锁成功而是会进入wait，那么，如果代码逻辑中出现了获取锁后不释放锁就直接再次获取锁的错误逻辑，那么程序会陷入死锁，任何线程都不能得以运行，这种锁就是不可重入锁
+
+​		那么，一个线程获取到锁之后，如果它再次尝试获取锁还能获取到，那么就能避免死锁的产生，此时可以引用一个计数字段和当前持有锁的线程对象，如果请求锁的线程等于当前持有锁的线程，那么允许再次获取该锁，可以像这样实现：
+
+```java
+public class Lock{
+    //标记是否已经被占有
+    boolean isLocked = false;
+    //记录当前占有该锁的线程
+    Thread  lockedBy = null;
+    //记录持有锁的线程获取该锁的次数
+    int lockedCount = 0;
+    //同步获取锁，如果被自己持有，则还可获取到该锁，同时次数加一
+    public synchronized void lock() throws InterruptedException{
+        Thread callingThread = Thread.currentThread();
+        while(isLocked && lockedBy != callingThread){
+            wait();
+        }
+        isLocked = true;
+        lockedCount++;
+        lockedBy = callingThread;
+    }
+    //同步释放锁，只有获取锁的线程才能释放锁，每次释放计数减一，直至为零，然后唤醒其他线程
+    public synchronized void unlock(){
+        if(Thread.curentThread() == this.lockedBy){
+            lockedCount--;
+            if(lockedCount == 0){
+                isLocked = false;
+                notify();
+            }
+        }
+    }
+}
+```
+
+
+
+
+
+
 
 
 
