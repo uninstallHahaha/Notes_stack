@@ -257,6 +257,35 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 
 
+###### ThreadLocal
+
+​		一个对所有线程都可见的变量，如果直接拿来让多个线程操作，那么必然造成数据的不一致，而 ThreadLocal 类型变量会在各个线程中复制一份，线程操作该变量时操作的是自己线程本地的变量，这样每个线程就是在操作独立的变量，互不影响
+
+​		但是如果想让每个线程都操作一份独立的变量，直接将该变量作为线程的内部字段不就行了？问题在于，如果这个变量的类型很复杂而且需要繁琐的初始化过程 (比如jdbc的connection变量)，那么直接将其作为线程内部字段不是不是可以，而是很麻烦，需要在每个线程中都写一遍初始化 connection 的代码，此时如果使用 ThreadLocal 变量，那么只需要在公共位置初始化一次连接对象，然后在各个线程中直接使用，它们就自动的进行了复制且互相独立
+
+​		<span style='color:cyan;'>ThreadLocal原理</span>
+
+​		在 Thread 对象中，有一个 Map 类型（也就是key，value）的字段 <span style='color:cyan;'>ThreadLocalMap</span>，当在线程中使用外部的 Threadlocal 变量时，会自动以该变量名作为key，值作为value加入 Threadlocalmap中，此后对该变量的操作都将操作该本地位置
+
+​		<span style='color:cyan;'>Threadlocal内存泄露</span>
+
+​		如果使用的是线程池，那么线程在执行完当前任务后，将不会从内存中释放，理所当然的是该 Thread对象上的ThreadLocalMap 中的值也不会被清理，但是此时 ThreadLocalMap 中存的是上一次任务的值，显然已经是无用的值，因为它们不会被清理而且以后也不会被使用，所以随着线程执行不同的任务，ThreadLocalMap中无用的值会越来越多侵蚀内存
+
+​		防止因为在线程池中使用 Threadlocal而造成内存泄露的方式是，每当执行完当前任务，就手动调用 Threadlocal 对象的 remove 方法清除掉本次任务使用的所有值
+
+​		<span style='color:cyan;'>ThreadLocal的应用场景</span>
+
+1.  为了避免重复的初始化对象代码，作为<span style='color:cyan;'>多重影分身之术</span>来使用，比如在多个线程中使用jdbc 的 connection对象
+2.  因为该值存到了线程的本地栈中，所以一旦存上，之后该线程就可以在任意时刻访问到它，可以作为<span style='color:cyan;'>飞雷神之术</span>，先将要用到的数据存起来，然后在之后任意时刻访问它，这样就避免了某些参数需要在一连串的方法中传递的困扰
+
+​	
+
+
+
+
+
+
+
 ###### 虚拟内存?物理内存?共享内存?
 
 物理内存: 实际分配给应用程序的内存大小 (RES)
