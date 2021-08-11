@@ -233,7 +233,9 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 ###### ***synchronized代码块***
 
->   wait , notify , notifyall 只能在 synchronized 代码块中使用
+>   wait , notify , notifyall 只能在 synchronized 代码块中使用，因为java语言只提供了一种锁的方式，就是 synchronized，而这三个方法就是指名对应给 synchronized 使用的
+
+​	synchronized 是 Java 中唯一语言层面实现的多线程同步方法，其他的方法都是相当于自己写的包
 
 ​	synchronized代码块接收一个对象作为参数(锁对象), 凡是使用同一个对象作为锁对象的, 不能同时执行这段代码, 这实现了多线程同步
 
@@ -243,7 +245,9 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 `锁对象.notifyAll()`  通知其他所有使用该对象作为锁对象的线程恢复到就绪状态, <span style='color:cyan;'>同样当前线程不会立即让出cpu除非执行完同步代码块, 或者手动wait()</span>
 
-<span style='color:cyan;'>注意，在synchronized代码块中，使用 sleep 不会释放锁，醒来后继续持有锁执行</span>
+注意，在synchronized代码块中，<span style='color:cyan;'>使用 sleep 不会释放锁，醒来后继续持有锁执行</span>
+
+
 
 ###### 如果想要多个进程交替打印
 
