@@ -76,9 +76,9 @@ myisam和innodb对比
 
 ​		通过前面的介绍，我们知道InnoDB使用 Buffer Pool 来提高读写的性能。但是 Buffer Pool  是在内存的，是易失性的，如果一个事务提交了事务后，MySQL突然宕机，且此时Buffer  Pool中修改的数据还没有刷新到磁盘中的话，就会导致数据的丢失，事务的持久性就无法保证。
 
-​		为了解决这个问题，InnoDB引入了  redo log来实现数据修改的持久化。当数据修改时，InnoDB除了修改Buffer Pool中的数据，还会在redo log  记录这次操作，并保证redo  log早于对应的页面落盘（一般在事务提交的时候），也就是常说的WAL。若MySQL突然宕机了且还没有把数据刷回磁盘，重启后，MySQL会通过已经写入磁盘的redo log来恢复没有被刷新到磁盘的数据页。
+​		为了解决这个问题，InnoDB引入了  redo log 来实现数据修改的持久化。当数据修改时，InnoDB除了修改Buffer Pool中的数据，还会在redo log  记录这次操作，并保证redo  log早于对应的页面落盘（一般在事务提交的时候），也就是常说的WAL。若MySQL突然宕机了且还没有把数据刷回磁盘，重启后，MySQL会通过已经写入磁盘的redo log来恢复没有被刷新到磁盘的数据页。
 
-实现原理：redo log
+<span style='color:cyan;'>实现原理：redo log</span>
 
 ​		为了提高性能，和数据页类似，redo log 也包括两部分：一是内存中的日志缓冲(redo  log buffer)，该部分日志是易失性的；二是磁盘上的重做日志文件(redo log file)，该部分日志是持久的。redo  log是物理日志，记录的是数据库中物理页的情况 。
 
