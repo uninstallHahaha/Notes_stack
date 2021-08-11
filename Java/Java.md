@@ -12,8 +12,9 @@ Java
 
 **ArrayList、LinkedList、HashSet、TreeSet、HashMap、TreeMap是线程不安全的**
 
-​	 为了保证集合既是安全的而且效率高，Collections为我们提出了解决方案，把这些集合包装成线程安全的集合。
-Collections提供了如下几个静态方法。 
+Collections提供了如下几个静态方法，把这些线程不安全的集合包装成线程安全的集合
+
+但是这些方法返回的只不过是在原类型对象的所有方法上加了synchronized实现同步的对象
 
 ![1620805648557](./Java.assets/1620805648557.png)
 
