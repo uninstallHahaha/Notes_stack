@@ -153,21 +153,25 @@ list.toArray(arr);
 
 ​	存元素时 key > hash > indexofarr > 存到数组中对应位置 > 如果这个位置已经有元素了 > 就作为这个位置上元素的下一个链表节点 
 
-​	所以总体的结构是 : 一个元素为链表的数组, 查找的时候先根据 key 算 hash, 然后换算成数组的index, 然后直接到这个位置取数据, 如果这个位置元素不止一个, 那么就只能遍历这个位置上的链表直到找到该元素.
+​	所以总体的结构是 : 一个元素为链表的数组, 查找的时候先根据 key 算 hash, 然后与数组的长度取余换算成在数组中的index, 然后直接到这个位置取数据, 如果这个位置元素不止一个, 那么就只能遍历这个位置上的链表直到找到该元素.
 
 ​	当然, 应当尽量避免数组中元素成为链表的情况, 也就是多个 key 算出来的 index 一样, 这种情况就是 hash冲突, 应当选择好的 hash计算函数, 减少算出来 hash值是一样的情况.
 
 ​	综上, 因为是数组存储, 所以查找, 修改, 删除速度为 O(1), 效率很高, 除非hash冲突很多导致链表很长.
 
-<span style='color:cyan;'>Hashmap如何实现线程安全？</span>
+**HashMap扩容**
+
+​		因为扩容后数组长度增加，所以要重新使用 key 的 hash 跟 新数组长度 取余 算所在位置
+
+<span style='color:cyan;'>**Hashmap如何实现线程安全？**</span>
 
 *   直接使用 HashTable , 本质上是把所有HashMap的方法都加上synchronized
 *   直接使用 java.util.collections.synchronizedMap， 本质上是对所有HashMap的方法用synchronized再包装一层
-*   <span style='color:cyan;'>直接使用 java.util.concurrent.concurrentHashMap，尽量减少了加synchronized的代码，只在关键的写操作时加synchronized，推荐用这个</span>
+*   <span style='color:cyan;'>直接使用 java.util.concurrent.concurrentHashMap，这里面方法尽量减少了加synchronized的代码，只在关键的写操作时加synchronized，推荐用这个</span>
 
-HashMap版本变化？
+**HashMap版本变化？**
 
-*   1.8之前，存储结构为 list+link
+*   1.6及之前，存储结构为 list+link
 
 *   1.8之后，存储结构为 <span style='color:cyan;'>list+link+tree</span>，list中元素是link或者tree，当该位置元素个数小于指定个数时，使用link存储，大于指定个数时，改为tree存储，为了能够提高查询效率，具体由 `MIN_TREEIFY_CAPACITY` 字段控制，默认是64
 
@@ -569,6 +573,20 @@ class Single {
     ​		利用CAS（compare and swap）机器指令来实现锁的方式，不需要加锁，在更新数据时判断当前数据的状态是否等于之前记录的状态，等于则认为本次更新有效，否则认为本次操作无效，自旋指定时间后再次尝试更新
 
     ​		J.U.C 包中的 Atomic 类方法都是乐观锁机制
+
+
+
+
+
+###### CAS的缺点
+
+*   ABA 问题：
+
+    ​		首先该变量是A，线程1记录下当前的值时A，然后换到线程2运行，线程2先把A改成B，然后又把B改回A，然后换到线程1运行，此时线程1想要修改变量值，使用CAS方法，判断变量还是等于上一次的A，那么认为可以修改，其实变量已经在这期间被修改过甚至修改了两次，这种问题存在但是一般不会影响对最终的结果
+
+*   如果长时间CAS自旋都获得不到锁，那么对于cpu来说是不可忽视的开销
+
+*   这种方法只能同时保证一个变量的原子性操作
 
 
 
