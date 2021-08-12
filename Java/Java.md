@@ -233,7 +233,9 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 ###### ***synchronized代码块***
 
->   wait , notify , notifyall 只能在 synchronized 代码块中使用，因为java语言只提供了一种锁的方式，就是 synchronized，而这三个方法就是指名对应给 synchronized 使用的
+>   wait , notify , notifyall 只能在 synchronized 代码块中使用
+>
+>   因为java语言只提供了一种锁的方式，就是 synchronized，而这三个方法就是指名对应给 synchronized 使用的
 
 ​	synchronized 是 Java 中唯一语言层面实现的多线程同步方法，其他的方法都是相当于自己写的包
 
@@ -246,6 +248,22 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 `锁对象.notifyAll()`  通知其他所有使用该对象作为锁对象的线程恢复到就绪状态, <span style='color:cyan;'>同样当前线程不会立即让出cpu除非执行完同步代码块, 或者手动wait()</span>
 
 注意，在synchronized代码块中，<span style='color:cyan;'>使用 sleep 不会释放锁，醒来后继续持有锁执行</span>
+
+###### synchronized原理
+
+​		synchronized会被编译为 monitorenter 和 monitorexit 字节码指令，依赖操作系统底层的互斥锁实现
+
+​		如果多个线程同时执行到 monitorenter 指令时，会进入 entrylist 队列尝试获取对象锁，成功获取到锁后锁计数加一并记录当前获得锁的线程
+
+​		因为存在计数以及保存了当前持有锁的对象，synchronized 是可重入锁
+
+​		如果在执行中调用了wait方法，那么该线程进入 waitlist 队列，待到其他线程调用 notify 或者 notifyall 时，重新回到 entrylist 参与锁的竞争
+
+
+
+
+
+
 
 
 
