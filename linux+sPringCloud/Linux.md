@@ -58,21 +58,13 @@
 
 #### linux命令
 
-* touch 生成一个空文件
+* touch 生成一个空文件（本质是修改文件的修改时间戳，如果存在直接修改，不存在则创建该文件）
   
   * touch xxx.xxx
-  
-* echo 生成一个带内容的文件
-  * echo abcd>1.txt
-  * echo 1234>>1.txt
   
 * <span style='color:cyan;'>find 根据正则搜索文件，并且可以对结果文件批量执行命令</span>
   
   * find -name  'hello.txt'
-  
-* grep 在指定的文本文件中查找指定的字符串
-  
-  * grep hello hello.txt
   
 * tree 用树形图列出文件结构
 
@@ -139,7 +131,7 @@
   
 * <span style="color:cyan">tar -zxvf <压缩包名>  解压缩</span>
 
-* <span style="color:cyan">grep</span>  匹配查找命令
+* <span style="color:cyan">grep</span>  匹配查找命令，使用grep会让你查找日志或者内容非常轻松。特别是当你数据量很大的时候，没办法使用vi或者vim打开的情况下
 
   `grep 正则1 正则2`  从正则2匹配的文件中查找匹配正则1的行
   
@@ -168,6 +160,8 @@
     `which 命令`
 
 * `nl 文件名` 带行号输出文件内容
+
+* <span style='color:cyan;'>`cut -cn-m 文件名` 从指定文件中取出第n列到第m列的内容，相当于竖着切开文本文件</span>
 
 
 
