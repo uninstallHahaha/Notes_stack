@@ -66,7 +66,7 @@
   * echo abcd>1.txt
   * echo 1234>>1.txt
   
-* find 搜索文件
+* <span style='color:cyan;'>find 根据正则搜索文件，并且可以对结果文件批量执行命令</span>
   
   * find -name  'hello.txt'
   
@@ -169,7 +169,7 @@
 
 * `nl 文件名` 带行号输出文件内容
 
-*  
+
 
 
 
