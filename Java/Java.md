@@ -12,11 +12,47 @@ Java
 
 **ArrayList、LinkedList、HashSet、TreeSet、HashMap、TreeMap是线程不安全的**
 
-Collections提供了如下几个静态方法，把这些线程不安全的集合包装成线程安全的集合
+Collections提供了如下几个静态方法，把这些线程不安全的集合包装成线程安全的集合，这些类型被称为 <span style='color:cyan;'>同步容器</span>，也就是简单地使用 synchronized 实现线程安全
 
-但是这些方法返回的只不过是在原类型对象的所有方法上加了synchronized实现同步的对象
+但是这些方法返回的只不过是在原类型对象的所有方法上加了synchronized实现同步的对象, 所以效率不高
 
 ![1620805648557](./Java.assets/1620805648557.png)
+
+
+
+
+
+###### 同步容器一定线程安全吗？
+
+>   总结同步容器只能保证单个操作同步，在进行复合操作时很容易造成数据不同步，而且对于读操作也进行同步，这会降低效率
+>
+>   所以，多线程下应当使用专门的 <span style='color:cyan;'>并发容器</span>，而不是 <span style='color:cyan;'>同步容器</span>
+
+​		可以看到，Vector这样的同步容器的所有公有方法全都是synchronized的，也就是说，我们可以在多线程场景中放心的使用 <span style='color:cyan;'>单独</span> 这些方法，因为这些方法本身的确是线程安全的
+
+​		但是，请注意上面这句话中，有一个比较关键的词：<span style='color:cyan;'>单独</span>
+
+​		因为，虽然同步容器的所有方法都加了锁，但是对这些容器的 <span style='color:cyan;'>复合操作</span> 无法保证其线程安全性。需要客户端通过主动加锁来保证。
+
+简单举一个例子，我们定义如下删除Vector中最后一个元素方法：
+
+```java
+public Object deleteLast(Vector v){
+    // vector 提供的方法都是同步的，但是如果把这些方法组合到一起执行然后使用多线程，就会造成线程不安全
+    int lastIndex  = v.size()-1;
+    v.remove(lastIndex);
+}
+```
+
+​		上面这个方法是一个复合方法，包括size(）和remove()，乍一看上去好像并没有什么问题，无论是size()方法还是remove()方法都是线程安全的，那么整个deleteLast方法应该也是线程安全的。
+
+​		但是时，如果多线程调用该方法的过程中，remove方法有可能抛出ArrayIndexOutOfBoundsException。
+
+​		同步容易由于对其所有方法都加了锁，这就导致多个线程访问同一个容器的时候，只能进行顺序访问，即使是不同的操作，也要排队，如get和add要排队执行。这就大大的降低了容器的并发能力
+
+​		在并发场景中，建议直接使用java.util.concurent包中提供的容器类，这些被称为 <span style='color:cyan;'>并发容器</span>， 如果需要复合操作时，建议使用这些容器自身提供的复合方法
+
+
 
 
 
