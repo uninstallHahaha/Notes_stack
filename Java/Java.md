@@ -64,9 +64,17 @@ public Object deleteLast(Vector v){
 
 ​	Vector与ArrayList一样，也是通过数组实现的，不同的是它是线程同步的, 但实现同步需要很高的花费，因此，访问它比访问ArrayList慢
 
+​		扩容策略为原来的两倍
+
+![image-20210817205722129](Java.assets/image-20210817205722129.png)
+
 2、ArrayList：
 	a. 当操作是在一列数据的后面添加数据而不是在前面或者中间，并需要随机地访问其中的元素时，使用ArrayList性能比较好。
 	b. ArrayList是最常用的List实现类，内部是通过数组实现的，它允许对元素进行快速随机访问。数组的缺点是每个元素之间不能有间隔，当数组大小不满足时需要增加存储能力，就要讲已经有数组的数据复制到新的存储空间中。当从ArrayList的中间位置插入或者删除元素时，需要对数组进行复制、移动、代价比较高。因此，它适合随机查找和遍历，不适合插入和删除。
+
+​		扩容策略为每次都是前一次的1.5倍
+
+![image-20210817205607264](Java.assets/image-20210817205607264.png)
 
 ​	<span style='color:cyan;'>使用带参构造函数</span>进行指定长度的初始化时，仅仅是初始化了内部的 数组，而没有初始化内部字段 size，而且 set 时会先检查 index 是否符合 size，因此指定长度初始化后，访问 size() 仍然会得到0, 而且不能直接向指定位置 set 值
 
@@ -180,6 +188,53 @@ list.toArray(arr);
 ```
 
 
+
+
+
+
+
+###### 队列容器
+
+>   队列都来自于 Queue 接口
+
+它们的API
+
+| 功能 |  抛异常   |  返回值  |
+| :--- | :-------: | :------: |
+| 增   |  add(e)   | offer(e) |
+| 删   | remove()  |  poll()  |
+| 瞧   | element() |  peek()  |
+
+![image-20210817210542676](Java.assets/image-20210817210542676.png)
+
+-   如果想实现「普通队列 - 先进先出」的语义，就使用 LinkedList 或者 ArrayDeque 来实现；
+-   如果想实现「优先队列」的语义，就使用 PriorityQueue；
+-   如果想实现「栈」的语义，就使用 ArrayDeque。
+
+**那 ArrayDeque 和 LinkedList 的区别有哪些呢？**
+
+1.  ArrayDeque 是一个可扩容的数组，LinkedList 是链表结构；
+2.  ArrayDeque 里不可以存 null 值，但是 LinkedList 可以；
+3.  ArrayDeque 在操作头尾端的增删操作时更高效，但是 LinkedList 只有在当要移除中间某个元素且已经找到了这个元素后的移除才是 O(1) 的；
+4.  ArrayDeque 在内存使用方面更高效。
+
+所以，只要不是必须要存 null 值，就选择 ArrayDeque 吧！
+
+**那如果是一个很资深的面试官问你，什么情况下你要选择用 LinkedList 呢？**
+
+-   答：Java 6 以前。。。因为 ArrayDeque 在 Java 6 之后才有的。。
+
+虽然 Java 中有 Stack 这个类，但是呢，官方文档都说不让用了！
+
+![image-20210817211248667](Java.assets/image-20210817211248667.png)
+
+原因也很简单，因为 Vector 已经过被弃用了，而 Stack 是继承 Vector 的。
+
+那么想实现 Stack 的语义，就用 ArrayDeque 吧：
+
+```java
+Deque<Integer> stack = new ArrayDeque<>();
+```
 
 
 
