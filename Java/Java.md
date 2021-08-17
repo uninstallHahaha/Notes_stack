@@ -147,7 +147,7 @@ list.toArray(arr);
 
 
 
-###### HashMap?
+###### HashMap
 
 ​		本质就是一个数组, 数组元素是 `Entry<K,V>` 类型, Entry 是链表节点的结构, 能保存下一个元素的位置
 
@@ -165,7 +165,7 @@ list.toArray(arr);
 
 
 
-**HashMap容量**
+###### HashMap容量
 
 ​		元素的index = hash(key) & (length-1)
 
@@ -180,19 +180,24 @@ list.toArray(arr);
 为了保证任何情况下Map的容量都是2的幂，HashMap在两个地方都做了限制
 
 *   首先是，如果用户制定了初始容量，那么HashMap会计算出比该数大的第一个2的幂作为初始容量
-*   另外，在扩容的时候，也是进行成倍的扩容，即4变成8，8变成16。
 
-**HashMap扩容**
+*   另外，在扩容的时候，也是进行成倍的扩容，即4变成8，8变成16
 
-​		因为扩容后数组长度增加，所以要重新使用 key 的 hash 跟 新数组长度 取余 算所在位置
+    因为扩容后数组长度增加，所以要重新使用 key 的 hash 跟 新数组长度 取余 算所在位置
 
-<span style='color:cyan;'>**Hashmap如何实现线程安全？**</span>
+​		
+
+
+
+###### <span style='color:cyan;'>Hashmap如何实现线程安全</span>
 
 *   直接使用 HashTable , 本质上是把所有HashMap的方法都加上synchronized
 *   直接使用 java.util.collections.synchronizedMap， 本质上是对所有HashMap的方法用synchronized再包装一层
 *   <span style='color:cyan;'>直接使用 java.util.concurrent.concurrentHashMap，这里面方法尽量减少了加synchronized的代码，只在关键的写操作时加synchronized，推荐用这个</span>
 
-**HashMap版本变化？**
+
+
+###### HashMap版本变化
 
 *   1.6及之前，存储结构为 list+link
 
@@ -204,17 +209,17 @@ list.toArray(arr);
 
     ​		所以，哪怕1.8用了尾插法，也不要尝试在多线程时直接使用 hashmap
 
-*   1.8之后，存储结构为 <span style='color:cyan;'>list+link+tree</span>，list中元素是link或者tree，当该位置元素个数小于指定个数时，使用link存储，大于指定个数时，改为tree存储，为了能够提高查询效率，具体由 `MIN_TREEIFY_CAPACITY` 字段控制，默认是64
+*   1.8之后，存储结构为 <span style='color:cyan;'>list+link+tree</span>，list中元素是link或者tree，当该位置元素个数小于指定个数时，使用link存储，大于指定个数时，改为tree存储，为了能够提高查询效率，具体由 `MIN_TREEIFY_CAPACITY` 字段控制，默认是8
 
-    ![image-20210811154730324](Java.assets/image-20210811154730324.png)
-
-
+    ![image-20210817163434560](Java.assets/image-20210817163434560.png)
 
 
 
 
 
-###### HashTable ?
+
+
+###### HashTable 
 
 线程安全版本的 hashMap , 整个类完全同 HashMap，唯一的区别就是在所有方法前面都加上一个 `synchronized`
 
