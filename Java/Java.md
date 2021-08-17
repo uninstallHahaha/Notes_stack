@@ -222,7 +222,9 @@ list.toArray(arr);
 
 **那如果是一个很资深的面试官问你，什么情况下你要选择用 LinkedList 呢？**
 
--   答：Java 6 以前。。。因为 ArrayDeque 在 Java 6 之后才有的。。
+-   答：Java 6 以前...因为 ArrayDeque 在 Java 6 之后才有的
+
+**使用 ArrayDeque 作为栈**
 
 虽然 Java 中有 Stack 这个类，但是呢，官方文档都说不让用了！
 
@@ -235,6 +237,26 @@ list.toArray(arr);
 ```java
 Deque<Integer> stack = new ArrayDeque<>();
 ```
+
+
+
+
+
+###### Set容器
+
+![image-20210817211521190](Java.assets/image-20210817211521190.png)
+
+**HashSet**: 采用 Hashmap 的 key 来储存元素，主要特点是无序的，基本操作都是 O(1) 的时间复杂度，很快。
+
+**LinkedHashSet**: 这个是一个 HashSet + LinkedList 的结构，特点就是既拥有了 O(1) 的时间复杂度，又能够保留插入的顺序。
+
+**TreeSet**: 采用红黑树结构，特点是可以有序，可以用自然排序或者自定义比较器来排序；缺点就是查询速度没有 HashSet 快。
+
+那每个 Set 的**底层实现**其实就是对应的 Map：
+
+​		**数值放在 map 中的 key 上，value 上放了个 PRESENT，是一个静态的 Object，相当于 place holder，每个 key 都指向这个 object。**
+
+
 
 
 
