@@ -201,13 +201,28 @@ list.toArray(arr);
 
     ![image-20210817164042837](Java.assets/image-20210817164042837.png)
 
-*   <span style='color:cyan;'>使用 java.util.concurrent.concurrentHashMap，这里面方法尽量减少了加synchronized的代码，只在关键的写操作时加synchronized，推荐用这个</span>
+*   <span style='color:cyan;'>使用 java.util.concurrent.concurrentHashMap，这里面方法尽量减少了加synchronized的代码，只在关键的 put 操作时加synchronized，推荐用这个</span>
+
+    ​		concurrentHashMap 是由 Segment 数组、HashEntry 组成，ConcurrentHashMap 采用了**分段锁**技术，每当一个线程占用锁访问一个 Segment 时，不会影响到其他的 Segment，就是说如果容量大小是16他的并发度就是16，可以同时允许16个线程操作16个Segment而且还是线程安全的
+
+    ConcurrentHashMap在进行put操作的还是比较复杂的，大致可以分为以下步骤：
+
+    1.  根据 key 计算出 hashcode 。
+    2.  判断是否需要进行初始化。
+    3.  即为当前 key 定位出的 Node，如果为空表示当前位置可以写入数据，利用 CAS 尝试写入，失败则自旋保证成功。
+    4.  如果当前位置的 `hashcode == MOVED == -1`,则需要进行扩容。
+    5.  如果都不满足，则利用 synchronized 锁写入数据。
+    6.  如果数量大于 `TREEIFY_THRESHOLD` 则要转换为红黑树。
+
+
+
+
 
 
 
 ###### HashMap版本变化
 
-*   1.6及之前，存储结构为 list+link
+*   1.7及之前，存储结构为 list+link
 
 *   1.7 在链表中新增的元素会作为链表的头进行插入，称为<span style='color:cyan;'>头插法</span>
 
@@ -229,9 +244,47 @@ list.toArray(arr);
 
 ###### HashTable 
 
-线程安全版本的 hashMap , 整个类完全同 HashMap，唯一的区别就是在所有方法前面都加上一个 `synchronized`
+线程安全版本的 hashMap , 在其所有方法前面都加上一个 `synchronized`
 
-hashMap 允许null, hashTable 不允许 null
+hashMap 允许 key 或者 value 为 null, hashTable 不允许 key 或者 value 为 null
+
+为什么Hashtable不允许null？
+
+​	Hashtable采用安全失败机制，如果允许 value 为 null ，将无法判断是因为key不存在所以返回的 null 还是本来 value 就是 null
+
+HashMap 的初始容量为：16，Hashtable 初始容量为：11
+
+当现有容量大于总容量 * 负载因子时，HashMap 扩容规则为当前容量翻倍，Hashtable 扩容规则为当前容量翻倍 + 1
+
+HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hashtable 的 Enumerator 不是 fail-safe（安全失败） 的
+
+
+
+
+
+###### 安全失败和快速失败
+
+<span style='color:cyan;'>快速失败</span>
+
+​		在用迭代器遍历一个集合对象时，如果遍历过程中对集合对象的内容进行了修改（增加、删除、修改），则会抛出 Concurrent Modification Exception。
+
+​		**原理：**迭代器在遍历时直接访问集合中的内容，并且在遍历过程中使用一个 modCount  变量。集合在被遍历期间如果内容发生变化，就会改变 modCount 的值。每当迭代器使用 hashNext()/next()  遍历下一个元素之前，都会检测 modCount 变量是否为 expectedmodCount 值，是的话就返回遍历；否则抛出异常，终止遍历。
+
+​		**注意：**这里异常的抛出条件是检测到 **modCount != expectedmodCount** 这个条件。如果集合发生变化时修改 modCount 值刚好又设置为了 expectedmodCount 值，则异常不会抛出。因此，不能依赖于这个异常是否抛出而进行并发操作的编程，这个异常只建议用于检测并发修改的 bug。
+
+​		**场景：**java.util 包下的集合类都是快速失败的，不能在多线程下发生并发修改（迭代过程中被修改）
+
+<span style='color:cyan;'>安全失败</span>
+
+​		采用安全失败机制的集合容器，在遍历时不是直接在集合内容上访问的，而是先复制原有集合内容，在拷贝的集合上进行遍历。
+
+​		**原理：**由于迭代时是对原集合的拷贝进行遍历，所以在遍历过程中对原集合所作的修改并不能被迭代器检测到，所以不会触发 Concurrent Modification Exception。
+
+​		缺点：基于拷贝内容的优点是避免了 Concurrent Modification Exception，但同样地，迭代器并不能访问到修改后的内容，即：迭代器遍历的是开始遍历那一刻拿到的集合拷贝，在遍历期间原集合发生的修改迭代器是不知道的。
+
+​		**场景：**java.util.concurrent 包下的容器都是安全失败，可以在多线程下并发使用，并发修改。
+
+
 
 
 
@@ -297,6 +350,8 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 注意，在synchronized代码块中，<span style='color:cyan;'>使用 sleep 不会释放锁，醒来后继续持有锁执行</span>
 
+
+
 ###### synchronized原理
 
 ​		synchronized会被编译为 monitorenter 和 monitorexit 字节码指令，依赖操作系统底层的互斥锁实现
@@ -306,6 +361,12 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 ​		因为存在计数以及保存了当前持有锁的对象，synchronized 是可重入锁
 
 ​		如果在执行中调用了wait方法，那么该线程进入 waitlist 队列，待到其他线程调用 notify 或者 notifyall 时，重新回到 entrylist 参与锁的竞争
+
+​		在 java 1.8 之前， synchronized 锁作为重量级锁而被诟病，java1.8 优化了 synchronized 锁机制，使其拥有了较好的性能，具体为：
+
+​		先使用**偏向锁**优先同一线程然后再次获取锁，如果失败，就升级为 **CAS 轻量级锁**，如果失败就会短暂**自旋**，防止线程被系统挂起。最后如果以上都失败才升级为**重量级锁**。
+
+​		所以是一步步升级上去的，最初也是通过很多轻量级的方式锁定的，这样就提高了 synchronized 锁的性能
 
 
 
@@ -686,6 +747,11 @@ public String getCheckResultSuper(String order) {
 *   ABA 问题：
 
     ​		首先该变量是A，线程1记录下当前的值时A，然后换到线程2运行，线程2先把A改成B，然后又把B改回A，然后换到线程1运行，此时线程1想要修改变量值，使用CAS方法，判断变量还是等于上一次的A，那么认为可以修改，其实变量已经在这期间被修改过甚至修改了两次，这种问题存在但是一般不会影响对最终的结果
+
+    ABA 问题解决方法：
+
+    *   可以不仅仅记录上次的值，还记录一个版本号，每次修改版本号加一，这样就能检测到 ABA 情况
+    *   同理也可以使用修改时时间戳作为辅助判断项
 
 *   如果长时间CAS自旋都获得不到锁，那么对于cpu来说是不可忽视的开销
 
