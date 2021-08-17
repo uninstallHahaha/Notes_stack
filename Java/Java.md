@@ -167,7 +167,7 @@ list.toArray(arr);
 
 ###### HashMap容量
 
-​		元素的index = hash(key) & (length-1)
+​		*元素的index = hash(key) & (length-1)*
 
 ​		在使用2的幂的数字的时候，Length-1的值是所有二进制位全为1（比如1111），这种情况下，index 的结果等同于 HashCode后几位的值
 
@@ -192,8 +192,16 @@ list.toArray(arr);
 ###### <span style='color:cyan;'>Hashmap如何实现线程安全</span>
 
 *   直接使用 HashTable , 本质上是把所有HashMap的方法都加上synchronized
-*   直接使用 java.util.collections.synchronizedMap， 本质上是对所有HashMap的方法用synchronized再包装一层
-*   <span style='color:cyan;'>直接使用 java.util.concurrent.concurrentHashMap，这里面方法尽量减少了加synchronized的代码，只在关键的写操作时加synchronized，推荐用这个</span>
+
+*   使用 java.util.collections.synchronizedMap
+
+    本质上是对用一个HashMap对象作为字段，同时包含一个 mutex 锁字段
+
+    调用方法时用锁字段synchronized调用 hashmap 字段的对应方法
+
+    ![image-20210817164042837](Java.assets/image-20210817164042837.png)
+
+*   <span style='color:cyan;'>使用 java.util.concurrent.concurrentHashMap，这里面方法尽量减少了加synchronized的代码，只在关键的写操作时加synchronized，推荐用这个</span>
 
 
 
