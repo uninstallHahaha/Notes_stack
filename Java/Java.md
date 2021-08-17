@@ -208,7 +208,7 @@ list.toArray(arr);
 ![image-20210817210542676](Java.assets/image-20210817210542676.png)
 
 -   如果想实现「普通队列 - 先进先出」的语义，就使用 LinkedList 或者 ArrayDeque 来实现；
--   如果想实现「优先队列」的语义，就使用 PriorityQueue，<span style='color:cyan;'>这个就是所谓的 [堆](https://mp.weixin.qq.com/s?__biz=MzAwNDA2OTM1Ng==&mid=2453144928&idx=2&sn=9381f2e2ac82013d7f6483a751597d1e&scene=21#wechat_redirect)</span> ,  这个堆是使用数组的形式来表达 大顶堆二叉树 或者 小顶堆二叉树，每次插入元素时自叶至根，逐渐上浮至合适位置 
+-   如果想实现「优先队列」的语义，就使用 <span style='color:orange;'>PriorityQueue</span>，<span style='color:cyan;'>这个就是所谓的 [堆](https://mp.weixin.qq.com/s?__biz=MzAwNDA2OTM1Ng==&mid=2453144928&idx=2&sn=9381f2e2ac82013d7f6483a751597d1e&scene=21#wechat_redirect)</span> ,  这个堆是使用数组的形式来表达 大顶堆二叉树 或者 小顶堆二叉树，每次插入元素时自叶至根，逐渐上浮至合适位置 , 删除元素就是先直接删除该位置元素, 然后拿最后一个元素先顶上, 然后将顶上的这个元素逐渐下沉至合适位置
 -   如果想实现「栈」的语义，就使用 ArrayDeque。
 
 **那 ArrayDeque 和 LinkedList 的区别有哪些呢？**
