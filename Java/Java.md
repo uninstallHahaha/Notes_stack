@@ -474,6 +474,67 @@ class Single {
 
 
 
+###### 策略模式
+
+**意图：**定义一系列的算法,把它们一个个封装起来, 并且使它们可相互替换。
+
+**主要解决：**在有多种算法相似的情况下，使用 if...else 所带来的复杂和难以维护。
+
+**何时使用：**一个系统有许多许多类，而区分它们的只是他们直接的行为。
+
+**如何解决：**将这些算法封装成一个一个的类，任意地替换。
+
+**关键代码：**实现同一个接口。
+
+**应用实例：** 1、诸葛亮的锦囊妙计，每一个锦囊就是一个策略。 2、旅行的出游方式，选择骑自行车、坐汽车，每一种旅行方式都是一个策略。 3、JAVA AWT 中的 LayoutManager。
+
+**优点：** 1、算法可以自由切换。 2、避免使用多重条件判断。 3、扩展性良好。
+
+**缺点：** 1、策略类会增多。 2、所有策略类都需要对外暴露。
+
+**使用场景：** 1、如果在一个系统里面有许多类，它们之间的区别仅在于它们的行为，那么使用策略模式可以动态地让一个对象在许多行为中选择一种行为。 2、一个系统需要动态地在几种算法中选择一种。 3、如果一个对象有很多的行为，如果不用恰当的模式，这些行为就只好使用多重的条件选择语句来实现。
+
+**注意事项：**如果一个系统的策略多于四个，就需要考虑使用混合模式，解决策略类膨胀的问题。
+
+![image-20210817084425512](Java.assets/image-20210817084425512.png)
+
+​		将策略对象作为 context 类的字段，通过新建 context 类时给定不同的策略类实例来调用不同的方法实现
+
+​		java1.8 的 map 结合 函数式接口可以更加方便地实现策略模式，使用判断条件作为 map 的 key，使用不同的实现方法作为 map 的 value
+
+```java
+// key 是判断条件， value 是方法类型
+private Map<String, Function<String, String>> map = new HashMap<>();
+
+// 首先对 map 初始化
+public void checkResultDispatcherInit() {
+        checkResultDispatcher.put("校验1", order -> String.format("对%s执行业务逻辑1", order));
+        checkResultDispatcher.put("校验2", order -> String.format("对%s执行业务逻辑2", order));
+        checkResultDispatcher.put("校验3", order -> String.format("对%s执行业务逻辑3", order));
+        checkResultDispatcher.put("校验4", order -> String.format("对%s执行业务逻辑4", order));
+        checkResultDispatcher.put("校验5", order -> String.format("对%s执行业务逻辑5", order));
+        checkResultDispatcher.put("校验6", order -> String.format("对%s执行业务逻辑6", order));
+        checkResultDispatcher.put("校验7", order -> String.format("对%s执行业务逻辑7", order));
+        checkResultDispatcher.put("校验8", order -> String.format("对%s执行业务逻辑8", order));
+        checkResultDispatcher.put("校验9", order -> String.format("对%s执行业务逻辑9", order));
+}
+
+// 然后根据条件选择执行不同的方法实现
+public String getCheckResultSuper(String order) {
+        //从逻辑分派Dispatcher中获得业务逻辑代码，result变量是一段lambda表达式
+        Function<String, String> result = map.get(order);
+        if (result != null) {
+            //执行这段表达式获得String类型的结果
+            return result.apply(order);
+        }
+        return "不在处理的逻辑中返回业务错误";
+}
+```
+
+
+
+
+
 
 
 ###### 线程池
