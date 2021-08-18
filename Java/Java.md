@@ -789,11 +789,13 @@ public String getCheckResultSuper(String order) {
 
 
 
-###### 线程池
+###### 线程池的创建
 
 ​	线程池减少创建和销毁线程的消耗, 复用线程使得处理任务更加迅速, 而且能控制最大线程数量, 防止挤爆内存, 而且还有针对定时任务的线程池
 
 ​	内置共六种线程池, 如下图, 线程池统一通过 `Executors.newXXX()` 来创建
+
+>   但是，《阿里巴巴Java开发手册》中强制线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险
 
 ​	本质上这六种都是在创建 `ThreadPoolExecutor` 实例,  只不过调整了各个参数, 就相当于拿铁, 卡布奇诺之类的
 
@@ -834,6 +836,38 @@ public String getCheckResultSuper(String order) {
 *   <span style='color:cyan;'>ForkJoinPool</span>
 
     ​	jdk1.7新加入的类型, 该线程池中的所有线程共同执行一个任务, 把任务拆分为多个子任务来并行执行, 提高原任务的执行速度
+
+
+
+
+
+###### 线程池的使用
+
+​		线程池对象可以通过调用 `execute()` 和 `submit()` 来执行任务，通过传入 `Runnable` 实例或者 `Callable` 实例指定任务
+
+*   **`execute()` 方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否**
+
+*   **`submit()` 方法用于提交需要返回值的任务。
+
+    **线程池会返回一个 `Future` 类型的对象，通过这个 `Future` 对象可以判断任务是否执行成功**，并且可以通过 `Future` 的 `get()` 方法来获取返回值，`get()` 方法会阻塞当前线程直到任务完成，而使用 `get（long timeout，TimeUnit unit）` 方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完
+
+`Runnable` 自Java 1.0以来一直存在，但 `Callable` 仅在Java 1.5中引入, 目的就是为了来处理 `Runnable` 不支持的用例。
+
+*   **`Runnable`  接口**不会返回结果或抛出检查异常
+
+    ![image-20210818201306611](Java.assets/image-20210818201306611.png)
+
+*   但是 **`Callable` 接口** 可以
+
+    ![image-20210818201427520](Java.assets/image-20210818201427520.png)
+
+​		所以，如果任务不需要返回结果或抛出异常推荐使用 **`Runnable` 接口**，这样代码看起来会更加简洁。
+
+工具类 `Executors` 可以实现 `Runnable` 对象和 `Callable` 对象之间的相互转换。（`Executors.callable（Runnable task`）或 `Executors.callable（Runnable task，Object resule）`）
+
+
+
+
 
 
 
