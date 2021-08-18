@@ -853,7 +853,9 @@ public String getCheckResultSuper(String order) {
 
     **线程池会返回一个 `Future` 类型的对象，通过这个 `Future` 对象可以判断任务是否执行成功**，并且可以通过 `Future` 的 `get()` 方法来获取返回值，`get()` 方法会阻塞当前线程直到任务完成，而使用 `get（long timeout，TimeUnit unit）` 方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完
 
-`Runnable` 自Java 1.0以来一直存在，但 `Callable` 仅在Java 1.5中引入, 目的就是为了来处理 `Runnable` 不支持的用例。
+
+
+​		`Runnable` 自Java 1.0以来一直存在，但 `Callable` 仅在Java 1.5中引入, 目的就是为了来处理 `Runnable` 不支持的用例。
 
 *   **`Runnable`  接口**不会返回结果或抛出检查异常
 
