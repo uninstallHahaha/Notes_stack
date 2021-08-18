@@ -485,6 +485,8 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 ​		synchronized会被编译为 monitorenter 和 monitorexit 字节码指令，依赖操作系统底层的互斥锁实现
 
+​		当执行 monitorenter 指令时，线程试图获取锁也就是获取  monitor(monitor对象存在于每个Java对象的对象头中，synchronized  锁便是通过这种方式获取锁的，也是为什么Java中任意对象可以作为锁的原因)  的持有权。当计数器为0则可以成功获取，获取后将锁计数器设为1也就是加1。相应的在执行 monitorexit  指令后，将锁计数器设为0，表明锁被释放。
+
 ​		如果多个线程同时执行到 monitorenter 指令时，会进入 entrylist 队列尝试获取对象锁，成功获取到锁后锁计数加一并记录当前获得锁的线程
 
 ​		因为存在计数以及保存了当前持有锁的对象，synchronized 是可重入锁
