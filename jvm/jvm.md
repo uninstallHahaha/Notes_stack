@@ -97,6 +97,10 @@
 
 ##### 堆
 
+###### 堆内存结构
+
+分为 Eden，survivor from，survivor to，old
+
 ###### 对象实例
 
 > 通过new 创建的对象都会放到堆中
@@ -131,7 +135,7 @@
 >
 > 在 1.8 中, 调用 intern() 方法时, 直接将该String对象的地址存到stringtable中 
 
-stringtable调优
+###### stringtable调优
 
 > stringtable的数据结构是hash表, 即总共有 n 个 bucket, 每一个 bucket中以链表的方式 存放一定hash范围内的数据
 >
@@ -141,13 +145,31 @@ stringtable调优
 >
 > 通过运行参数 -XX:StringTableSize=200000 来设置 bucket 的个数
 
-stringtable的应用
+###### stringtable应用
 
 > ⭐ 假设有大量的字符串数据, 其中有不少是重复的, 现在要在程序中将它们存储到一个 List 中
 >
 > 1️⃣ 如果使用 new String 的方式来创建它们, 那么这些字符串会一个不差地被创建为新的 String 对象被存到堆中
 >
 > 2️⃣ 如果将这些字符串 通过调用 intern() 放入 stringtable 中, 然后将该方法返回的值即它在 stringtable 中地址存到 List 中, 因为 stringtable 不会存重复数据的特性, 所以这就相当于使用了更少的空间存储了更多的数据, 极大地降低了内存的使用 
+
+###### TLAB
+
+>   提高多线程情况下申请内存的效率
+
+​		为了保证对象的内存分配过程中的线程安全性，HotSpot虚拟机提供了一种叫做TLAB(Thread Local Allocation Buffer) 的技术
+
+​		多线程的情况下，各个线程都是在 Eden 中申请内存，如果不加以同步，可能造成数据错乱的问题，但是使用同步又会使得内存分配效率低下
+
+​		所以 HotSpot 虚拟机就提供了一种方法，即事先给各个线程在 Eden 中分配专属的区域，那么在申请内存时，无需考虑同步问题，直接从自己所属的区域中申请即可
+
+​		专属区域仅仅用来区分写操作，对于读操作它们是对所有线程可见的
+
+​		当然，如果线程专属区域不足以放下新对象，那么还是需要结合同步在Eden的其余区域进行创建
+
+![image-20210818141240766](jvm.assets/image-20210818141240766.png)
+
+
 
 
 
