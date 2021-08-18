@@ -664,7 +664,7 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 
 
-###### 双重判断的单例模式
+###### 单例模式双重判断版本
 
 ​	在传统的 lazy式创建单例对象的方法中, 如果创建对象代码不是同步代码, 那么在多线程的情况下很可能创建多个实例出来, 但是如果加上同步, 又会陷入性能低下的境地
 
@@ -782,6 +782,108 @@ public String getCheckResultSuper(String order) {
         return "不在处理的逻辑中返回业务错误";
 }
 ```
+
+
+
+
+
+###### 模板模式
+
+>   AQS 的设计思想就是模板模式，使用者只需要继承它，然后实现其中步骤的逻辑即可
+
+**意图：**定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
+
+**主要解决：**一些方法通用，却在每一个子类都重新写了这一方法。
+
+**何时使用：**有一些通用的方法。
+
+**如何解决：**将这些通用算法抽象出来。
+
+**关键代码：**在抽象类实现，其他步骤在子类实现。
+
+1.  创建一个抽象类，它的模板方法被设置为 final, 模板中定义流程
+
+    ```java
+    // Game.java
+    public abstract class Game {
+       abstract void initialize();
+       abstract void startPlay();
+       abstract void endPlay();
+     
+       //模板
+       public final void play(){
+     
+          //初始化游戏
+          initialize();
+          //开始游戏
+          startPlay();
+          //结束游戏
+          endPlay();
+       }
+    }
+    ```
+
+2.  创建扩展了上述类的实体类，每一个实现类都可以对流程中步骤有不同的实现，但是总是要按照这个流程走
+
+    ```java
+    // Cricket.java
+    public class Cricket extends Game {
+     
+       @Override
+       void endPlay() {
+          System.out.println("Cricket Game Finished!");
+       }
+     
+       @Override
+       void initialize() {
+          System.out.println("Cricket Game Initialized! Start playing.");
+       }
+     
+       @Override
+       void startPlay() {
+          System.out.println("Cricket Game Started. Enjoy the game!");
+       }
+    }
+    ```
+
+    ```java
+    // Football.java
+    public class Football extends Game {
+     
+       @Override
+       void endPlay() {
+          System.out.println("Football Game Finished!");
+       }
+     
+       @Override
+       void initialize() {
+          System.out.println("Football Game Initialized! Start playing.");
+       }
+     
+       @Override
+       void startPlay() {
+          System.out.println("Football Game Started. Enjoy the game!");
+       }
+    }
+    
+    ```
+
+3.  使用 *Game* 的模板方法 play() 来演示游戏的定义方式。
+
+    ```java
+    public class TemplatePatternDemo {
+       public static void main(String[] args) {
+     
+          Game game = new Cricket();
+          game.play();
+          System.out.println();
+          game = new Football();
+          game.play();      
+       }
+    }
+    ```
+
+    
 
 
 
