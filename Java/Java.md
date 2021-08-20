@@ -1051,6 +1051,73 @@ public String getCheckResultSuper(String order) {
 
 ![image-20210820104910108](Java.assets/image-20210820104910108.png)
 
+使用 release 方法实现自定义锁中的 unlock 方法
+
+![image-20210820105338555](Java.assets/image-20210820105338555.png)
+
+一个简单的自定义独占锁demo
+
+```java
+
+public class testExclusiveLock {
+
+    public static void main(String[] args) {
+
+        CustomQueue lock = new CustomQueue();
+        lock.lock();
+        for (int i = 0; i < 10; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    lock.lock();
+                    System.out.println(Thread.currentThread().getName() + " is using the lock...");
+                    lock.unlock();
+                }
+            }).start();
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("Main is willing to release...");
+        lock.unlock();
+    }
+}
+
+
+// 自定义锁，继承AQS，因为是独享锁，只需实现 tryAcquire 和 tryRelease
+class CustomQueue extends AbstractQueuedSynchronizer {
+    @Override
+    protected boolean tryAcquire(int arg) {
+        if (compareAndSetState(0, 1)) {
+            setExclusiveOwnerThread(Thread.currentThread());
+            return true;
+        }
+        return false;
+    }
+
+    // 调用 acquire 实现 lock
+    public void lock() {
+        acquire(1);
+    }
+
+    // 调用 release 实现 unlock
+    public void unlock() {
+        release(0);
+    }
+
+    @Override
+    protected boolean tryRelease(int arg) {
+        setState(arg);
+        setExclusiveOwnerThread(null);
+        return true;
+    }
+
+}
+```
+
 
 
 
