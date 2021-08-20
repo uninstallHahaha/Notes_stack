@@ -1062,10 +1062,13 @@ public String getCheckResultSuper(String order) {
 public class testExclusiveLock {
 
     public static void main(String[] args) {
-
+        // 创建锁实例
         CustomQueue lock = new CustomQueue();
+        // 主线程先拿锁执行
         lock.lock();
         for (int i = 0; i < 10; i++) {
+            // 整10个子线程，它们的执行都需要先拿到锁，因为主线程一直持锁未释放，所以只有等到主线程释放锁后，它们才能依次执行
+            // 因为不能直接拿到锁，所以会入等待队列，然后依次出队拿到锁执行
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -1118,7 +1121,9 @@ class CustomQueue extends AbstractQueuedSynchronizer {
 }
 ```
 
+执行结果
 
+![image-20210820110102104](Java.assets/image-20210820110102104.png)
 
 
 
