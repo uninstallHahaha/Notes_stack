@@ -1159,6 +1159,22 @@ class CustomQueue extends AbstractQueuedSynchronizer {
 
 
 
+##### ReentrantLock 和 synchronized 
+
+ReentrantLock 和 synchronized 都是互斥锁，可重入锁
+
+但是 ReentrantLock 比 synchronized 多一些功能：
+
+*   ReentrantLock 可以选择中断等待，也就是如果获取锁失败就不再继续获取锁，进而转去做其他事情
+*   ReentrantLock 可以选择是 公平锁 或者 非公平锁，synchronized 是个非公平锁且无法修改
+*   ReentrantLock 可以通过 condition 限定哪些线程可以被唤醒来参与锁的竞争
+
+ **性能已不是选择标准**
+
+
+
+
+
 
 
 ##### 锁的总结
