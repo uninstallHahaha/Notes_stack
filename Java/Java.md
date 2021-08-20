@@ -1147,6 +1147,12 @@ class CustomQueue extends AbstractQueuedSynchronizer {
 
 ![image-20210820110102104](Java.assets/image-20210820110102104.png)
 
+​		<span style='color:cyan;'>非公平锁和公平锁</span> 的实现唯一区别在于，公平锁先检查当前线程在等待队列中有没有前驱节点，如果有直接返回获取锁失败，而非公平锁直接不断自旋尝试修改 state 变量进而获取锁，以下是 Semaphore 中对两种锁的实现
+
+![image-20210820135857669](Java.assets/image-20210820135857669.png)
+
+
+
 
 
 
