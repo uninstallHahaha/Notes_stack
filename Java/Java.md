@@ -1151,9 +1151,9 @@ class CustomQueue extends AbstractQueuedSynchronizer {
 
 ![image-20210820135857669](Java.assets/image-20210820135857669.png)
 
-CountDownLatch 也是基于 AQS 实现的同步工具，用于一个线程等待其他多个线程执行完毕的场景，比如在主线程中等待子线程都执行完毕
+​		CountDownLatch 也是基于 AQS 实现的同步工具，用于一个线程等待其他多个线程执行完毕的场景，比如在主线程中等待子线程都执行完毕
 
-
+​		CountDownLatch是一次性的，计数器的值只能在构造方法中初始化一次，之后没有任何机制再次对其设置值，当CountDownLatch使用完毕后，它不能再次被使用。
 
 
 
