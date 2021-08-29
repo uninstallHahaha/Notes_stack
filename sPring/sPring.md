@@ -766,7 +766,7 @@ TODO : 使用线程 ThreadLocal 与连接进行绑定的方式, 实现在业务�
 
 静态代理直接写死编译到 .class文件中
 
-#### 基于接口的动态代理  
+#### Java接口动态代理  
 
 * 经销商和生产厂商实现同一个接口 
 * 使用JDK官方提供的Proxy类下的newProxyInstance方法获取一个代理对象
@@ -808,7 +808,7 @@ public void static main(){
 
 
 
-#### 基于子类的动态代理
+#### cglib子类动态代理
 
 1. 引入jar包 `cglib`, 然后确认 asm 包已经被引入
 2. 使用cglib库中的Enhancer对象下的create方法创建代理对象
