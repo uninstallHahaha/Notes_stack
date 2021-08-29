@@ -1569,6 +1569,8 @@ public static void main(){
 
 ### BeanFacotry和FactoryBean
 
+###### BeanFactory
+
 ​		BeanFacotry 是最顶层的 ioc 容器接口， 提供了用于存放 beanDefination 和 beanmap 的字段，spring ioc 初始化实际上就是在初始化一个 BeanFactory 类型的对象，然后把这个对象称作 上下文，并读取配置，将指定的类初始化实例保存到该 上下文 对象中，待到使用这些类实例时，直接从 上下文 对象中取出
 
 一句代码使用spring
@@ -1582,6 +1584,64 @@ BeanFactory 家族
 ApplicationContext 家族
 
 ![image-20210829164711800](sPring.assets/image-20210829164711800.png)
+
+###### Factorybean
+
+`org.springframework.bean.factory.FactoryBean`
+
+​		Factorybean是一个接口，包含getObect()方法，使用该方法获取其他对象的实例，所以实现了该类型的类为工厂类
+
+​		IOC容器默认通过反射的方式创建bean，在某些情况下，实例化Bean过程比较复杂，如果按照传统的方式，则需要在<bean>中提供大量的配置信息。配置方式的灵活性是受限的，这时采用编码的方式可能会得到一个简单的方案。
+
+​		Spring为此提供了一个 `org.springframework.bean.factory.FactoryBean` 的工厂类接口，用户可以通过实现该接口定制实例化Bean的逻辑。FactoryBean接口对于Spring框架来说占用重要的地位，Spring自身就提供了70多个FactoryBean的实现
+
+​		如果使用 Factorybean 来创建其他 bean， 那么肯定首先得有一个 Factorybean 实例，所以该工厂类也应当交给 IOC容器 来管理，当用户通过 Factorybean 的 bean id 获取实例时，实际上返回的是 getObject() 方法的返回值，如果要获取FactoryBean对象，请在 `id` 前面加一个 `&` 符号来获取
+
+###### xml中配置使用 `工厂对象` 来创建 bean
+
+1.  可以通过 静态方法 创建
+
+    ```xml
+    <bean id="clientService"
+        class="examples.ClientService"
+        factory-method="createInstance"/>
+    ```
+
+    ```java
+    public class ClientService {
+        private static ClientService clientService = new ClientService();
+        private ClientService() {}
+    
+        // 静态方法
+        public static ClientService createInstance() {
+            return clientService;
+        }
+    }
+    ```
+
+2.  也可以通过工厂的实例方法创建
+
+    ```xml
+    <bean id="serviceLocator" class="examples.DefaultServiceLocator">
+        <!-- 这个是工厂实例 -->
+    </bean>
+    
+    <!-- factory-bean 设置工厂实例 -->
+    <!-- factory-method 设置使用工厂实例中的哪个方法来获取bean实例 -->
+    <bean id="clientService"
+        factory-bean="serviceLocator"
+        factory-method="createClientServiceInstance"/>
+    
+    <bean id="accountService"
+        factory-bean="serviceLocator"
+        factory-method="createAccountServiceInstance"/>
+    ```
+
+
+
+
+
+
 
 
 
