@@ -926,7 +926,93 @@ b.运行阶段
 
 
 
-#### 使用spring的aop( xml方式 )
+#### spring-aop中实现aop的原理
+
+​		如果被代理的目标类实现了一个或多个自定义的接口，那么就会使用 JDK 动态代理，如果没有实现任何接口，会使用 CGLIB 实现代理，如果设置了 proxy-target-class="true"，那么都会使用 CGLIB。
+
+​		JDK 动态代理基于接口，所以只有接口中的方法会被增强，而 CGLIB 基于类继承，需要注意就是如果方法使用了 final 修饰，或者是 private 方法，是不能被增强的。
+
+
+
+
+
+
+
+#### spring1.2起使用的配置方式
+
+>   ​		这节我们将介绍 Spring 1.2 中的配置，这是最古老的配置，但是由于 Spring  提供了很好的向后兼容
+>
+>   ​		使用配置文件的方式进行配置
+>
+>    		基于Java自带的 proxy 包中的动态代理方法实现的 aop，所以需要被增强对象实现接口
+
+###### 使用 Advice 进行增强
+
+>   直接配置 Advice 作为增强的方法将会对目标类的所有方法不加以区分都进行增强
+
+1.  首先准备 `接口` 和 `实现类`， 目的是对该实现类进行增强
+
+2.  实现 spring-aop 包中的 MethodBeforeAdvice 来定义 Advice，在Advice中定义各种通知
+
+    ![image-20210829145814840](sPring.assets/image-20210829145814840.png)
+
+3.  在配置文件中指定使用Advice增强指定类
+
+    ![image-20210829150611672](sPring.assets/image-20210829150611672.png)
+
+4.  最后用一下看看
+
+    ![image-20210829151731306](sPring.assets/image-20210829151731306.png)
+
+###### 使用 Advisor 进行增强
+
+>   在配置文件中创建一个 Advisor bean ，可以实现只对目标类中指定方法的增强
+
+1.  配置文件这样写
+
+    ![image-20210829151123955](sPring.assets/image-20210829151123955.png)
+
+###### 使用 AutoProxy 自动增强
+
+>   ​		直接使用 ProxyFactoryBean 创建的代理对象必须指名对哪个类进行代理，所以需要一个类创建一个 ProxyFactoryBean bean对象，这样很不方便
+>
+>   ​		使用 AutoProxy 可以根据给定的正则规则，对匹配的所有类进行增强
+
+1.  配置文件这样写
+
+    ![image-20210829152847074](sPring.assets/image-20210829152847074.png)
+
+2.  然后用一下看看
+
+    ![image-20210829153313198](sPring.assets/image-20210829153313198.png)
+
+###### 使用 DefaultAdvisorAutoProxyCreator
+
+>   ​		创建该 bean 后，默认使得其他所有的 advice bean 生效，所以只需要在advice bean中定义匹配范围即可
+
+1.  配置文件这样写
+
+    ![image-20210829155850195](sPring.assets/image-20210829155850195.png)
+
+2.  用一下看看
+
+    ![image-20210829155904868](sPring.assets/image-20210829155904868.png)
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### 使用spring的aop( xml )
 
 1. 导入jar包
    * spring-context
@@ -1474,3 +1560,220 @@ public static void main(){
 > spring5,该版本tomcat要求8.5及以上
 
 > jdk1.8比1.7在反射创建对象时的效率有显著的提升
+
+
+
+
+
+
+
+### BeanFacotry和FactoryBean
+
+​		BeanFacotry 是最顶层的 ioc 容器接口， 提供了用于存放 beanDefination 和 beanmap 的字段，spring ioc 初始化实际上就是在初始化一个 BeanFactory 类型的对象，然后把这个对象称作 上下文，并读取配置，将指定的类初始化实例保存到该 上下文 对象中，待到使用这些类实例时，直接从 上下文 对象中取出
+
+一句代码使用spring
+
+![image-20210829164758411](sPring.assets/image-20210829164758411.png)
+
+BeanFactory 家族
+
+![image-20210829164422265](sPring.assets/image-20210829164422265.png)
+
+ApplicationContext 家族
+
+![image-20210829164711800](sPring.assets/image-20210829164711800.png)
+
+
+
+### BeanDefination
+
+Bean 是什么, Bean 在代码层面上可以简单认为是 BeanDefinition 的实例
+
+IOC容器 就是存放 BeabName 和 BeanDefination 对应关系的 map
+
+BeanDefinition 中保存了我们的 Bean 信息，比如这个 Bean 指向的是哪个类、是否是单例的、是否懒加载、这个 Bean 依赖了哪些 Bean 等等
+
+```java
+public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
+
+   // 我们可以看到，默认只提供 sington 和 prototype 两种，
+   // 很多读者可能知道还有 request, session, globalSession, application, websocket 这几种，
+   // 不过，它们属于基于 web 的扩展。
+   String SCOPE_SINGLETON = ConfigurableBeanFactory.SCOPE_SINGLETON;
+   String SCOPE_PROTOTYPE = ConfigurableBeanFactory.SCOPE_PROTOTYPE;
+
+   // 比较不重要，直接跳过吧
+   int ROLE_APPLICATION = 0;
+   int ROLE_SUPPORT = 1;
+   int ROLE_INFRASTRUCTURE = 2;
+
+   // 设置父 Bean，这里涉及到 bean 继承，不是 java 继承。请参见附录的详细介绍
+   // 一句话就是：继承父 Bean 的配置信息而已
+   void setParentName(String parentName);
+
+   // 获取父 Bean
+   String getParentName();
+
+   // 设置 Bean 的类名称，将来是要通过反射来生成实例的
+   void setBeanClassName(String beanClassName);
+
+   // 获取 Bean 的类名称
+   String getBeanClassName();
+
+
+   // 设置 bean 的 scope
+   void setScope(String scope);
+
+   String getScope();
+
+   // 设置是否懒加载
+   void setLazyInit(boolean lazyInit);
+
+   boolean isLazyInit();
+
+   // 设置该 Bean 依赖的所有的 Bean，注意，这里的依赖不是指属性依赖(如 @Autowire 标记的)，
+   // 是 depends-on="" 属性设置的值。
+   void setDependsOn(String... dependsOn);
+
+   // 返回该 Bean 的所有依赖
+   String[] getDependsOn();
+
+   // 设置该 Bean 是否可以注入到其他 Bean 中，只对根据类型注入有效，
+   // 如果根据名称注入，即使这边设置了 false，也是可以的
+   void setAutowireCandidate(boolean autowireCandidate);
+
+   // 该 Bean 是否可以注入到其他 Bean 中
+   boolean isAutowireCandidate();
+
+   // 主要的。同一接口的多个实现，如果不指定名字的话，Spring 会优先选择设置 primary 为 true 的 bean
+   void setPrimary(boolean primary);
+
+   // 是否是 primary 的
+   boolean isPrimary();
+
+   // 如果该 Bean 采用工厂方法生成，指定工厂名称。对工厂不熟悉的读者，请参加附录
+   // 一句话就是：有些实例不是用反射生成的，而是用工厂模式生成的
+   void setFactoryBeanName(String factoryBeanName);
+   // 获取工厂名称
+   String getFactoryBeanName();
+   // 指定工厂类中的 工厂方法名称
+   void setFactoryMethodName(String factoryMethodName);
+   // 获取工厂类中的 工厂方法名称
+   String getFactoryMethodName();
+
+   // 构造器参数
+   ConstructorArgumentValues getConstructorArgumentValues();
+
+   // Bean 中的属性值，后面给 bean 注入属性值的时候会说到
+   MutablePropertyValues getPropertyValues();
+
+   // 是否 singleton
+   boolean isSingleton();
+
+   // 是否 prototype
+   boolean isPrototype();
+
+   // 如果这个 Bean 是被设置为 abstract，那么不能实例化，
+   // 常用于作为 父bean 用于继承，其实也很少用......
+   boolean isAbstract();
+
+   int getRole();
+   String getDescription();
+   String getResourceDescription();
+   BeanDefinition getOriginatingBeanDefinition();
+}
+```
+
+BeanDefinition 的覆盖问题
+
+​		BeanDefinition 的覆盖问题可能会有开发者碰到这个坑，就是在配置文件中定义 bean 时使用了相同的 id 或  name
+
+​		默认情况下，allowBeanDefinitionOverriding 属性为  null，如果在同一配置文件中重复了，会抛错，但是如果不是同一配置文件中，会发生覆盖
+
+
+
+
+
+### spring容器初始化
+
+```java
+@Override
+public void refresh() throws BeansException, IllegalStateException {
+   // 来个锁，不然 refresh() 还没结束，你又来个启动或销毁容器的操作，那不就乱套了嘛
+   synchronized (this.startupShutdownMonitor) {
+
+      // 准备工作，记录下容器的启动时间、标记“已启动”状态、处理配置文件中的占位符
+      prepareRefresh();
+
+      // 这步比较关键，这步完成后，配置文件就会解析成一个个 Bean 定义，注册到 BeanFactory 中，
+      // 当然，这里说的 Bean 还没有初始化，只是配置信息都提取出来了，
+      // 注册也只是将这些信息都保存到了注册中心(说到底核心是一个 beanName-> beanDefinition 的 map)
+      ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+      // 设置 BeanFactory 的类加载器，添加几个 BeanPostProcessor，手动注册几个特殊的 bean
+      prepareBeanFactory(beanFactory);
+
+      try {
+         // 【这里需要知道 BeanFactoryPostProcessor 这个知识点，Bean 如果实现了此接口，
+         // 那么在容器初始化以后，Spring 会负责调用里面的 postProcessBeanFactory 方法。】
+
+         // 这里是提供给子类的扩展点，到这里的时候，所有的 Bean 都加载、注册完成了，但是都还没有初始化
+         // 这一步本质上就是执行aop增强原实现类
+         postProcessBeanFactory(beanFactory);
+         // 调用 BeanFactoryPostProcessor 各个实现类的 postProcessBeanFactory(factory) 回调方法
+         invokeBeanFactoryPostProcessors(beanFactory);          
+
+
+
+         // 注册 BeanPostProcessor 的实现类，注意看和 BeanFactoryPostProcessor 的区别
+         // 此接口两个方法: postProcessBeforeInitialization 和 postProcessAfterInitialization
+         // 两个方法分别在 Bean 初始化之前和初始化之后得到执行。这里仅仅是注册，之后会看到回调这两方法的时机
+         registerBeanPostProcessors(beanFactory);
+
+         // 初始化当前 ApplicationContext 的 MessageSource
+         initMessageSource();
+
+         // 初始化当前 ApplicationContext 的事件广播器
+         initApplicationEventMulticaster();
+
+         // 从方法名就可以知道，典型的模板方法(钩子方法)，不展开说
+         // 具体的子类可以在这里初始化一些特殊的 Bean（在初始化 singleton beans 之前）
+         onRefresh();
+
+         // 注册事件监听器，监听器需要实现 ApplicationListener 接口
+         registerListeners();
+
+         // 重点，重点，重点
+         // 初始化所有的 singleton beans
+         //（lazy-init 的除外）
+         finishBeanFactoryInitialization(beanFactory);
+
+         // 最后，广播事件，ApplicationContext 初始化完成，不展开
+         finishRefresh();
+      }
+
+      catch (BeansException ex) {
+         if (logger.isWarnEnabled()) {
+            logger.warn("Exception encountered during context initialization - " +
+                  "cancelling refresh attempt: " + ex);
+         }
+
+         // Destroy already created singletons to avoid dangling resources.
+         // 销毁已经初始化的 singleton 的 Beans，以免有些 bean 会一直占用资源
+         destroyBeans();
+
+         // Reset 'active' flag.
+         cancelRefresh(ex);
+
+         // 把异常往外抛
+         throw ex;
+      }
+
+      finally {
+         // Reset common introspection caches in Spring's core, since we
+         // might not ever need metadata for singleton beans anymore...
+         resetCommonCaches();
+      }
+   }
+}
+```
