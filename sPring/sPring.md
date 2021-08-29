@@ -1589,6 +1589,8 @@ ApplicationContext 家族
 
 `org.springframework.bean.factory.FactoryBean`
 
+>   直接把工厂类用作 bean 的定义
+
 ​		Factorybean是一个接口，包含getObect()方法，使用该方法获取其他对象的实例，所以实现了该类型的类为工厂类
 
 ​		IOC容器默认通过反射的方式创建bean，在某些情况下，实例化Bean过程比较复杂，如果按照传统的方式，则需要在<bean>中提供大量的配置信息。配置方式的灵活性是受限的，这时采用编码的方式可能会得到一个简单的方案。
@@ -1597,7 +1599,12 @@ ApplicationContext 家族
 
 ​		如果使用 Factorybean 来创建其他 bean， 那么肯定首先得有一个 Factorybean 实例，所以该工厂类也应当交给 IOC容器 来管理，当用户通过 Factorybean 的 bean id 获取实例时，实际上返回的是 getObject() 方法的返回值，如果要获取FactoryBean对象，请在 `id` 前面加一个 `&` 符号来获取
 
-###### xml中配置使用 `工厂对象` 来创建 bean
+1.  创建工厂对象，继承 FactoryBean，实现 getObject() 方法
+2.  直接在xml配置文件中，将工厂类当做普通类使用来定义 bean， 此时该bean默认返回的值为 getObject() 的返回值
+
+
+
+###### 通过 `工厂类` 来创建 bean
 
 1.  可以通过 静态方法 创建
 
@@ -1837,3 +1844,81 @@ public void refresh() throws BeansException, IllegalStateException {
    }
 }
 ```
+
+
+
+
+
+
+
+### 初始化Bean后的钩子函数
+
+>   有四种写法来定义 Bean 初始化后的回调函数
+
+1.  ```xml
+    <!-- xml 设置 -->
+    <bean id="exampleInitBean" class="examples.ExampleBean" init-method="init"/>
+    ```
+
+2.  ```java
+    public class AnotherExampleBean implements InitializingBean {
+    // 实现接口并定义方法
+        public void afterPropertiesSet() {
+            // do some initialization work
+        }
+    }
+    ```
+
+3.  ```java
+    // 使用注解
+    @Bean(initMethod = "init")
+    public Foo foo() {
+        return new Foo();
+    }
+    ```
+
+4.  ```java
+    // 使用注解
+    @PostConstruct
+    public void init() {
+    
+    }
+    ```
+
+
+
+
+
+### 销毁Bean后的钩子函数
+
+>   有四种方法定义销毁 Bean 后的钩子函数
+
+1.  ```xml
+    <bean id="exampleInitBean" class="examples.ExampleBean" destroy-method="cleanup"/>
+    ```
+
+2.  ```java
+    public class AnotherExampleBean implements DisposableBean {
+    
+        public void destroy() {
+            // do some destruction work (like releasing pooled connections)
+        }
+    }
+    ```
+
+3.  ```java
+    @Bean(destroyMethod = "cleanup")
+    public Bar bar() {
+        return new Bar();
+    }
+    ```
+
+4.  ```java
+    @PreDestroy
+    public void cleanup() {
+    
+    }
+    ```
+
+
+
