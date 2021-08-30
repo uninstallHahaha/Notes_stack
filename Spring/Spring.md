@@ -1784,20 +1784,19 @@ public void refresh() throws BeansException, IllegalStateException {
       prepareBeanFactory(beanFactory);
 
       try {
-         // 【这里需要知道 BeanFactoryPostProcessor 这个知识点，Bean 如果实现了此接口，
-         // 那么在容器初始化以后，Spring 会负责调用里面的 postProcessBeanFactory 方法。】
-
-         // 这里是提供给子类的扩展点，到这里的时候，所有的 Bean 都加载、注册完成了，但是都还没有初始化
-         // 这一步本质上就是执行aop增强原实现类
+         // 【 Bean 如果实现了接口 BeanFactoryPostProcessor，
+         // 那么在容器初始化以后，
+         // Spring 会负责调用里面的 postProcessBeanFactory 方法。】
+         // 到这里的时候，所有的 Bean 都加载、注册完成了，但是都还没有初始化
          postProcessBeanFactory(beanFactory);
-         // 调用 BeanFactoryPostProcessor 各个实现类的 postProcessBeanFactory(factory) 回调方法
+         // 调用 BeanFactoryPostProcessor实现类的 postProcessBeanFactory方法
          invokeBeanFactoryPostProcessors(beanFactory);          
 
-
-
-         // 注册 BeanPostProcessor 的实现类，注意看和 BeanFactoryPostProcessor 的区别
-         // 此接口两个方法: postProcessBeforeInitialization 和 postProcessAfterInitialization
-         // 两个方法分别在 Bean 初始化之前和初始化之后得到执行。这里仅仅是注册，之后会看到回调这两方法的时机
+         // 注册 BeanPostProcessor 的实现类
+         // 此接口两个方法: 
+         // postProcessBeforeInitialization 和 postProcessAfterInitialization
+         // 两个方法分别在 Bean 初始化之前和初始化之后得到执行。
+         // 这里仅仅是注册，之后会看到回调这两方法的时机
          registerBeanPostProcessors(beanFactory);
 
          // 初始化当前 ApplicationContext 的 MessageSource
@@ -1807,7 +1806,8 @@ public void refresh() throws BeansException, IllegalStateException {
          initApplicationEventMulticaster();
 
          // 从方法名就可以知道，典型的模板方法(钩子方法)，不展开说
-         // 具体的子类可以在这里初始化一些特殊的 Bean（在初始化 singleton beans 之前）
+         // 具体的子类可以在这里初始化一些特殊的 Bean
+         //（在初始化 singleton beans 之前）
          onRefresh();
 
          // 注册事件监听器，监听器需要实现 ApplicationListener 接口
