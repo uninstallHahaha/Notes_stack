@@ -99,7 +99,17 @@
 
 ###### 堆内存结构
 
-分为 Eden，survivor from，survivor to，old
+分代式实现：分为 Eden，survivor from，survivor to，old
+
+###### 为什么分代管理？
+
+​		gc 时候需要检查相关引用，如果不分代的话，需要对整个内存进行遍历，这将会造成很长时间的 STW，严重损耗性能，分代的话，minor gc 只遍历新生代进行垃圾回收，这样能够大幅度减少 STW 时间
+
+​		同时，对象本身就存在生命周期长短的差异，如果一个对象获得可能比较长，那么就少对它尝试回收，这样就可以提高 gc 的效率
+
+​		但是如何知道谁比较可能活的长呢，当然是已经活的很长的对象比较有可能活的更长，所以才会有进入老年代的阈值以及不频繁 gc 的设定
+
+​		假设可用内存无限大，那么就不需要 gc，此时肯定就不需要分代了，但是事实是内存总是宝贵的，又不能任由 java 程序不断扩张，所以就要选择速度快，而且能够快速清理掉合适对象的gc算法
 
 ###### 对象实例
 
@@ -197,7 +207,59 @@
 
 
 
-​		在 1.8 及以后, 因为方法区使用元空间的位置，而<span style='color:cyan;'>元空间直接使用物理内存空间</span>, 就是主机的内存，所以 8 以后，方法区的大小不再受限于堆空间的大小，而是取决于本地内存（native memory）的大小
+###### 永久代
+
+​		JDK1.8以前的HotSpot JVM有**方法区**，也叫**永久代(permanent generation)**
+
+​		永久代的**GC**是和老年代(old generation)捆绑在一起的，无论谁满了，都会触发永久代和老年代的垃圾收集
+
+
+
+
+
+**为什么要用Metaspace替代方法区？**
+		 随着动态类加载的情况越来越多，这块内存变得不太可控，如果设置小了，系统运行过程中就容易出现内存溢出，设置大了又浪费内存
+
+
+
+
+
+###### 元空间
+
+​		在 8 及以后, 因为方法区使用元空间的位置，而<span style='color:cyan;'> 元空间直接使用物理内存空间 </span>, 就是主机的内存
+
+​		所以 8 以后，方法区的大小不再受限于堆空间的大小，而是取决于本地内存（native memory）的大小
+
+​		元空间存放类的元定义数据 Klass（matadata），在堆中创建对象时，首先来元空间寻找对应的Klass定义，然后在堆中为其分配地址创建对象
+
+​		类加载器就是将字节码文件中的类定义加载为 Klass 定义，保存到元空间中，所以元空间中每个 Klass 定义都与类加载器一一对应
+
+​		当某个类加载器关联的所有 Klass 在堆中不存在实例时，该类加载器会被垃圾回收，对应的，元空间中相关的 Klass 定义也会被垃圾回收，所以，<span style='color:cyan;'>方法区类的定义并不是永久存在的</span>
+
+![image-20210830155819690](jvm.assets/image-20210830155819690.png)
+
+Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span> 和 <span style='color:cyan;'>NoKlass Metaspace</span>
+
+-   **Klass Metaspace**
+
+1.  Klass Metaspace就是用来存**klass**的，就是class文件在jvm里的运行时数据结构（不过我们看到的类似A.class其实是存在heap里的，是java.lang.Class的对象实例）。
+2.  这部分默认放在**Compressed Class Pointer Space**中，是一块连续的内存区域，
+     紧接着Heap，和之前的perm一样。通过-XX:CompressedClassSpaceSize来控制这块内存的大小，默认是1G。
+3.  Compressed Class Pointer Space**不是必须有的**，如果设置了**-XX:-UseCompressedClassPointers**，或者**-Xmx设置大于32G**，就不会有这块内存，这种情况下klass都会存在NoKlass Metaspace里。
+
+-   **NoKlass Metaspace**
+
+1.  NoKlass Metaspace专门来存klass相关的其他的内容，比如method，constantPool等，可以由多块不连续的内存组成。
+2.  这块内存是必须的，虽然叫做NoKlass Metaspace，但是也其实可以存klass的内容，上面已经提到了对应场景。
+3.  NoKlass Metaspace在本地内存中分配。
+
+
+
+<span style='color:red;'>Metaspace OOM问题</span>
+
+​		Metaspace 的总使用空间达到了 MaxMetaspaceSize 设置的阈值，或者 Compressed Class Space  被使用光了，如果这次 GC 真的通过卸载类加载器腾出了很多的空间，这很好，否则的话，我们会进入一个糟糕的 GC 周期，即使我们有足够的堆内存。
+
+​		所以不要把 MaxMetaspaceSize 设置得太小，会造成莫名其妙的频繁GC
 
 
 
