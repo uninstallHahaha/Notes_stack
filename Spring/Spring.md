@@ -980,13 +980,13 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 
 
-#### spring1.2起使用的配置方式
+#### spring1.2使用的配置方式
 
->   ​		这节我们将介绍 Spring 1.2 中的配置，这是最古老的配置，但是由于 Spring  提供了很好的向后兼容
+​		这节我们将介绍 Spring 1.2 中的配置，这是最古老的配置，但是 Spring  提供了很好的向后兼容
+
+>   使用配置文件的方式进行配置
 >
->   ​		使用配置文件的方式进行配置
->
->    	基于Java自带的 proxy 包中的动态代理方法实现的 aop，所以需要被增强对象实现接口
+>   基于Java自带的 proxy 包中的动态代理方法实现的 aop，所以需要被增强对象实现接口
 
 ###### 使用 Advice 进行增强
 
