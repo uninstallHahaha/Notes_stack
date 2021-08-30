@@ -1813,7 +1813,6 @@ public void refresh() throws BeansException, IllegalStateException {
          // 注册事件监听器，监听器需要实现 ApplicationListener 接口
          registerListeners();
 
-         // 重点，重点，重点
          // 初始化所有的 singleton beans
          //（lazy-init 的除外）
          finishBeanFactoryInitialization(beanFactory);
@@ -1828,7 +1827,7 @@ public void refresh() throws BeansException, IllegalStateException {
                   "cancelling refresh attempt: " + ex);
          }
 
-         // Destroy already created singletons to avoid dangling resources.
+       
          // 销毁已经初始化的 singleton 的 Beans，以免有些 bean 会一直占用资源
          destroyBeans();
 
