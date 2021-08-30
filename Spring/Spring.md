@@ -2056,3 +2056,11 @@ public void refresh() throws BeansException, IllegalStateException {
 
 -   global-session：全局session作用域，仅仅在基于portlet的web应用中才有意义，Spring5已经没有了。Portlet是能够生成语义代码(例如：HTML)片段的小型Java Web插件。它们基于portlet容器，可以像servlet一样处理HTTP请求。但是，与 servlet 不同，每个 portlet  都有不同的会话
 
+
+
+
+
+## Bean的生命周期
+
+![image-20210830232556704](Spring.assets/image-20210830232556704.png)
+
