@@ -1,4 +1,4 @@
-## sPring
+## Spring
 
 spring干的事: 本质上就是 <span style='color:cyan;'>单例工厂模式</span> , 通过配置文件告诉它待会需要哪些类实例, spring于是在开始时就创建好这些实例, 用的时候就直接返回给用户.
 
@@ -45,11 +45,11 @@ spring的IOC通过读取配置文件, 然后反射的方式创建对象实例
 
 ​	使用常规的new方法创建对象构建系统, 就像是手表里面的齿轮, 环环相扣, 牵一发而动全身, 十分难以维护
 
-![image-20210718153543470](sPring.assets/image-20210718153543470.png)
+![image-20210718153543470](Spring.assets/image-20210718153543470.png)
 
 ​	如果能有一个统一的管理中心, 管理所有的对象, 那么只需要在使用的时候声明就可以, 就不再需要使用 new , 从而避免了环环相扣的情况
 
-![image-20210718153654618](sPring.assets/image-20210718153654618.png)
+![image-20210718153654618](Spring.assets/image-20210718153654618.png)
 
 ​	spring就是IOC的实现, 只需要事先声明要管理哪些对象, 然后在使用它们时使用注解声明即可
 
@@ -944,7 +944,7 @@ b.运行阶段
 >
 >   ​		使用配置文件的方式进行配置
 >
->    		基于Java自带的 proxy 包中的动态代理方法实现的 aop，所以需要被增强对象实现接口
+>    	基于Java自带的 proxy 包中的动态代理方法实现的 aop，所以需要被增强对象实现接口
 
 ###### 使用 Advice 进行增强
 
@@ -954,15 +954,15 @@ b.运行阶段
 
 2.  实现 spring-aop 包中的 MethodBeforeAdvice 来定义 Advice，在Advice中定义各种通知
 
-    ![image-20210829145814840](sPring.assets/image-20210829145814840.png)
+    ![image-20210829145814840](Spring.assets/image-20210829145814840.png)
 
 3.  在配置文件中指定使用Advice增强指定类
 
-    ![image-20210829150611672](sPring.assets/image-20210829150611672.png)
+    ![image-20210829150611672](Spring.assets/image-20210829150611672.png)
 
 4.  最后用一下看看
 
-    ![image-20210829151731306](sPring.assets/image-20210829151731306.png)
+    ![image-20210829151731306](Spring.assets/image-20210829151731306.png)
 
 ###### 使用 Advisor 进行增强
 
@@ -970,7 +970,7 @@ b.运行阶段
 
 1.  配置文件这样写
 
-    ![image-20210829151123955](sPring.assets/image-20210829151123955.png)
+    ![image-20210829151123955](Spring.assets/image-20210829151123955.png)
 
 ###### 使用 AutoProxy 自动增强
 
@@ -980,11 +980,11 @@ b.运行阶段
 
 1.  配置文件这样写
 
-    ![image-20210829152847074](sPring.assets/image-20210829152847074.png)
+    ![image-20210829152847074](Spring.assets/image-20210829152847074.png)
 
 2.  然后用一下看看
 
-    ![image-20210829153313198](sPring.assets/image-20210829153313198.png)
+    ![image-20210829153313198](Spring.assets/image-20210829153313198.png)
 
 ###### 使用 DefaultAdvisorAutoProxyCreator
 
@@ -992,11 +992,11 @@ b.运行阶段
 
 1.  配置文件这样写
 
-    ![image-20210829155850195](sPring.assets/image-20210829155850195.png)
+    ![image-20210829155850195](Spring.assets/image-20210829155850195.png)
 
 2.  用一下看看
 
-    ![image-20210829155904868](sPring.assets/image-20210829155904868.png)
+    ![image-20210829155904868](Spring.assets/image-20210829155904868.png)
 
     
 
@@ -1567,7 +1567,7 @@ public static void main(){
 
 
 
-## BeanFacotry和FactoryBean
+## BeanFacotry 和 FactoryBean
 
 ###### BeanFactory
 
@@ -1575,15 +1575,15 @@ public static void main(){
 
 一句代码使用spring
 
-![image-20210829164758411](sPring.assets/image-20210829164758411.png)
+![image-20210829164758411](Spring.assets/image-20210829164758411.png)
 
 BeanFactory 家族
 
-![image-20210829164422265](sPring.assets/image-20210829164422265.png)
+![image-20210829164422265](Spring.assets/image-20210829164422265.png)
 
 ApplicationContext 家族
 
-![image-20210829164711800](sPring.assets/image-20210829164711800.png)
+![image-20210829164711800](Spring.assets/image-20210829164711800.png)
 
 ###### Factorybean
 
