@@ -1567,7 +1567,7 @@ public static void main(){
 
 
 
-### BeanFacotry和FactoryBean
+## BeanFacotry和FactoryBean
 
 ###### BeanFactory
 
@@ -1652,7 +1652,7 @@ ApplicationContext 家族
 
 
 
-### BeanDefination
+## BeanDefination
 
 Bean 是什么, Bean 在代码层面上可以简单认为是 BeanDefinition 的实例
 
@@ -1761,7 +1761,7 @@ BeanDefinition 的覆盖问题
 
 
 
-### spring容器初始化
+## spring容器初始化
 
 ```java
 @Override
@@ -1772,12 +1772,15 @@ public void refresh() throws BeansException, IllegalStateException {
       // 准备工作，记录下容器的启动时间、标记“已启动”状态、处理配置文件中的占位符
       prepareRefresh();
 
-      // 这步比较关键，这步完成后，配置文件就会解析成一个个 Bean 定义，注册到 BeanFactory 中，
+      // 这步比较关键，这步完成后，配置文件就会解析成一个个 Bean 定义，
+      // 注册到 BeanFactory 中，
       // 当然，这里说的 Bean 还没有初始化，只是配置信息都提取出来了，
-      // 注册也只是将这些信息都保存到了注册中心(说到底核心是一个 beanName-> beanDefinition 的 map)
+      // 注册也只是将这些信息都保存到了注册中心
+      // (说到底核心是一个 beanName-> beanDefinition 的 map)
       ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
-      // 设置 BeanFactory 的类加载器，添加几个 BeanPostProcessor，手动注册几个特殊的 bean
+      // 设置 BeanFactory 的类加载器
+      // 添加几个 BeanPostProcessor，手动注册几个特殊的 bean
       prepareBeanFactory(beanFactory);
 
       try {
@@ -1851,7 +1854,7 @@ public void refresh() throws BeansException, IllegalStateException {
 
 
 
-### 初始化Bean后的钩子函数
+## 初始化Bean后的钩子函数
 
 >   有四种写法来定义 Bean 初始化后的回调函数
 
@@ -1889,7 +1892,7 @@ public void refresh() throws BeansException, IllegalStateException {
 
 
 
-### 销毁Bean后的钩子函数
+## 销毁Bean后的钩子函数
 
 >   有四种方法定义销毁 Bean 后的钩子函数
 
@@ -1919,6 +1922,82 @@ public void refresh() throws BeansException, IllegalStateException {
     
     }
     ```
+
+
+
+
+
+
+
+## BeanFactoryPostProcessor
+
+>   ​		BeanFactoryPostProcessor 同样为一个接口，用来对 beanFactory 进行增强
+>
+>   ​		与BeanPostProcessor 不同的是，BeanFactoryPostProcessor 在 bean 实例化之前对 beanFactory 进行增强，而 BeanPostProcessor 在 bean 实例化后，对bean实例进行增强
+
+>   ​		BeanFactoryPostProcessor 的作用范围同样是全局，即对所有的 beanFactory 生效，不过实际应用中一般只开启一个 beanFactory（ApplicationContext）就足够了
+
+使用自定义的BeanFactoryPostProcessor
+
+1.  写类来实现 BeanFactoryPostProcessor 接口
+
+    ![image-20210830143654881](Spring.assets/image-20210830143654881.png)
+
+    其中包含一个函数，入参为 beanFactory，既然都能拿到 beanFactory 了，那么就意味着可以对任何 beanDefination ，beanNames 进行任意修改
+
+    ![image-20210830143815807](Spring.assets/image-20210830143815807.png)
+
+2.  在配置文件中设置使用自定义的 BeanFactoryPostProcessor
+
+    ![image-20210830143848165](Spring.assets/image-20210830143848165.png)
+
+3.  启动容器验证 BeanFactoryPostProcessor 的执行时机，是在所有的 bean 实例化之前进行的，因此结论就是 BeanFactoryPostProcessor 用来在实例化 bean 之前对 beanFactory 进行增强，<span style='color:cyan;'>不过它是一次性执行的</span>
+
+
+
+
+
+
+
+
+
+## BeanPostProcessor
+
+![image-20210830140436649](Spring.assets/image-20210830140436649.png)
+
+>   ​		BeanPostProcessor 就是 spring 初始化时上图的这个步骤中注册的东西，注册说白了就是把配置文件中设置的 BeanPostProcessor 解析出来保存下来
+>
+>   ​		但是在这个步骤中仅仅是注册，而不会调用，待到真正实例化对象时，才会调用
+
+>   ​		BeanPostProcessor 为初始化 bean 时的增强, BeanPostProcessor 的作用范围为其他所有bean，所以如果想要针对某些 bean的初始化进行增强，请在实现的方法中先判断 beanName
+
+使用自定义的 BeanPostProcessor
+
+1.  先实现 BeanPostProcessor 接口
+
+    ![image-20210830140928584](Spring.assets/image-20210830140928584.png)
+
+    其中包含两个方法
+
+    ![image-20210830140949208](Spring.assets/image-20210830140949208.png)
+
+    ![image-20210830141004254](Spring.assets/image-20210830141004254.png)
+
+    分别是 前置处理逻辑 和 后置处理逻辑
+
+2.  然后在配置文件中使用
+
+    ![image-20210830141115555](Spring.assets/image-20210830141115555.png)
+
+3.  被 BeanPostProcessor 增强的对象，会分别在 init-method 的前后调用 BeanPostProcessor 中的前置和后置方法，所以结果是
+
+    ![image-20210830141341654](Spring.assets/image-20210830141341654.png)
+
+    
+
+
+
+
 
 
 
