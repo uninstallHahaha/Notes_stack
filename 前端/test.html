@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body style="background-color: rebeccapurple;" class="body">
+    <div class="dd sti"></div>
+    <div class="dd"></div>
+    <div class="dd d2"></div>
+    <div class="dd d3" cli></div>
+
+</body>
+<style>
+    .dd {
+        width: 200px;
+        height: 200px;
+        background-color: salmon;
+    }
+
+    .d2 {
+        position: relative;
+        top: 50px;
+        left: 40px;
+    }
+
+    .d3 {
+        background-color: seagreen;
+        position: relative;
+    }
+
+    .d3::after {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 50%;
+        left: -10px;
+        top: -10px;
+        position: absolute;
+    }
+
+    .ab {
+        position: absolute;
+        top: 0px;
+        left: 40px;
+        background-color: slateblue;
+    }
+
+    .sti {
+        position: sticky;
+        background-color: yellowgreen;
+        top: 500px;
+    }
+
+    div[cli] {
+        border: 3px solid slateblue;
+    }
+
+    .body {
+        height: 300px;
+    }
+</style>
+
+</html>
