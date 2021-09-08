@@ -1840,3 +1840,6 @@ static void shell(int[] arr) {
 ​		到了 Java 7，大佬们已经着手去掉 PermGen Space 了，首先，就是将 String Pool 移到了堆中。把 String Pool 放到堆中，即使堆的大小也是固定的，但是这个时候，对于应用调优工作，只需要调整堆大小就行了。
 
 ​		在 Java 8 中，String Pool 依然还是在 Heap Space 中
+
+​		插入的性能主要取决于链表的平均长度。当链表平均长度为 10 的时候，我们看到性能是几乎没有任何损失的。所以要根据自己的实际情况，考虑是否要设置 `-XX:StringTableSize=N`，还是使用默认值。
+
