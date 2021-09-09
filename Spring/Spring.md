@@ -2064,3 +2064,10 @@ public void refresh() throws BeansException, IllegalStateException {
 
 ![image-20210830232556704](Spring.assets/image-20210830232556704.png)
 
+
+
+
+
+## Spring事务功能
+
+https://mp.weixin.qq.com/s?__biz=MzAwNDA2OTM1Ng==&mid=2453142012&idx=2&sn=239d190ab27024af39e51e7e21806e95&scene=21#wechat_redirect
