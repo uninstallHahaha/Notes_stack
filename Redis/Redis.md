@@ -1132,7 +1132,7 @@ https://blog.csdn.net/qq_38545713/article/details/105439688
 
 ​		为了主从复制的速度和连接的稳定性，Master和Slave最好在同一个局域网内
 
-​		为了Master的稳定性，主从复制不要用图状结构，用单向链表结构更稳定，即主从关系为：Master <– Slave1 <– Slave2 <– Slave3…，这样的结构也方便解决单点故障问题，实现Slave对Master的替换，也即，如果Master挂了，可以立马启用Slave1做Master，其他不变
+​		为了 Master 的稳定性，主从复制不要用图状结构，用单向链表结构更稳定，即主从关系为：Master <– Slave1 <– Slave2 <– Slave3…，这样的结构也方便解决单点故障问题，实现 Slave 对 Master 的替换，也即，如果 Master 挂了，可以立马启用 Slave1 做 Master，其他不变
 
 
 
