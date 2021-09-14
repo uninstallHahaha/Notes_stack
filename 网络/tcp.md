@@ -26,7 +26,9 @@ TCP 协议是由操作系统实现，所以操作系统提供了不少调节 TCP
 
 TCP 是面向连接的、可靠的、双向传输的传输层通信协议，所以在传输数据之前需要经过三次握手才能建立连接。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/J0g14CUwaZciat6yMSZJ2QYWIldpAXY6VLPcVD30JQ2hZKPOgCesbok6sNedqib1e0ibYJEI8qurabNKsjosVOhow/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)三次握手与数据传输
+![图片](https://mmbiz.qpic.cn/mmbiz_png/J0g14CUwaZciat6yMSZJ2QYWIldpAXY6VLPcVD30JQ2hZKPOgCesbok6sNedqib1e0ibYJEI8qurabNKsjosVOhow/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+
+<div style='display:flex;width:100%;background:#666;color:white;padding:5px;border-radius:5px;'>三次握手与数据传输</div>
 
 那么，三次握手的过程在一个 HTTP 请求的平均时间占比 10% 以上，在网络状态不佳、高并发或者遭遇 SYN 攻击等场景中，如果不能有效正确的调节三次握手中的参数，就会对性能产生很多的影响。
 
