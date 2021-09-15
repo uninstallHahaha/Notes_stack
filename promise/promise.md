@@ -332,3 +332,92 @@ new Promise((res,rej)=>{
 ​		因为任务队列先进先出，所以Interval任务得排队执行，可能造成连续的Interval任务入队，也就引发了连续的Interval任务执行
 
 ​		因为本质是：interval并不关心当前执行的是什么，它们将不加区别地排队，即使这意味着回调之间的时间间隔将被牺牲
+
+<span style='color:cyan;'>解决方案</span>
+
+1.  每次都使用settimeout开始下一次的计时，计算本次的时间误差，然后在settimeout的时间中进行修正
+
+    ```js
+     var count = count2 = 0;
+     var runTime,runTime2;
+     var startTime,startTime2 = performance.now();//获取当前时间
+     
+     //普通任务-对比
+     setInterval(function(){
+         runTime2 = performance.now();
+         ++count2;    
+         console.log("普通任务",count2 + ' --- 延时：' + (runTime2 - (startTime2 + count2 * 1000)) + ' 毫秒');
+     }, 1000);
+     
+     //动态计算时长
+     function func(){
+      runTime = performance.now();
+         ++count;
+         let time = (runTime - (startTime + count * 1000));
+         console.log("优化任务",count2 + ' --- 延时：' + time +' 毫秒'); 
+         //动态修正定时时间
+         t = setTimeout(func,1000 - time);
+     }
+     startTime = performance.now();
+     var t = setTimeout(func , 1000);
+     
+     //耗时任务
+     setInterval(function(){
+         let i = 0;
+         while(++i < 100000000);
+     }, 0);
+    ```
+
+2.  直接开多线程使用 web worker
+
+    ​		Web Worker 的作用，就是**为 JavaScript 创造多线程环境**，允许主线程创建 Worker 线程，将一些任务分配给后者运行
+
+    ​		在主线程运行的同时，Worker 线程在后台运行，两者互不干扰。等到 Worker 线程完成计算任务，再把结果返回给主线程。这样的好处是，一些计算密集型或高延迟的任务，被 Worker 线程负担了，主线程（通常负责 UI 交互）就会很流畅，不会被阻塞或拖慢
+
+```js
+   <!-- index.html -->
+   <html>
+   <meta charset="utf-8">
+   <body>
+   <script type="text/javascript">
+   var count = 0;
+   var runTime;
+    
+   //performance.now()相对Date.now()精度更高，并且不会受系统程序堵塞的影响。
+   //API：https://developer.mozilla.org/zh-CN/docs/Web/API/Performance/now
+   var startTime = performance.now(); //获取当前时间 
+   
+   //普通任务-对比测试
+   setInterval(function(){
+       runTime = performance.now();
+       ++count;    
+       console.log("普通任务",count + ' --- 普通任务延时：' + (runTime - (startTime + 1000))+' 毫秒');
+       startTime = performance.now();
+   }, 1000);
+   
+   //耗时任务
+   setInterval(function(){
+       let i = 0;
+       while(i++ < 100000000);
+   }, 0);
+   
+   // worker 解决方案
+   let worker = new Worker('worker.js');
+   </script>
+   </body>
+   </html>
+```
+
+```js
+   // worker.js
+   var count = 0;
+   var runTime;
+   var startTime = performance.now();
+   setInterval(function(){
+       runTime = performance.now();
+       ++count;    
+       console.log("worker任务",count + ' --- 延时：' + (runTime - (startTime + 1000))+' 毫秒');
+       startTime = performance.now();
+   }, 1000);
+```
+
