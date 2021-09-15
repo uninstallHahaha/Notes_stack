@@ -12,7 +12,7 @@ unity3D
 ps ¡Ì
 ai ¡Ì
 pr ¡Ì
-mysql 
+mysql ¡Ì
 android
 nodejs  ¡Ì
 webpack  ¡Ì
