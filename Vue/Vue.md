@@ -1581,7 +1581,7 @@ for(了 i=0;i<btns.length;i++){
 ###### 遍历
 
 1.  `for(let i in arr)` 直接遍历index
-2.  `for(let n in arr)` 直接遍历值
+2.  `for(let n of arr)` 直接遍历值
 
 ###### filter函数
 
