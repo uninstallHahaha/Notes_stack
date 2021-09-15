@@ -323,3 +323,12 @@ new Promise((res,rej)=>{
 
 
 
+
+
+#### setInterval的误差问题
+
+![image-20210915145231016](promise.assets/image-20210915145231016.png)
+
+​		因为任务队列先进先出，所以Interval任务得排队执行，可能造成连续的Interval任务入队，也就引发了连续的Interval任务执行
+
+​		因为本质是：interval并不关心当前执行的是什么，它们将不加区别地排队，即使这意味着回调之间的时间间隔将被牺牲
