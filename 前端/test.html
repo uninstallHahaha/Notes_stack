@@ -9,6 +9,12 @@
 </head>
 
 <body style="background-color: rebeccapurple;" class="body">
+
+    <div class="dd flexdiv">
+        <div class="flexitem fi1"></div>
+        <div class="flexitem"></div>
+        <div class="flexitem"></div>
+    </div>
     <div class="dd sti">
     </div>
     <div class="dd"></div>
@@ -17,9 +23,19 @@
         <div class="lin"></div>
         <div class="lin"></div>
     </div>
+    
 
 </body>
 <style>
+    .flexitem{
+        width: 100px;
+        height: 100px;
+        background-color: aqua;
+        border: 1px solid #676767;
+    }
+    .fi1{
+        flex-grow: 1;
+    }
     .lin {
         height: 50px;
         width: 50px;
@@ -73,6 +89,15 @@
 
     div[cli] {
         border: 3px solid slateblue;
+    }
+
+    .flexdiv{
+        display: flex;
+        width: auto;
+        height: 500px;
+        background-color: #fff;
+        justify-content: center;
+        align-items: center;
     }
 
     .body {
