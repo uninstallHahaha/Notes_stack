@@ -360,6 +360,8 @@ make([]int, 10, 100)
 
 ###### Arrays
 
+<span style='color:cyan;'>数组是值类型，值类型，值类型</span>
+
 *   go的数组是值类型, 把一个数组赋值给另外一个数组是复制各个元素
 *   数组作为函数参数传递时, 接收方默认收到的是数组的copy, 也就是在函数中改变数组不会改变原数组
 *   数组的长度也是类型的一部分, `[10]int` 和 `[20]int` 就是两个类型
@@ -373,6 +375,30 @@ make([]int, 10, 100)
 >   -   The size of an array is part of its type.  The types `[10]int` and `[20]int` are 
 >
 >       distinct.
+
+一些创建数组的方式
+
+```go
+// 全局变量
+var arr [3]int = [3]int{1, 2}
+var arr1 = [3]int{1, 2}
+var arr2 = [...]int{1, 2, 3}
+var arr3 = [3]int{1: 10, 2: 20}
+// 创建对象数组
+var arr4 = [2]struct{
+    name string
+    age int32
+    }{
+        {"alice",20},{"ylive",21},
+    }
+
+func main() {
+    // 局部变量
+	ar := [5]int{}
+    ar1 := [...]int{1,2,3}
+    ar2 := [3]int{1:10, 2:20}
+}
+```
 
 如果要在函数中修改原数组, 请传递数组指针
 
