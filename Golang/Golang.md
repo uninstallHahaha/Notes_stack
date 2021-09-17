@@ -435,13 +435,38 @@ x := Sum(&array)  // Note the explicit address-of operator
 
 
 
-###### Slices 
+###### [Slices](https://www.topgoer.com/go%E5%9F%BA%E7%A1%80/Slice%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0.html)
 
 需要说明，slice 并不是数组或数组指针。它通过内部指针和相关属性引用数组片段，以实现变长方案
 
-slices切片本质是一个结构体，保存了指向具体数组位置的信息, slices变量的赋值就是复制地址, 改变slices的元素就是在改变指向数组的元素
+slices变量的赋值就是复制地址, 改变slices的元素就是在改变指向数组的元素
 
 >   Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. 
+
+切片数据结构
+
+slices切片本质是一个结构体，保存了指向具体数组位置的信息
+
+```go
+type slice struct {
+    array unsafe.Pointer // 指向数组某元素的指针
+    len   int 
+    cap   int
+}
+```
+
+所以，可以从切片是一个对象，它有自己的内存地址，也可以从中获取到指向的数组元素地址
+
+```go
+// 原数组
+ar := []int{1, 2, 3, 4, 5, 6}
+// 切片
+sli := ar[0:]
+// 切片对象的地址   切片指向数组首元素的地址==原数组首元素地址
+fmt.Println(unsafe.Pointer(&sli), &sli[0], &ar[0])
+```
+
+切片的创建
 
 ```go
 // 非主流手动创建
@@ -476,6 +501,25 @@ resize切片
     // 在切片上再切片，实际上还是在原数组上切片
     sli1 := sli[0:2]
 ```
+
+直接切片时限定 cap
+
+通常直接切片方法为 arr[a:b], 表示左闭右开切片，这样的话，默认 cap 直接为原数组兜底
+
+非常规直接切片方法为 arr[a: b: ​c​] , 表示取 [a,b) 切片，并且限定 cap 到 c 结束
+
+```go
+    ar := []int{1,2,3,4,5,6}
+    // [2], len 1, cap 5
+    sli := ar[1:2]
+    // [1], len 1, cap 2
+    sli1 := ar[:1:2]
+
+    fmt.Println(len(sli), cap(sli))
+    fmt.Println(len(sli1), cap(sli1))
+```
+
+
 
 
 
