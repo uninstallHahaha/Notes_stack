@@ -400,6 +400,17 @@ func main() {
 }
 ```
 
+创建多维数组
+
+```go
+    // 全局
+    var arr0 [5][3]int
+    var arr1 [2][3]int = [...][3]int{{1, 2, 3}, {7, 8, 9}}
+    // 局部
+    a := [2][3]int{{1, 2, 3}, {4, 5, 6}}
+    b := [...][2]int{{1, 1}, {2, 2}, {3, 3}} // 第 2 纬度不能用 "..."
+```
+
 如果要在函数中修改原数组, 请传递数组指针
 
 >   The value property can be useful but also expensive; if you want C-like behavior and efficiency, you can pass a pointer to the array.
@@ -426,7 +437,9 @@ x := Sum(&array)  // Note the explicit address-of operator
 
 ###### Slices 
 
-slices切片就是数组的指针, slices变量的赋值就是复制地址, 改变slices的元素就是在改变指向数组的元素
+需要说明，slice 并不是数组或数组指针。它通过内部指针和相关属性引用数组片段，以实现变长方案
+
+slices切片本质是一个结构体，保存了指向具体数组位置的信息, slices变量的赋值就是复制地址, 改变slices的元素就是在改变指向数组的元素
 
 >   Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. 
 
