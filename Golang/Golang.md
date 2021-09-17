@@ -479,6 +479,16 @@ ar := [5]int{1,2,3,4,5}
 sli4 := ar[:]
 ```
 
+手动创建一个 slice 对象，在 Go 的反射中就存在一个与之对应的数据结构 SliceHeader，我们可以用它来构造一个 slice
+
+```go
+    var o []byte
+    sliceHeader := (*reflect.SliceHeader)((unsafe.Pointer(&o)))
+    sliceHeader.Cap = length
+    sliceHeader.Len = length
+    sliceHeader.Data = uintptr(ptr)
+```
+
 slice如果是直接make出来的，那么len 和 cap 按照指定的值设置
 
 slice如果是从数组中直接切出来的，那么len 是切出来的实际长度，而 cap 是从开始切的元素直至原数组最后一个元素之间的长度
@@ -519,9 +529,37 @@ resize切片
     fmt.Println(len(sli1), cap(sli1))
 ```
 
+nil切片
 
+```go
+// pointer 属性指向 nil， len=0, cap=0
+var slice []int
+```
 
+![image-20210917172226488](Golang.assets/image-20210917172226488.png)
 
+nil 切片被用在很多标准库和内置函数中，描述一个不存在的切片的时候，就需要用到 nil 切片。比如函数在发生异常的时候，返回的切片就是 nil 切片。nil 切片的指针指向 nil。
+
+空切片
+
+```go
+    silce := make( []int , 0 )
+    slice := []int{ }
+```
+
+![image-20210917172310704](Golang.assets/image-20210917172310704.png)
+
+空切片就是没有元素的空集合，空切片和 nil 切片的区别在于，空切片指向的地址不是nil，指向的是一个内存地址，但是它没有分配任何内存空间，即底层元素包含0个元素。
+
+切片扩容策略
+
+![image-20210917172708486](Golang.assets/image-20210917172708486.png)
+
+​		如果切片的容量小于 1024 个元素，于是扩容的时候就翻倍增加容量。上面那个例子也验证了这一情况，总容量从原来的4个翻倍到现在的8个。
+
+​		一旦元素个数超过 1024 个元素，那么增长因子就变成 1.25 ，即每次增加原来容量的四分之一。
+
+​		注意：扩容扩大的容量都是针对原来的容量而言的，而不是针对原来数组的长度而言的。
 
 
 
