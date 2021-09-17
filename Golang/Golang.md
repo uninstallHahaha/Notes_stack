@@ -596,6 +596,16 @@ x = append(x, y...)
 fmt.Println(x)
 ```
 
+遍历
+
+```go
+for index, value := range slice {
+        fmt.Printf("inde : %v , value : %v\n", index, value)
+}
+```
+
+
+
 
 
 
