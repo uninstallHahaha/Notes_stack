@@ -737,6 +737,31 @@ func (s Sequence) Swap(i, j int) {
 
 
 
+###### string
+
+字符串
+
+实际上是个 byte 数组， 或者 rune 数组（包含中文），所以如果想要修改字符串，应当先转换为数组，对数组操作，最后再转回 string
+
+```go
+    // 字符串
+    str := "hello 你好"
+    // 转数组
+    strarr:= []rune(str)
+    // 操作数组
+    strarr[0]='y'
+    strarr = append(strarr, '!')
+    // 转换回 string
+    str = string(strarr)
+    fmt.Println(str)   
+```
+
+
+
+
+
+
+
 
 
 #### Unused imports and variables
