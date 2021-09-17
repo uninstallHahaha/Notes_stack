@@ -569,7 +569,9 @@ delete(timeZone, "PDT")  // Now on Standard Time
 
 ###### Append
 
-Append内置函数用于给 slice 加上新元素, 因为加上新元素后 slice 指向的数组可能改变, 所以要返回新的 slice
+Append内置函数用于给 slice 加上新元素
+
+​		如果加上新元素后，超出了 slice 的 cap，那么重新按照二倍的长度重新申请一个底层数组，然后在该数组上追加，最后返回新的 slice 地址（扩容了），或者原 slice 地址（没扩容）
 
 >   What `append` does is append the elements to the end of the slice and return the result.  The result needs to be returned because, as with our hand-written `Append`, the underlying array may change. 
 
