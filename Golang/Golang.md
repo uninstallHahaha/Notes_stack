@@ -444,8 +444,14 @@ slices切片本质是一个结构体，保存了指向具体数组位置的信�
 >   Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. 
 
 ```go
-// 创建slices
-newSlice := make([]byte, 10)
+// 非主流手动创建
+sli := []int{}
+sli1 := []int{1, 2, 3}
+// 常规make,
+sli2 := make([]int, 1, 3)
+// 直接从数组中切片
+ar := [5]int{1,2,3,4,5}
+sli4 := ar[:]
 ```
 
 
