@@ -466,7 +466,16 @@ for index, value := range slice {
 }
 ```
 
+resize切片
 
+```go
+    // 原数组
+    ar := [3]int{1,2,3}
+    // 切片
+    sli := ar[1:2]
+    // 在切片上再切片，实际上还是在原数组上切片
+    sli1 := sli[0:2]
+```
 
 
 
