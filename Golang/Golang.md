@@ -1536,7 +1536,7 @@ func WithValue(parent Context, key, val interface{}) Context
 
 > 项目中生成的 go.mod 文件用于记录项目直接引用的包
 
-> 项目中生成的 go.sum 文件用于记录项目直接加间接引用的包
+> 项目中生成的 go.sum 文件用于记录项目 直接 + 间接引用 的包
 
 > go module 模块化的方式使得同一个包的多个版本可以共存用于不同的项目中
 
