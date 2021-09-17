@@ -10,6 +10,10 @@
 
 
 
+方法变量类型 -> package -> module( go mod )
+
+
+
 一个模块包含一个或者多个包, 模块文件夹根目录的 `go.mod` 文件中声明了该模块的名称, 在其他地方导入该模块使用该名称
 
 >   A repository contains one or more modules. A module is a collection of related Go packages that are released together. A Go repository typically contains only one module, located at the root of the repository. A file named `go.mod` there declares the module path: the import path prefix for all packages within the module. The module contains the packages in the directory containing its `go.mod` file as well as subdirectories of that directory, up to the next subdirectory containing another `go.mod` file (if any).
@@ -726,6 +730,31 @@ func Announce(message string, delay time.Duration) {
 但是单单能开启一个 goroutine 去执行任务是不够的, 此时还不能知道这个 goroutine 执行到那里了, 任务是否执行完毕了, 那么就需要使用 channels
 
 >   These examples aren't too practical because the functions have no way of signaling completion.  For that, we need channels.
+
+
+
+
+
+#### WaitGroup
+
+使用 sync.WaitGroup 来实现goroutine的同步
+
+```go
+var wg sync.WaitGroup
+
+func hello(i int) {
+    defer wg.Done() // goroutine结束就登记-1
+    fmt.Println("Hello Goroutine!", i)
+}
+func main() {
+
+    for i := 0; i < 10; i++ {
+        wg.Add(1) // 启动一个goroutine就登记+1
+        go hello(i)
+    }
+    wg.Wait() // 等待所有登记的goroutine都结束
+}
+```
 
 
 
