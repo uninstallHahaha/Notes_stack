@@ -458,6 +458,18 @@ slice如果是直接make出来的，那么len 和 cap 按照指定的值设置
 
 slice如果是从数组中直接切出来的，那么len 是切出来的实际长度，而 cap 是从开始切的元素直至原数组最后一个元素之间的长度
 
+遍历
+
+```go
+for index, value := range slice {
+    fmt.Printf("inde : %v , value : %v\n", index, value)
+}
+```
+
+
+
+
+
 
 
 
@@ -594,14 +606,6 @@ x := []int{1,2,3}
 y := []int{4,5,6}
 x = append(x, y...)
 fmt.Println(x)
-```
-
-遍历
-
-```go
-for index, value := range slice {
-        fmt.Printf("inde : %v , value : %v\n", index, value)
-}
 ```
 
 
