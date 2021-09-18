@@ -1269,6 +1269,56 @@ TODO
 
 
 
+#### 自定义类型和类型别名
+
+自定义类型是定义了一个全新的类型。我们可以基于内置的基本类型定义，其实也是定义struct的方法。例如
+
+```go
+// 自定义一个 myint 的类型
+type myint int
+// 定义结构体
+type 类型名 struct {
+    字段名 字段类型
+    字段名 字段类型
+    …
+}
+```
+
+类型别名规定：TypeAlias只是Type的别名，本质上TypeAlias与Type是同一个类型，例如我们之前见过的rune和byte就是类型别名，他们的定义如下：
+
+```go
+type byte = uint8
+type rune = int32
+```
+
+它们的区别
+
+```go
+//类型定义
+type NewInt int
+
+//类型别名
+type MyInt = int
+
+func main() {
+    var a NewInt
+    var b MyInt
+
+    // 自定义的类型就是一个独立的类型
+    fmt.Printf("type of a:%T\n", a) //type of a:main.NewInt
+    // 类型别名在编译时会被还原为原类型名，只是用来方便阅读
+    fmt.Printf("type of b:%T\n", b) //type of b:int
+}
+```
+
+
+
+
+
+
+
+
+
 #### 内置包
 
 ##### os
