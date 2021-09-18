@@ -1064,7 +1064,26 @@ func main() {
 }
 ```
 
+嵌套匿名结构体：继承的基础
 
+```go
+//Address 地址结构体
+type Address struct {
+    Province string
+    City     string
+}
+
+//User 用户结构体
+type User struct {
+    Name    string
+    Gender  string	// 这里相当于子类的字段
+    Address //匿名结构体，这里就相当于父类
+}
+func main() {
+    var user2 User
+    user2.City = "哈尔滨"	//可以直接访问匿名结构体（父类）的字段名
+}
+```
 
 
 
