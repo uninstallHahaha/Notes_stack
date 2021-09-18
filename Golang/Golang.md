@@ -1076,8 +1076,8 @@ type Address struct {
 //User 用户结构体
 type User struct {
     Name    string
-    Gender  string	// 这里相当于子类的字段
-    Address //匿名结构体，这里就相当于父类
+    Gender  string	// 这里相当于子类的字段，与父类字段重名时，优先使用子类字段
+    *Address //匿名结构体，这里就相当于父类
 }
 func main() {
     var user2 User
