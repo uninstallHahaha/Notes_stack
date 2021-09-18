@@ -907,6 +907,8 @@ func (s Sequence) Swap(i, j int) {
 
 ###### struct
 
+<span style='color:cyan;'>结构体中字段大写开头表示可公开访问，小写表示私有（仅在定义当前结构体的包中可访问）</span>
+
 定义
 
 ```go
@@ -1069,7 +1071,7 @@ func main() {
 ```go
 //Address 地址结构体
 type Address struct {
-    Province string
+    Name string
     City     string
 }
 
@@ -1082,8 +1084,45 @@ type User struct {
 func main() {
     var user2 User
     user2.City = "哈尔滨"	//可以直接访问匿名结构体（父类）的字段名
+    // 创建一个子类实例
+    u := &User{
+        Name: "alice",
+        Gender: "man",
+        Address: &Address{
+            Name: "sichuan",
+            City: "cd",
+        },
+    }
 }
 ```
+
+json序列化与反序列化
+
+```go
+import "encoding/json"
+func main(){
+    // 对象实例
+    u := &User{
+        Name: "alice",
+        Gender: "man",
+        Address: &Address{
+            Name: "sichuan",
+            City: "cd",
+        },
+    }
+    // 序列化
+    data, _ := json.Marshal(u)
+    fmt.Printf("%s\n", data)
+    // 反序列化
+    uu := &User{}
+    json.Unmarshal(data, uu)
+    fmt.Println(uu)
+}
+```
+
+
+
+
 
 
 
