@@ -633,8 +633,8 @@ for i := range picture {
 ###### Map
 
 *   map 是引用类型, 作为参数传递后, 改变其值就是在改变原 map 的值
-
 *   map 的 key 可以是任何定义了 equality 操作的类型, 但是 slice就不行, 因为 slice不能 equlity操作
+*   map 的链表使用尾插法，但是它不是线程安全的
 
 >   The key can be of any type for which the equality operator is defined, such as integers, floating point and complex numbers, strings, pointers, interfaces (as long as the dynamic type supports equality), structs and arrays. Slices cannot be used as map keys, because equality is not defined on them. Like slices, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller.
 
@@ -1730,13 +1730,13 @@ t.Stop()
 
 并发相关
 
-sync.WaitGroup 等一等功能
+*   sync.WaitGroup 等一等功能
 
-sync.Mutex 互斥锁
+* sync.Mutex 互斥锁 
 
-sync.RWMutex 读写锁
+*   sync.RWMutex 读写锁 
 
-sync.Once 
+*   sync.Once 
 
 ​		该对象实例仅包含一个方法 Do(), 将要执行的方法传入该方法，将会总是只被执行一次，实现原理类似于双重判断的单例模式，内部使用一个布尔变量和锁变量来保证目标逻辑只被执行一次
 
@@ -1809,6 +1809,26 @@ func main() {
 结果就变得正确起来，像这样
 
 ![image-20210918160709192](Golang.assets/image-20210918160709192.png)
+
+
+
+*   sync.Map 并发安全的Map
+
+    ​		开箱即用表示不用像内置的map一样使用make函数初始化就能直接使用。同时sync.Map内置了诸如Store、Load、LoadOrStore、Delete、Range等操作方法
+
+    ```go
+    // 直接创建使用，无需 make
+    var m sync.Map
+    // store 存kv，无视类型
+    m.Store("alice", 12)
+    m.Store(12, "yyy")
+    // load 取值，返回第二个值为是否存在该key
+    v, _ := m.Load(12)
+    ```
+
+    
+
+
 
 
 
