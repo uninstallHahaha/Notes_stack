@@ -351,7 +351,9 @@ m := map[int]string{Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
 
 ###### Allocation with `make` 
 
-make 仅用于创建 slices, maps , channels , 因为这三种数据结构必须在初始化内部字段后才能使用, 而使用 new 进行创建, 内部字段将默认初始化为 0 , 此时不能直接使用, 还需要初始化, 所以使用 make 可以更加方便地创建以上类型
+​		make 仅用于创建 slices, maps , channels , 返回的还是这三个引用类型本身
+
+​		因为这三种数据结构必须在初始化内部字段后才能使用, 而使用 new 进行创建, 内部字段将默认初始化为 0 , 此时不能直接使用, 还需要初始化, 所以使用 make 可以更加方便地创建以上类型
 
 >   It creates slices, maps, and channels only, and it returns an *initialized* (not *zeroed*) value of type `T` (not `*T`). The reason for the distinction is that these three types represent, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data (inside an array), the length, and the capacity, and until those items are initialized, the slice is `nil`. For slices, maps, and channels, `make` initializes the internal data structure and prepares the value for use.
 
@@ -673,6 +675,53 @@ if ok{
 ```go
 delete(timeZone, "PDT")  // Now on Standard Time
 ```
+
+<span style='color:cyan;'>按照指定顺序遍历 map</span>
+
+思想是使用切片放所有的 key ，然后按照目标顺序排序，最后遍历切片依次从map中取值
+
+```go
+ func main() {
+    rand.Seed(time.Now().UnixNano()) //初始化随机数种子
+
+    var scoreMap = make(map[string]int, 200)
+
+    for i := 0; i < 100; i++ {
+        key := fmt.Sprintf("stu%02d", i) //生成stu开头的字符串
+        value := rand.Intn(100)          //生成0~99的随机整数
+        scoreMap[key] = value
+    }
+    //取出map中的所有key存入切片keys
+    var keys = make([]string, 0, 200)
+    for key := range scoreMap {
+        keys = append(keys, key)
+    }
+    //对切片进行排序
+    sort.Strings(keys)
+    //按照排序后的key遍历map
+    for _, key := range keys {
+        fmt.Println(key, scoreMap[key])
+    }
+}
+```
+
+map数据结构
+
+实现原理即常规的 数组 + 链表 的实现方式
+
+解决hash冲突的问题，使用拉链法，也就是链表的方式
+
+扩展：解决hash冲突的方法
+
+*   开发定址法：也就是说当我们存储一个key，value时，发现hashkey(key)的下标已经被别key占用，那我们在这个数组中空间中重新找一个没被占用的存储这个冲突的key，那么没被占用的有很多，找哪个好呢？常见的有线性探测法，线性补偿探测法，随机探测法
+*   线性探测 ：字面意思就是按照顺序来，从冲突的下标处开始往后探测，到达数组末尾时，从数组开始处探测，直到找到一个空位置存储这个key，当数组都找不到的情况下回扩容（事实上当数组容量快满的时候就会扩容了）；查找某一个key的时候，找到key对应的下标，比较key是否相等，如果相等直接取出来，否则按照顺寻探测直到碰到一个空位置，说明key不存在。
+*   拉链法 ：数组 + 链表
+
+
+
+
+
+
 
 
 
