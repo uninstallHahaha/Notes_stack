@@ -1210,10 +1210,11 @@ goroutine 调度
 
 `runtime.GOMAXPROCS()`，用来设置可以并行计算的CPU核数最大值，并返回之前的值。
 
-默认此函数的值与ＣＰＵ逻辑个数相同，即有多少个goroutine并发执行，当然可以设置它，它的取值是１～２５６。最好在主函数在开始前设置它，因为设置它会停止当前程序的运行。
+Go1.5版本之前，默认使用的是单核心执行。Go1.5版本之后，默认使用全部的CPU逻辑核心数。
 
-GO默认是使用一个CPU核的，除非设置runtime.GOMAXPROCS
-那么在多核环境下，什么情况下设置runtime.GOMAXPROCS会比较好的提高速度呢？
+它的取值是１～２５６。
+
+最好在主函数在开始前设置它，因为设置它会停止当前程序的运行。
 
 适合于CPU密集型、并行度比较高的情景。如果是IO密集型，CPU之间的切换也会带来性能的损失。
 
@@ -1255,6 +1256,8 @@ func main() {
 channels 通过 make 来创建, 引用类型
 
 不指定 size 时, 默认 buffer 大小为0
+
+通道是可以被垃圾回收机制回收的，它和关闭文件是不一样的，在结束操作之后关闭文件是必须要做的，但关闭通道不是必须的
 
 >   Like maps, channels are allocated with `make`, and the resulting value acts as a reference to an underlying data structure. If an optional integer parameter is provided, it sets the buffer size for the channel. The default is zero, for an unbuffered or synchronous channel.
 
