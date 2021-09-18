@@ -1269,9 +1269,19 @@ cs := make(chan *os.File, 100)  // buffered channel of pointers to Files
 
 使用 `close()` 关闭通道
 
-​	对于已经关闭的通道，不可以继续向里面发送数据，但是还是可以从中接收数据，此时如果通道中还有数据，那么按照队列顺序依次返回，反之如果通道中没有数据，那么直接跳过而不是使得当前 goroutine 进入阻塞
+​		对于已经关闭的通道，不可以继续向里面发送数据，但是还是可以从中接收数据，此时如果通道中还有数据，那么按照队列顺序依次返回，反之如果通道中没有数据，那么直接跳过而不是使得当前 goroutine 进入阻塞
 
+​		对于已经关闭的通道，再次关闭会引发 panic
 
+![image-20210918143300744](Golang.assets/image-20210918143300744.png)
+
+<span style='color:cyan;'>因为通道使用不当导致无限阻塞进入死锁状态</span>
+
+​		如果其他 goroutine 都已经关闭，而主 groutine 中还需要阻塞等待某个通道，那么会检测出此 deadlock 错误
+
+​		如果一个 0 buffer 缓冲通道，主 goroutine 往里面发送数据而又没有其他 goroutine 接收的话，就会检测出 deadlock 错误
+
+![image-20210918141923996](Golang.assets/image-20210918141923996.png)
 
 不带 buffer 的 channel 能够实现两个 goroutine 的数据交流和同步执行, 比如
 
