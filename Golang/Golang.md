@@ -964,7 +964,43 @@ p2.city = "北京"
 fmt.Printf("p2=%#v\n", p2) //p2=&main.person{name:"测试", city:"北京", age:18}
 ```
 
+使用 & 实例化
 
+```go
+p3 := &person{}
+fmt.Printf("%T\n", p3)     //*main.person
+fmt.Printf("p3=%#v\n", p3) //p3=&main.person{name:"", city:"", age:0}
+p3.name = "博客"
+p3.age = 30
+p3.city = "成都"
+fmt.Printf("p3=%#v\n", p3) //p3=&main.person{name:"博客", city:"成都", age:30}
+```
+
+p3.name = "博客"其实在底层是(*p3).name = "博客"，这是Go语言帮我们实现的语法糖
+
+创建时初始化
+
+```go
+// 这里创建出来是 person 对象
+p5 := person{
+    name: "pprof.cn",
+    city: "北京",
+    age:  18,
+}
+//p5=main.person{name:"pprof.cn", city:"北京", age:18}
+fmt.Printf("p5=%#v\n", p5) 
+
+// 这里创建出来是 person 对象的指针
+p6 := &person{
+    name: "pprof.cn",
+    city: "北京",
+    age:  18,
+}
+//p6=&main.person{name:"pprof.cn", city:"北京", age:18}
+fmt.Printf("p6=%#v\n", p6) 
+
+// 两个对象都可以直接通过 .属性 来访问内容，因为go默认做了转换
+```
 
 
 
