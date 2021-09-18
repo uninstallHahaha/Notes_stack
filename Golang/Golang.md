@@ -1934,9 +1934,40 @@ func main() {
 
     
 
-    
 
-    
+
+
+
+
+##### Json
+
+```go
+import "encoding/json"
+func main(){
+    // 对象实例
+    u := &User{
+        name: "alice", // 小写开头的私有字段不能被 json 访问，所以不参与序列化
+        Gender: "man",
+        Address: &Address{
+            Name: "sichuan",
+            City: "cd",
+        },
+    }
+    // 序列化
+    data, _ := json.Marshal(u)
+    fmt.Printf("%s\n", data)
+    // 反序列化
+    uu := &User{}
+    json.Unmarshal(data, uu)
+    fmt.Println(uu)
+}
+```
+
+
+
+
+
+
 
 ##### [net](https://www.topgoer.com/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/socket%E7%BC%96%E7%A8%8B/UDP%E7%BC%96%E7%A8%8B.html)
 
