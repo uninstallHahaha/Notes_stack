@@ -917,7 +917,45 @@ type animal interface {
 }
 ```
 
+空接口
 
+空接口是指没有定义任何方法的接口。因此任何类型都实现了空接口。
+
+空接口类型的变量可以存储任意类型的变量
+
+```go
+// 定义一个空接口x
+var x interface{}
+s := "pprof.cn"
+x = s
+fmt.Printf("type:%T value:%v\n", x, x)
+i := 100
+x = i
+fmt.Printf("type:%T value:%v\n", x, x)
+b := true
+x = b
+fmt.Printf("type:%T value:%v\n", x, x)
+```
+
+使用空接口作为函数参数可以接受任何类型参数
+
+```go
+// 空接口作为函数参数
+func show(a interface{}) {
+    fmt.Printf("type:%T value:%v\n", a, a)
+}
+```
+
+使用空接口创建可保存任何类型的map
+
+```go
+// 空接口作为map值
+var studentInfo = make(map[string]interface{})
+studentInfo["name"] = "李白"
+studentInfo["age"] = 18
+studentInfo["married"] = false
+fmt.Println(studentInfo)
+```
 
 
 
