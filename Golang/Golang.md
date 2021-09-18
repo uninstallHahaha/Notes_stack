@@ -2872,6 +2872,21 @@ observer节点不参与 leader 节点的选举, 不参与写数据时的ack反�
     lock.UnLock() // 释放锁
     ```
 
+*   读写互斥锁
+
+    支持同时读读，不支持同时读写或者同时写写
+
+    多读少写时提高并发
+
+    ```go
+    import "sync"
+    var lock sync.RWMutex
+    lock.Lock() // 获取写锁
+    lock.UnLock() // 释放写锁
+    lock.RLock() // 获取读锁
+    lock.RUnLock() // 释放读锁
+    ```
+
     
 
 
