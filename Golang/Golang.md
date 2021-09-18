@@ -849,6 +849,10 @@ bs.Write(make([]byte, 0))
 
 <span style='color:cyan;'>接口是一种类型，是一种类型，是一种类型</span>
 
+接口类型变量能够存储所有实现了该接口的实例
+
+但是要注意，所有接口方法在实现类中必须都有值接收者方法的实现，这样才能算是实现了该接口
+
 ```go
 // 接口定义
 type animal interface {
