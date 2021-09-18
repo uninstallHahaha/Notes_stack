@@ -1371,6 +1371,29 @@ func Serve(queue chan *Request) {
 
 
 
+#### Select
+
+使用 select 语法，同时操作多个 channel，可以是写数据，也可以是读数据，按照最先就绪的分支执行，如果同时有多个分支可以执行，随机选择其中一个执行
+
+```go
+    select {
+        case <-chan1:
+           // 如果chan1成功读到数据，则进行该case处理语句
+        case chan2 <- 1:
+           // 如果成功向chan2写入数据，则进行该case处理语句
+        default:
+           // 如果上面都没有成功，则进入default处理流程
+    }
+```
+
+
+
+
+
+
+
+
+
 #### Panic
 
 >   there is a built-in function `panic` that in effect creates a run-time error that will stop the program (but see the next section).  The function takes a single argument of arbitrary type—often a string—to be printed as the program dies.
@@ -1531,10 +1554,6 @@ n3 := copy(b, "Hello, World!")  // n3 == 5, b == []byte("Hello")
 
 
 
-#### Select
-
-TODO
-
 
 
 
@@ -1645,6 +1664,67 @@ func main() {
 使用--help显示提示
 
 ![1606441600160](Golang.assets/1606441600160.png)
+
+
+
+
+
+##### time
+
+>    定时器，计时器，时间相关
+
+一次性的定时器
+
+```go
+// 1.timer基本使用，一次性的定时器
+timer1 := time.NewTimer(2 * time.Second)
+fmt.Printf("t1:%v\n", time.Now())
+t2 := <-timer1.C
+fmt.Printf("t2:%v\n", t2)
+```
+
+中断定时器
+
+```go
+t := time.NewTimer(time.Second * 5)
+// 中断定时器
+t.Stop()
+fmt.Println("timer stop...")
+```
+
+重新设置定时器时间
+
+```go
+t := time.NewTimer(time.Second * 5)
+// 重置定时器
+t.Reset(time.Second * 5)
+<-t.C
+fmt.Println("timer stop...")
+```
+
+多次执行的计时器
+
+```go
+	t := time.NewTicker(time.Second)
+	i := 0
+	for {
+		if i == 5 {
+			break
+		}
+		<-t.C
+		i++
+		fmt.Println("tick...")
+	}
+
+// 停止计时器
+t.Stop()
+```
+
+
+
+
+
+
 
 
 
@@ -2774,6 +2854,27 @@ observer节点不参与 leader 节点的选举, 不参与写数据时的ack反�
 *   i.(type) 只能在 switch 中使用
 *   reflext.TypeOf(i) 内置方法
 *   fmt.Printf("%T", i) 格式化输出
+
+
+
+
+
+#### 并发编程
+
+*   互斥锁，完全互斥
+
+    尝试获取锁，获取失败则阻塞，待到释放锁后，从等待列表中随机唤醒来执行
+
+    ```go
+    import "sync"
+    var lock sync.Mutex
+    lock.Lock() // 获取锁
+    lock.UnLock() // 释放锁
+    ```
+
+    
+
+
 
 
 
