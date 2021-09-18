@@ -1173,6 +1173,8 @@ import _ "net/http/pprof"
 
 <span style='color:cyan;'>goroutine 只是由官方实现的超级"线程池"</span>
 
+​		goroutine 是由Go运行时（runtime）自己的调度器调度的，这个调度器使用一个称为m:n调度的技术（复用/调度m个goroutine到n个OS线程）。 其一大特点是goroutine的调度是在用户态下完成的， 不涉及内核态与用户态之间的频繁切换。另一方面充分利用了多核的硬件资源，近似的把若干goroutine均分在物理线程上， 再加上本身goroutine的超轻量，以上种种保证了go调度方面的性能。
+
 >    A goroutine has a simple model: it is a function executing concurrently with other goroutines in the same address space.  It is lightweight, costing little more than the allocation of stack space. And the stacks start small, so they are cheap, and grow by allocating (and freeing) heap storage as required.
 
 在方法的调用语句前面加上 `go` 关键字就会开启一个 goroutine 执行这个方法调用, 也可以直接执行一个匿名方法, 就像是在命令行中后台运行了一条命令
