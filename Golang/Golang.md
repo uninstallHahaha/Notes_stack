@@ -713,9 +713,11 @@ delete(timeZone, "PDT")  // Now on Standard Time
 
 ​		数组中存放的元素是 bucket 对象，一个 bucket 对象同时存放 8 个 kv 对，以及指向下一个 bucket 的指针，以及这 8 个 key 的 hash 高八位用来快速判断目标 key 是否存在于该 bucket 中
 
-​		在 bucket 中，所有的 key 连起来存放，所有的 value 连起来存放，为什么呢？假设 map[int64]int8，那么 key 占 8 个字节，value 占 1 个字节，如果 kv 连起来存放，它们长度不同也会内存对其，使得 value 也占据 8 个字节，这就浪费了内存空间
-
 ![img](Golang.assets/4.png)
+
+​		在 bucket 中，所有的 key 连起来存放，所有的 value 连起来存放，为什么呢？假设 map[int64]int8，那么 key 占 8 个字节，value 占 1 个字节，如果 kv 连起来存放，它们长度不同也会内存对齐，使得 value 也占据 8 个字节，这就浪费了内存空间
+
+![img](Golang.assets/5.png)
 
 <span style='color:orange;'>扩展：解决hash冲突的方法</span>
 
