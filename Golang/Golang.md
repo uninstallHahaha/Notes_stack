@@ -922,7 +922,47 @@ func (s Sequence) Swap(i, j int) {
     }
 ```
 
+实例化
 
+```go
+    var 结构体实例 结构体类型
+```
+
+匿名结构体
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    // 匿名创建
+    var user struct{Name string; Age int}
+    user.Name = "pprof.cn"
+    user.Age = 18
+    fmt.Printf("%#v\n", user)
+}
+```
+
+使用 new 实例化
+
+```go
+    var p2 = new(person)
+    fmt.Printf("%T\n", p2)     //*main.person
+    fmt.Printf("p2=%#v\n", p2) //p2=&main.person{name:"", city:"", age:0}
+```
+
+直接使用结构体指针访问内容
+
+```go
+var p2 = new(person)
+p2.name = "测试"
+p2.age = 18
+p2.city = "北京"
+fmt.Printf("p2=%#v\n", p2) //p2=&main.person{name:"测试", city:"北京", age:18}
+```
 
 
 
