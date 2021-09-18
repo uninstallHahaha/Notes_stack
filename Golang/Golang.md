@@ -905,6 +905,27 @@ func (s Sequence) Swap(i, j int) {
 
 
 
+###### struct
+
+定义
+
+```go
+    type 类型名 struct {
+        字段名 字段类型
+        字段名 字段类型
+        …
+    }
+	// 属性可写在一行，用逗号隔开
+    type person1 struct {
+        name, city string
+        age        int8
+    }
+```
+
+
+
+
+
 
 
 
