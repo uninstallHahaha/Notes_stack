@@ -1726,6 +1726,94 @@ t.Stop()
 
 
 
+##### sync
+
+并发相关
+
+sync.WaitGroup 等一等功能
+
+sync.Mutex 互斥锁
+
+sync.RWMutex 读写锁
+
+sync.Once 
+
+​		该对象实例仅包含一个方法 Do(), 将要执行的方法传入该方法，将会总是只被执行一次，实现原理类似于双重判断的单例模式，内部使用一个布尔变量和锁变量来保证目标逻辑只被执行一次
+
+例子：不加限制时，可能被初始化多次
+
+```go
+var wg sync.WaitGroup
+
+// 未初始化对象，将要在方法中初始化
+var obj []int
+// 用来初始化对象的方法
+func init_obj() {
+	if obj == nil {
+        // 结果发现本句会被多次打印，也就是会被多次初始化
+        fmt.Println("obj is nil") 
+		obj = make([]int, 0)
+	}
+    wg.Done()
+}
+
+func main() {
+    wg.Add(5)
+    // 多个 goroutine 同时进行初始化工作
+    for i:=0;i<5;i++{
+        go init_obj()
+    }
+    wg.Wait()
+
+	fmt.Println("this is main go")
+}
+```
+
+结果发现对象会被多次初始化
+
+![image-20210918160437617](Golang.assets/image-20210918160437617.png)
+
+现在使用单次运行限制
+
+```go
+var wg sync.WaitGroup
+var once sync.Once
+
+// 未初始化对象，将要在方法中初始化
+var obj []int
+// 用来初始化对象的方法
+func init_obj() {
+    // 在初始化逻辑上加上单次执行的限制
+    once.Do(func() {
+        if obj == nil {
+            // 结果发现本句会被多次打印，也就是会被多次初始化
+            fmt.Println("obj is nil") 
+            obj = make([]int, 0)
+        }
+    })
+    wg.Done()
+}
+
+func main() {
+    wg.Add(5)
+    // 多个 goroutine 同时进行初始化工作
+    for i:=0;i<5;i++{
+        go init_obj()
+    }
+    wg.Wait()
+
+	fmt.Println("this is main go")
+}
+```
+
+结果就变得正确起来，像这样
+
+![image-20210918160709192](Golang.assets/image-20210918160709192.png)
+
+
+
+
+
 
 
 
