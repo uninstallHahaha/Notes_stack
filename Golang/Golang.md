@@ -705,13 +705,19 @@ delete(timeZone, "PDT")  // Now on Standard Time
 }
 ```
 
-map数据结构
+<span style='color:cyan;'>[map数据结构](https://www.topgoer.com/go%E5%9F%BA%E7%A1%80/Map%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.html)</span>
 
 实现原理即常规的 数组 + 链表 的实现方式
 
 解决hash冲突的问题，使用拉链法，也就是链表的方式
 
-扩展：解决hash冲突的方法
+​		数组中存放的元素是 bucket 对象，一个 bucket 对象同时存放 8 个 kv 对，以及指向下一个 bucket 的指针，以及这 8 个 key 的 hash 高八位用来快速判断目标 key 是否存在于该 bucket 中
+
+​		在 bucket 中，所有的 key 连起来存放，所有的 value 连起来存放，为什么呢？假设 map[int64]int8，那么 key 占 8 个字节，value 占 1 个字节，如果 kv 连起来存放，它们长度不同也会内存对其，使得 value 也占据 8 个字节，这就浪费了内存空间
+
+![img](Golang.assets/4.png)
+
+<span style='color:orange;'>扩展：解决hash冲突的方法</span>
 
 *   开发定址法：也就是说当我们存储一个key，value时，发现hashkey(key)的下标已经被别key占用，那我们在这个数组中空间中重新找一个没被占用的存储这个冲突的key，那么没被占用的有很多，找哪个好呢？常见的有线性探测法，线性补偿探测法，随机探测法
 *   线性探测 ：字面意思就是按照顺序来，从冲突的下标处开始往后探测，到达数组末尾时，从数组开始处探测，直到找到一个空位置存储这个key，当数组都找不到的情况下回扩容（事实上当数组容量快满的时候就会扩容了）；查找某一个key的时候，找到key对应的下标，比较key是否相等，如果相等直接取出来，否则按照顺寻探测直到碰到一个空位置，说明key不存在。
