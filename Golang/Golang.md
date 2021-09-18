@@ -1096,14 +1096,14 @@ func main() {
 }
 ```
 
-json序列化与反序列化
+Json序列化与反序列化
 
 ```go
 import "encoding/json"
 func main(){
     // 对象实例
     u := &User{
-        Name: "alice",
+        name: "alice", // 小写开头的私有字段不能被 json 访问，所以不参与序列化
         Gender: "man",
         Address: &Address{
             Name: "sichuan",
@@ -1170,6 +1170,8 @@ import _ "net/http/pprof"
 
 
 #### Goroutines
+
+<span style='color:cyan;'>goroutine 只是由官方实现的超级"线程池"</span>
 
 >    A goroutine has a simple model: it is a function executing concurrently with other goroutines in the same address space.  It is lightweight, costing little more than the allocation of stack space. And the stacks start small, so they are cheap, and grow by allocating (and freeing) heap storage as required.
 
