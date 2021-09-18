@@ -893,7 +893,31 @@ func (s Sequence) Swap(i, j int) {
 }
 ```
 
-接口中的方法要全部实现，但是不一定就是在实现类中直接实现，也可以在内嵌类中实现，就相当于在父类中实现也可以
+关于在父类中实现接口方法
+
+​		接口中的方法要全部实现，但是不一定就是在实现类中直接实现，也可以在内嵌类中实现，就相当于在父类中实现也可以
+
+接口的嵌套
+
+```go
+// Sayer 接口
+type Sayer interface {
+    say()
+}
+
+// Mover 接口
+type Mover interface {
+    move()
+}
+
+// 接口嵌套
+type animal interface {
+    Sayer
+    Mover
+}
+```
+
+
 
 
 
