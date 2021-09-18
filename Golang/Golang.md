@@ -847,6 +847,29 @@ bs.Write(make([]byte, 0))
 
 ###### Interface
 
+<span style='color:cyan;'>接口是一种类型，是一种类型，是一种类型</span>
+
+```go
+// 接口定义
+type animal interface {
+	say(string) int
+	eat(string) int
+}
+// 实现接口的类
+type dog struct {
+	name string
+}
+
+func (d dog) say(str string) int {
+	fmt.Println(d.name, "say: ", str)
+	return 1
+}
+func (d dog) eat(str string) int {
+	fmt.Println(d.name, "eat: ", str)
+	return 1
+}
+```
+
 对于一个类型, 只要实现了某个接口的所有方法, 就被认为是实现了该接口, 无须显示书写实现哪个接口
 
 ```go
@@ -1865,6 +1888,20 @@ func main() {
 解决黏包的方法，既然不能阻止数据被缓存后批量发送，那么就在收到数据后，手动对数据拆分，使其恢复原样，那么如何？
 
 这里可以自己定一个协议，作为包头加在数据上，比如使用四个字节表示当前包的数据大小，那么在收到数据后，只需要解析自定义包头，然后根据大小切分出实际的数据部分即可
+
+
+
+
+
+
+
+##### [net/http](https://www.topgoer.com/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/http%E7%BC%96%E7%A8%8B.html)
+
+​		上面使用net包直接建立的 tcp 或者 udp 连接，都是较底层的服务方式，说白了就是只管数据能够在服务端和客户端之间进行交互即可，至于请求怎样被处理，响应怎样被封装，都需要自己实现
+
+​		http协议实际上就是一种数据封装的格式，内置的 net/http 包中提供了创建 http 服务和客户端的接口，已经帮你实现了将请求封装为 http 请求格式的逻辑，以及将响应数据封装为 http 响应格式的逻辑
+
+
 
 
 
