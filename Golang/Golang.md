@@ -1283,6 +1283,13 @@ cs := make(chan *os.File, 100)  // buffered channel of pointers to Files
 
 ![image-20210918141923996](Golang.assets/image-20210918141923996.png)
 
+<span style='color:cyan;'>优雅地遍历通道值</span>
+
+*   用两个变量接收通道值，第二个变量代表通道是否还有可以取出来的值，如果返回false代表不仅已经关闭，而且通道中无剩余元素
+*   使用 for range 直接从通道取值，如果 通道关闭并且已经遍历完剩余元素 则自动退出 for range
+
+<span style='color:cyan;'>用于 goroutine 通信</span>
+
 不带 buffer 的 channel 能够实现两个 goroutine 的数据交流和同步执行, 比如
 
 >   Unbuffered channels combine communication—the exchange of a value—with synchronization—guaranteeing that two calculations (goroutines) are in a known state.
