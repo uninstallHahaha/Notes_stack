@@ -1267,6 +1267,12 @@ cj := make(chan int, 0)         // unbuffered channel of integers
 cs := make(chan *os.File, 100)  // buffered channel of pointers to Files
 ```
 
+使用 `close()` 关闭通道
+
+​	对于已经关闭的通道，不可以继续向里面发送数据，但是还是可以从中接收数据，此时如果通道中还有数据，那么按照队列顺序依次返回，反之如果通道中没有数据，那么直接跳过而不是使得当前 goroutine 进入阻塞
+
+
+
 不带 buffer 的 channel 能够实现两个 goroutine 的数据交流和同步执行, 比如
 
 >   Unbuffered channels combine communication—the exchange of a value—with synchronization—guaranteeing that two calculations (goroutines) are in a known state.
