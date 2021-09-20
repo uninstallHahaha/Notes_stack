@@ -1827,9 +1827,9 @@ t.Stop()
 
 *   sync.WaitGroup 等一等功能
 
-* sync.Mutex 互斥锁 
+* sync.Mutex 互斥锁 ，不能连续多次加锁
 
-*   sync.RWMutex 读写锁 
+*   sync.RWMutex 读写锁 ，不能连续多次加锁
 
 *   sync.Once 
 
@@ -1932,7 +1932,37 @@ func main() {
     atomic.AddInt32(&x, 1)
     ```
 
+*   sync.Pool 
+
+    对象池，向对象池中添加的元素，被取出一次后就失效，其所占位置将会在下一次 gc 时被清理，在这之前，再向对象池中添加的新元素，会复用之前已经离开对象池的对象的位置，这样就省去了重新为其分配内存的步骤，提高了效率
+
+    对象池无内存大小上限限制，这就意味着无法对对象池中存放对象的个数进行控制
+
+    ```go
+    	p := sync.Pool{
+    		// New 函数指定如果 pool 中不存在元素时调用 Get 的返回值
+    		New: func() interface{} { return -1 },
+    	}
+    	// 向 pool 中添加元素
+    	p.Put(1)
+    	p.Put(true)
+    	p.Put("alice")
+    	// 从 pool 中获取元素
+    	fmt.Println(p.Get())
+    	fmt.Println(p.Get())
+    	fmt.Println(p.Get())
+    	// 由于对象池中之前只放入三个元素，所以在取完之后，将会调用New函数返回默认值
+    	fmt.Println(p.Get())
+    	fmt.Println(p.Get())
+    ```
+
     
+
+
+
+
+
+
 
 
 
