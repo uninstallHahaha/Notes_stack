@@ -305,7 +305,7 @@ case *int:
 
 ###### Defer
 
-defer 语句在当前方法 return 后立即执行, 一般用来关闭资源, 能够防止忘记关闭资源而且开启资源和关闭资源写在一起更加容易维护
+defer 语句 <span style='color:cyan;'>在当前函数</span> return 后立即执行, 一般用来关闭资源, 能够防止忘记关闭资源而且开启资源和关闭资源写在一起更加容易维护
 
 >   Go's `defer` statement schedules a function call (the *deferred* function) to be run immediately before the function executing the `defer` returns.
 
@@ -1504,6 +1504,17 @@ func Serve(queue chan *Request) {
 内置函数 recover 能够阻断因为 panic 造成的方法出栈, 也就是阻断程序因为 panic 的强制退出
 
 引发 panic 后, 只有 defer 的语句会照常执行, 所以只能把 recover 放到 defer 中使用 
+
+<span style='color:cyan;'>注： revocer 必须直接放到 defer 执行的函数中才能生效</span>
+
+```go
+// 错，直接在defer中调用 recover，不生效
+defer recover() 
+// 错，在defer的多层嵌套函数中调用 recover，不生效
+defer func(){ func(){ recover() }() }() 
+// 对，只能在 defer 调用的函数中直接调用 recover 才生效
+defer func(){ recover() }()
+```
 
 >   A call to `recover` stops the unwinding and returns the argument passed to `panic`.  Because the only code that runs while unwinding is inside deferred functions, `recover` is only useful inside deferred functions.
 
