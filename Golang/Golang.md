@@ -337,7 +337,9 @@ case *int:
 
 ###### Named result parameters 
 
-具名返回参数默认在进入函数时初始化, 在函数中使用 `return` 时, 直接将其作为返回值 , 具名返回值不强制, 但是能够让代码更简洁
+具名返回参数默认在进入函数时创建并初始化, 在函数中使用 `return` 时, 直接将其作为返回值 , 具名返回值不强制, 但是能够让代码更简洁
+
+<span style='color:cyan;'>注意：使用了命名返回值的函数，不能在函数中再使用这个返回值变量名字来创建变量</span>
 
 >   The return or result "parameters" of a Go function can be given names and used as regular variables, just like the incoming parameters. When named, they are initialized to the zero values for their types when the function begins; if the function executes a `return` statement with no arguments, the current values of the result parameters are used as the returned values.
 
