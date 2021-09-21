@@ -52,9 +52,25 @@ func main() {
 
 
 
+#### 模块和包
+
 一个包中的方法和类型将被编译到一个文件中
 
 >   ​	Go programs are organized into packages. A package is a collection of source files in the same directory that are compiled together. Functions, types, variables, and constants defined in one source file are visible to all other source files within the same package.
+
+在文件组织上来看，一个拥有 go.mod 文件的文件夹，就是一个完整的模块
+
+直接放到模块根文件夹的 go 文件就是 main 包的文件，应当在文件中声明 `package main`
+
+在根文件夹中的子文件夹都是独立的包，这些包名应当同文件夹名，在文件中声明 `package 文件夹名`，这些包都属于该模块
+
+如果都是一个包下面的文件，那么它们里面的方法和全局变量都是通用的，直接使用即可
+
+如果属于同一个模块下面的不同包，那么应当 `import "模块名称/包名"` , 然后 `包名.函数名()` 来使用，其实和其他模块的包的使用方法一样 
+
+<span style='color:cyan;'>注意：如果要在别的包中使用，请确保函数名首字母大写，变量名首字母大写，属性名首字母大写</span>
+
+![image-20210921140613625](Golang.assets/image-20210921140613625.png)
 
 
 
