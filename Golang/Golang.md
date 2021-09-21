@@ -56,6 +56,8 @@ func main() {
 
 一个包中的方法和类型将被编译到一个文件中
 
+一个文件夹下只能有一个包，可以多个.go文件，但这些文件必须属于同一个包
+
 >   ​	Go programs are organized into packages. A package is a collection of source files in the same directory that are compiled together. Functions, types, variables, and constants defined in one source file are visible to all other source files within the same package.
 
 在文件组织上来看，一个拥有 go.mod 文件的文件夹，就是一个完整的模块
@@ -1340,6 +1342,16 @@ func main(){
     fmt.Println(uu)
 }
 ```
+
+
+
+
+
+
+
+###### nil
+
+golang 中的空
 
 
 
