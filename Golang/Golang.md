@@ -1892,7 +1892,16 @@ t.Stop()
 
 * sync.Mutex 互斥锁 ，不能连续多次加锁
 
-*   sync.RWMutex 读写锁 ，不能连续多次加锁
+*   sync.RWMutex 读写锁 ，能连续多次拿读锁，其余不可以
+
+    ```go
+    var rwm sync.RWMutex
+    // 连续拿读锁，没毛病
+    rwm.RLock()
+    rwm.RLock()
+    rwm.RUnlock()
+    rwm.RUnlock()
+    ```
 
 *   sync.Once 
 
