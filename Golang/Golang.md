@@ -305,7 +305,26 @@ case *int:
 
 ###### Defer
 
-defer 语句 <span style='color:cyan;'>在当前函数</span> return 后立即执行, 一般用来关闭资源, 能够防止忘记关闭资源而且开启资源和关闭资源写在一起更加容易维护
+<span style='color:cyan;'>这样理解，在 return 将要执行前，等等，先按照先进后出的顺序执行 defer 定义的内容，最后再 return，所以如果事先定义了返回的变量时，可以在 defer 中对要返回变量的值进行最后的修改</span>
+
+```go
+func main() {
+	fmt.Println(doubleScore(0))
+}
+
+func doubleScore(source float32) (res float32) {
+	defer func ()  {
+		res = 100 //在defer中对res做最后的修改
+	}()
+	return source*2
+	// 这里的返回相当于以下两句，defer调用在return语句之前
+	// res = source*2
+	// defer 在这里被调用
+	// return
+}
+```
+
+defer 语句 <span style='color:cyan;'>在当前函数</span> return 前执行，如果事先指名了返回变量，请将return语句看做两句, 一般用来关闭资源, 能够防止忘记关闭资源而且开启资源和关闭资源写在一起更加容易维护
 
 >   Go's `defer` statement schedules a function call (the *deferred* function) to be run immediately before the function executing the `defer` returns.
 
@@ -314,6 +333,8 @@ defer 语句先进后出, 也就是先声明的 defer 会在最后执行, 后声
 >   Deferred functions are executed in LIFO order
 
 defer 后面指定的函数中的变量会在实际执行时现场获得，所以如果想要保存在定义 defer 时某个变量的值，请使用闭包将其作为参数传递
+
+<span style='color:cyan;'>请这样理解，把defer后面的内容抠出来放到实际的 return 语句前，如果给defer函数传递了参数，那么使用定义位置的值，否则在执行时现场获取值</span> 
 
 ```go
 func test() {
