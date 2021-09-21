@@ -1351,6 +1351,27 @@ func main(){
 }
 ```
 
+类型的 String() 方法。
+
+如果类型定义了 String() 方法，使用 Printf()、Print() 、 Println() 、 Sprintf() 等格式化输出时会自动使用 String() 方法
+
+```go
+type us struct {
+	name string
+}
+// 定义类型 String 方法，所以不要在这里面调用 print 系列方法，否则会无限递归
+func (u us) String() string {
+	return "<name:" + u.name + ">"
+}
+func main() {
+	u := us{"alice"}
+    // 将会自动调用 String 方法，打印 <name:alice>
+	fmt.Println(u)
+}
+```
+
+
+
 
 
 
