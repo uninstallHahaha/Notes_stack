@@ -1347,6 +1347,57 @@ func main(){
 
 
 
+###### 具名类型和非具名类型
+
+`named type` and `unnamed type`
+
+Named Type 有两类：
+
+-   内置类型，比如 int, int64, float, string, bool 等；
+-   使用关键字 type 声明的类型；
+
+Unnamed Type 是基于已有的 Named Type 组合一起的类型，例如：struct{}、[]string、interface{}、map[string]bool 等。
+
+
+
+不同类型的值是不能相互赋值的，即使底层类型一样
+
+但是如果底层类型相同的变量，且其中至少有一个不是有名类型（named type），那么它们就可以相互赋值
+
+比如
+
+```go
+type T int
+// 形参是具名类型
+func F(t T) {}
+
+func main() {
+    var q int
+    // 传参也是具名类型，那么即使它们底层相同，也无法赋值
+    F(q)
+}
+```
+
+那么
+
+```go
+type T []int
+// 形参是具名类型
+func F(t T) {}
+
+func main() {
+    var q []int
+    // 但是传参是非具名类型，此时编译器会尝试将其转换，因为其底层相同，所以可以成功转换
+    F(q)
+}
+```
+
+
+
+
+
+
+
 
 
 #### Unused imports and variables
@@ -1662,6 +1713,108 @@ func safelyDo(work *Work) {
 
 
 
+
+
+
+
+
+
+
+
+#### Import
+
+| Import declaration  | Local name of Sin |
+| ------------------- | ----------------- |
+| import   "lib/math" | math.Sin          |
+| import m "lib/math" | m.Sin             |
+| import . "lib/math" | Sin               |
+| import _ "lib/math" |                   |
+
+
+
+
+
+
+
+
+
+#### 自定义类型和类型别名
+
+自定义类型是定义了一个全新的类型。我们可以基于内置的基本类型定义，其实也是定义struct的方法。例如
+
+```go
+// 自定义一个 myint 的类型
+type myint int
+// 定义结构体
+type 类型名 struct {
+    字段名 字段类型
+    字段名 字段类型
+    …
+}
+// 结构体里面可以不写属性名，直接写类型作为字段，但是同一个类型只能有一个字段
+type 类型名 struct{
+    类型1
+    类型2
+}
+// 调用的时候直接使用类型名作为字段调用
+变量名.类型1
+```
+
+自定义类型不继承原来类型的方法集，只包含原类型的属性
+
+```go
+// 原类型
+type User struct {
+    Name string
+}
+// 原类型的方法
+func (u *User) SetName(name string) {
+    u.Name = name
+    fmt.Println(u.Name)
+}
+// 使用原类型再定义一个类型
+type Employee User
+
+func main() {
+    employee := new(Employee)
+    // 错，这里直接编译失败，因为它不继承原类型的方法
+    employee.SetName("Jack")
+}
+```
+
+类型别名规定：TypeAlias只是Type的别名，本质上TypeAlias与Type是同一个类型，例如我们之前见过的rune和byte就是类型别名，他们的定义如下：
+
+```go
+type byte = uint8
+type rune = int32
+```
+
+它们的区别
+
+```go
+//类型定义
+type NewInt int
+
+//类型别名
+type MyInt = int
+
+func main() {
+    var a NewInt
+    var b MyInt
+
+    // 自定义的类型就是一个独立的类型
+    fmt.Printf("type of a:%T\n", a) //type of a:main.NewInt
+    // 类型别名在编译时会被还原为原类型名，只是用来方便阅读
+    fmt.Printf("type of b:%T\n", b) //type of b:int
+}
+```
+
+
+
+
+
+
+
 #### 内置函数
 
 ###### Close
@@ -1767,102 +1920,6 @@ var b = make([]byte, 5)
 n1 := copy(s, a[0:])            // n1 == 6, s == []int{0, 1, 2, 3, 4, 5}
 n2 := copy(s, s[2:])            // n2 == 4, s == []int{2, 3, 4, 5, 4, 5}
 n3 := copy(b, "Hello, World!")  // n3 == 5, b == []byte("Hello")
-```
-
-
-
-
-
-
-
-
-
-#### Import
-
-| Import declaration  | Local name of Sin |
-| ------------------- | ----------------- |
-| import   "lib/math" | math.Sin          |
-| import m "lib/math" | m.Sin             |
-| import . "lib/math" | Sin               |
-| import _ "lib/math" |                   |
-
-
-
-
-
-
-
-
-
-#### 自定义类型和类型别名
-
-自定义类型是定义了一个全新的类型。我们可以基于内置的基本类型定义，其实也是定义struct的方法。例如
-
-```go
-// 自定义一个 myint 的类型
-type myint int
-// 定义结构体
-type 类型名 struct {
-    字段名 字段类型
-    字段名 字段类型
-    …
-}
-// 结构体里面可以不写属性名，直接写类型作为字段，但是同一个类型只能有一个字段
-type 类型名 struct{
-    类型1
-    类型2
-}
-// 调用的时候直接使用类型名作为字段调用
-变量名.类型1
-```
-
-自定义类型不继承原来类型的方法集，只包含原类型的属性
-
-```go
-// 原类型
-type User struct {
-    Name string
-}
-// 原类型的方法
-func (u *User) SetName(name string) {
-    u.Name = name
-    fmt.Println(u.Name)
-}
-// 使用原类型再定义一个类型
-type Employee User
-
-func main() {
-    employee := new(Employee)
-    // 错，这里直接编译失败，因为它不继承原类型的方法
-    employee.SetName("Jack")
-}
-```
-
-类型别名规定：TypeAlias只是Type的别名，本质上TypeAlias与Type是同一个类型，例如我们之前见过的rune和byte就是类型别名，他们的定义如下：
-
-```go
-type byte = uint8
-type rune = int32
-```
-
-它们的区别
-
-```go
-//类型定义
-type NewInt int
-
-//类型别名
-type MyInt = int
-
-func main() {
-    var a NewInt
-    var b MyInt
-
-    // 自定义的类型就是一个独立的类型
-    fmt.Printf("type of a:%T\n", a) //type of a:main.NewInt
-    // 类型别名在编译时会被还原为原类型名，只是用来方便阅读
-    fmt.Printf("type of b:%T\n", b) //type of b:int
-}
 ```
 
 
