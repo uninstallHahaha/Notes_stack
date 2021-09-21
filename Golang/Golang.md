@@ -72,8 +72,6 @@ func main() {
 
 ![image-20210921140613625](Golang.assets/image-20210921140613625.png)
 
-
-
 方法变量类型 -> package -> module( go mod )
 
 
@@ -356,6 +354,35 @@ case *int:
 #### Function
 
 ​		Go语言中的函数传参都是值拷贝，当我们想要修改某个变量的时候，我们可以创建一个指向该变量地址的指针变量。传递数据使用指针，而无须拷贝数据。类型指针不能进行偏移和运算。Go语言中的指针操作非常简单，只需要记住两个符号：`&`（取地址）和`*`（根据地址取值）
+
+
+
+###### init 函数
+
+>   一般 init 方法用来检验全局变量的值, 或者给全局变量赋值
+
+>   Finally, each source file can define its own niladic `init` function to set up whatever state is required.  (Actually each file can have multiple `init` functions.) And finally means finally: `init` is called after all the variable declarations in the package have evaluated their initializers, and those are evaluated only after all the imported packages have been initialized.
+
+```go
+func init() {
+    if user == "" {
+        log.Fatal("$USER not set")
+    }
+}
+```
+
+*   init 函数不能被显式调用，它会在执行 main 函数之前自动被调用
+*   一个 go文件 可以包含多个 init 函数, 从上到下依次执行
+*   一个 package 中不同文件的 init 函数，按照字符串字典序从小到大执行
+*   不同 packge 中的 init 函数按照 import 的顺序执行
+
+
+
+
+
+
+
+
 
 
 
@@ -912,22 +939,6 @@ var (
 
 
 
-
-###### The init function
-
-init方法在当前文件中所有全局变量都初始化完成后自动执行, 相当于 python 包中的 init 文件, 一个go文件可以包含多个 init 函数, 从上到下依次执行
-
-一般 init 方法用来检验全局变量的值
-
->   Finally, each source file can define its own niladic `init` function to set up whatever state is required.  (Actually each file can have multiple `init` functions.) And finally means finally: `init` is called after all the variable declarations in the package have evaluated their initializers, and those are evaluated only after all the imported packages have been initialized.
-
-```go
-func init() {
-    if user == "" {
-        log.Fatal("$USER not set")
-    }
-}
-```
 
 
 
