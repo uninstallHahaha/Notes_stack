@@ -1662,7 +1662,7 @@ func safelyDo(work *Work) {
 
 
 
-#### Built-in functions
+#### 内置函数
 
 ###### Close
 
@@ -1756,7 +1756,7 @@ var b []byte
 b = append(b, "bar"...)            // append string contents      b == []byte{'b', 'a', 'r' }
 ```
 
-copy 第一个参数是目的地, 第二个参数是原数组, 返回copy元素的数量
+copy 第一个参数是目的地, 第二个参数是原数组, 返回 <span style='color:cyan;'>copy元素的数量</span>
 
 >   The function `copy` copies slice elements from a source `src` to a destination `dst` and returns the number of elements copied.
 
@@ -1768,6 +1768,10 @@ n1 := copy(s, a[0:])            // n1 == 6, s == []int{0, 1, 2, 3, 4, 5}
 n2 := copy(s, s[2:])            // n2 == 4, s == []int{2, 3, 4, 5, 4, 5}
 n3 := copy(b, "Hello, World!")  // n3 == 5, b == []byte("Hello")
 ```
+
+
+
+
 
 
 
