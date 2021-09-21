@@ -1778,6 +1778,28 @@ type 类型名 struct {
 }
 ```
 
+自定义类型不继承原来类型的方法集，只包含原类型的属性
+
+```go
+// 原类型
+type User struct {
+    Name string
+}
+// 原类型的方法
+func (u *User) SetName(name string) {
+    u.Name = name
+    fmt.Println(u.Name)
+}
+// 使用原类型再定义一个类型
+type Employee User
+
+func main() {
+    employee := new(Employee)
+    // 错，这里直接编译失败，因为它不继承原类型的方法
+    employee.SetName("Jack")
+}
+```
+
 类型别名规定：TypeAlias只是Type的别名，本质上TypeAlias与Type是同一个类型，例如我们之前见过的rune和byte就是类型别名，他们的定义如下：
 
 ```go
