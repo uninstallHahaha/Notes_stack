@@ -6,6 +6,44 @@
 
 
 
+<span style='color:cyan;'>??? 只要带花括号的，或者控制语句结构，或者函数结构，都是一个独立的作用域，可以在其中使用与作用域之外相同的变量名</span>
+
+```go
+func main() {
+	// 外边定义变量
+	i:=10
+	fmt.Println(i)
+	{
+		// 里面属于不同的作用域，照样可以使用这个变量名
+		i:=100
+		fmt.Println(i)
+	}
+}
+```
+
+<span style='color:cyan;'>最迷惑的当属 for 结构，应当这样看待，for 条件中的变量属于 for 结构之外，for 括号中间的变量属于当前 for ，所以它们不冲突</span>
+
+```go
+func main() {
+	// for 条件中的 i 属于外边作用域
+	for i:=0;i<5;i++{
+		// 这个 i 属于内部作用域，所以它和外边的 i 不冲突
+		i:=i+1
+		fmt.Println(i)
+	}
+	// 上面的可以看做是这样
+	i:=0
+	for ;i<5;i++{
+		i:=i+1
+		fmt.Println(i)
+	}
+}
+```
+
+
+
+
+
 一个包中的方法和类型将被编译到一个文件中
 
 >   ​	Go programs are organized into packages. A package is a collection of source files in the same directory that are compiled together. Functions, types, variables, and constants defined in one source file are visible to all other source files within the same package.
