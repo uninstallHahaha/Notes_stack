@@ -2,6 +2,8 @@
 
 
 
+<span style='color:red;'>??? 关键字也能当变量名，当然强烈不建议这样使用</span>
+
 
 
 一个包中的方法和类型将被编译到一个文件中
@@ -683,6 +685,7 @@ for i := range picture {
 *   map 是引用类型, 作为参数传递后, 改变其值就是在改变原 map 的值
 *   map 的 key 可以是任何定义了 equality 操作的类型, 但是 slice就不行, 因为 slice不能 equlity操作
 *   map 的链表使用尾插法，但是它不是线程安全的
+*   <span style='color:cyan;'>直接使用for range遍历map时，返回的顺序是随机的每次都不一定一样</span>
 
 >   The key can be of any type for which the equality operator is defined, such as integers, floating point and complex numbers, strings, pointers, interfaces (as long as the dynamic type supports equality), structs and arrays. Slices cannot be used as map keys, because equality is not defined on them. Like slices, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller.
 
