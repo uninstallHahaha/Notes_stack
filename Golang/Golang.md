@@ -313,6 +313,33 @@ defer 语句先进后出, 也就是先声明的 defer 会在最后执行, 后声
 
 >   Deferred functions are executed in LIFO order
 
+defer 后面指定的函数中的变量会在实际执行时现场获得，所以如果想要保存在定义 defer 时某个变量的值，请使用闭包将其作为参数传递
+
+```go
+func test() {
+    x, y := 10, 20
+
+    defer func(i int) {
+        println("defer:", i, y) // i通过参数保存了状态，而y在实际调用时获取
+    }(x) // x 被复制
+
+    x += 10
+    y += 100
+    println("x =", x, "y =", y)
+}
+
+func main() {
+    test()
+}
+// output
+// x = 20 y = 120
+// defer: 10 120
+```
+
+
+
+
+
 
 
 
@@ -1837,6 +1864,10 @@ t.Stop()
 并发相关
 
 *   sync.WaitGroup 等一等功能
+
+    <span style='color:cyan;'>注：WaitGroup 在调用 Wait() 之后不能再调用 Add() 方法的</span>
+
+    <span style='color:cyan;'>注：如果没有足够的 wg.Done() 去完成 wg.Add() 的个数，会检测出死锁错误</span>
 
 * sync.Mutex 互斥锁 ，不能连续多次加锁
 
