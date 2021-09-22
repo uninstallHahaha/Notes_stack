@@ -104,23 +104,62 @@
 #### *hash ( 对象 )*
 
   * `hset key field value` 赋值( 键, 属性, 值 )
+
   * `hmset key field value [field1 value1 ...]` 同时存储一个对象的多个属性
+
   * `hget key field` 取值 ( 键, 属性 )
+
   * `hmget key field [field1 ...] ` 同时取一个对象中多个属性的值
+
   * `hgetall key`  获取一个对象中所有属性的值
+
   * `hkeys key` 获取对象中所有的键
+
   * `hlen key`  获取对象中键的数量
+
   * `hdel key field [field1 ...]` 删除一个对象中的一个或多个属性, 属性删完后对象就会被释放
+
   * `del key` 直接删除对象
+
   * `hsetnx key field value`  属性不存在时赋值
+
   * `hincrby key field num` 对象整型属性自增num
+
   * `hincrbyfloat key field num` 对象浮点数属性自增num
+
   * `hexists key field`  查看对象是否存在属性, R1&0
+
   * 应用场景:
     1. 存储对象
     2. 因为存储的对象都是放到一块， 所以可以使用命名来标识每条数据的身份， 比如要存 user 类型的信息， 那么可以存为一个对象， 名字为 `user:id:828383`, 然后设置该对象的各个属性
     3. 注意 hash 对象的 value 值都是字符串类型 ，不能对象嵌套
     4. 存购物车数据， key 是 `cart:userID:itemID`, value 使用多个字段存放该用户该商品的名字， 数量， 图片等信息
+    
+* 数据结构
+
+    在同时满足以下两个条件时，使用 ziplist 存储，为了“时间”换“空间”
+
+    ![image-20210922090802920](Redis.assets/image-20210922090802920.png)
+
+    超过这两个条件时，使用标准的 hashmap 数据结构，使用拉链法解决hash冲突
+
+    ​		ziplist, 使用 entry 节点存储 key 和 value，每个key和value都独占一个entry，每个entry的长度可以不同
+
+    ![image-20210922090904959](Redis.assets/image-20210922090904959.png)
+
+    ​		其中，entry的数据结构为
+
+    ![image-20210922091045107](Redis.assets/image-20210922091045107.png)
+
+    
+
+    
+
+
+
+
+
+
 
 
 
