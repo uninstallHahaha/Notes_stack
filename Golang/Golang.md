@@ -600,6 +600,8 @@ x := Sum(&array)  // Note the explicit address-of operator
 
 slices变量的赋值就是复制地址, 改变slices的元素就是在改变指向数组的元素
 
+<span style='color:cyan;'>使用 make 创建 slice 时，必须指定长度</span>
+
 >   Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. 
 
 切片数据结构
@@ -787,6 +789,13 @@ for i := range picture {
 *   map 的 key 可以是任何定义了 equality 操作的类型, 但是 slice就不行, 因为 slice不能 equlity操作
 *   map 的链表使用尾插法，但是它不是线程安全的
 *   <span style='color:cyan;'>直接使用for range遍历map时，返回的顺序是随机的每次都不一定一样</span>
+
+map的臭毛病
+
+*   必须用 make 创建，否则是 nil 不能使用, 但是此时能 for range 遍历，当然，遍历结果是什么都没有
+*   使用 make 创建的时候不能指定第三个参数，即cap，因为map没有 cap，也就是说，不能 cap(m)
+*   使用 make 创建 map 时，一般只给一个参数，当然也可以指定第二个参数，为预估该 map 将要存放的 kv 对数
+*   使用 len(m) 返回的是当前 map 实例中包含的 kv 对数
 
 >   The key can be of any type for which the equality operator is defined, such as integers, floating point and complex numbers, strings, pointers, interfaces (as long as the dynamic type supports equality), structs and arrays. Slices cannot be used as map keys, because equality is not defined on them. Like slices, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller.
 
