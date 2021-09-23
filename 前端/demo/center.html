@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>center</title>
+</head>
+
+<body>
+    <div class="fa1">
+        <div class="ch1"></div>
+    </div>
+
+    <div class="fa2">
+        <div class="ch2"></div>
+    </div>
+
+    <div class="fa3">
+        <div class="ch3"></div>
+    </div>
+
+    <div class="fa4">
+        <div class="ch4"></div>
+    </div>
+
+    <div class="fa5">
+        <div class="ch5"></div>
+    </div>
+</body>
+<style>
+    /* method 1 */
+    .fa1 {
+        width: 300px;
+        height: 300px;
+        position: relative;
+        background-color: darkgreen;
+        margin: 10px;
+    }
+
+    .ch1 {
+        width: 100px;
+        height: 100px;
+        background-color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -50px;
+        margin-top: -50px;
+    }
+
+    /* method 2 */
+    .fa2 {
+        width: 300px;
+        height: 300px;
+        position: relative;
+        background-color: darkgreen;
+        margin: 10px;
+    }
+
+    .ch2 {
+        width: 100px;
+        height: 100px;
+        background-color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    /* method 3 */
+    .fa3 {
+        width: 300px;
+        height: 300px;
+        position: relative;
+        background-color: darkgreen;
+        margin: 10px;
+    }
+
+    .ch3 {
+        width: 100px;
+        height: 100px;
+        background-color: white;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+    /* method 4 */
+    .fa4 {
+        width: 300px;
+        height: 100px;
+        position: relative;
+        background-color: darkgreen;
+        margin: 10px;
+        text-align: center;
+        padding: 0;
+    }
+
+    .ch4 {
+        width: 100px;
+        height: 100px;
+        background-color: white;
+        display: inline-block;
+        margin: 0;
+    }
+    /* method 5 */
+    .fa5 {
+        width: 300px;
+        height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: darkgreen;
+        margin: 10px;
+    }
+
+    .ch5 {
+        width: 100px;
+        height: 100px;
+        background-color: white;
+    }
+</style>
+
+</html>
