@@ -235,7 +235,7 @@ v-model上的修饰符
 | created        | vue实例的数据对象data有了，$el还没有                         | 结束loading、请求数据为mounted渲染做准备            |
 | beforeMount    | vue实例的$el和data都初始化了，但还是虚拟的dom节点，具体的data.filter还未替换。 | ..                                                  |
 | mounted        | vue实例挂载完成，data.filter成功渲染                         | 配合路由钩子使用                                    |
-| beforeUpdate   | data更新时触发                                               |                                                     |
+| beforeUpdate   | data更新前触发                                               |                                                     |
 | updated        | data更新后触发                                               | 数据更新时，做一些处理（此处也可以用watch进行观测） |
 | beforeDestroy  | 组件销毁前触发                                               |                                                     |
 | destroyed      | 组件销毁后触发，vue实例解除了事件监听以及和dom的绑定（无响应了），但DOM节点依旧存在 | 组件销毁时进行提示                                  |
@@ -1576,7 +1576,7 @@ for(var i=0;i<btns.length;i++){
     })(i)
 }
 //此问题也可直接通过使用ES6中的let来实现, 因为let变量以if,for,块代码,函数为作用域
-for(了 i=0;i<btns.length;i++){
+for(l i=0;i<btns.length;i++){
     btns[i].addEventListener('click',function(){
         console.log('btn '+i+' is clicked');
     })
