@@ -232,7 +232,8 @@ v-model上的修饰符
 | 钩子函数       | 触发的行为                                                   | 在此阶段可以做的事情                                |
 | -------------- | ------------------------------------------------------------ | --------------------------------------------------- |
 | beforeCreadted | vue实例的挂载元素$el和数据对象data都为undefined，还未初始化。 | 加loading事件                                       |
-| created        | vue实例的数据对象data有了，$el还没有	结束loading、请求数据为mounted渲染做准备<br/>beforeMount	vue实例的$el和data都初始化了，但还是虚拟的dom节点，具体的data.filter还未替换。 | ..                                                  |
+| created        | vue实例的数据对象data有了，$el还没有                         | 结束loading、请求数据为mounted渲染做准备            |
+| beforeMount    | vue实例的$el和data都初始化了，但还是虚拟的dom节点，具体的data.filter还未替换。 | ..                                                  |
 | mounted        | vue实例挂载完成，data.filter成功渲染                         | 配合路由钩子使用                                    |
 | beforeUpdate   | data更新时触发                                               |                                                     |
 | updated        | data更新后触发                                               | 数据更新时，做一些处理（此处也可以用watch进行观测） |
