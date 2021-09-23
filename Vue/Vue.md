@@ -1576,7 +1576,7 @@ for(var i=0;i<btns.length;i++){
     })(i)
 }
 //此问题也可直接通过使用ES6中的let来实现, 因为let变量以if,for,块代码,函数为作用域
-for(l i=0;i<btns.length;i++){
+for(let i=0;i<btns.length;i++){
     btns[i].addEventListener('click',function(){
         console.log('btn '+i+' is clicked');
     })
@@ -1593,7 +1593,7 @@ for(l i=0;i<btns.length;i++){
 
 ###### 遍历
 
-1.  `for(let i in arr)` 直接遍历index
+1.  `for(let i in arr)` 遍历索引
 2.  `for(let n of arr)` 直接遍历值
 
 ###### filter函数
