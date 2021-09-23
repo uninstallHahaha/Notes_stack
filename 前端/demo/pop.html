@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pop event</title>
+</head>
+<body>
+    <div class="base" id='base'>
+        <div class="mid" id='mid'>
+            <div class="btn" id='btn'>button</div>
+        </div>
+    </div>
+</body>
+
+<style>
+    .btn{
+        width: 40px;
+        height: 20px;
+        background-color: darkgreen;
+        color: white;
+    }
+</style>
+
+<script>
+    document.getElementById('btn').addEventListener('click',function(e){
+        alert('this is btn')
+        e.stopPropagation()
+    })
+    document.getElementById('mid').addEventListener('click',function(){
+        alert('this is mid')
+    })
+    document.getElementById('base').addEventListener('click',function(){
+        alert('this is base')
+    })
+</script>
+</html>
