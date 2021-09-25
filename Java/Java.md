@@ -877,16 +877,7 @@ public String getCheckResultSuper(String order) {
 3.  使用 *Game* 的模板方法 play() 来演示游戏的定义方式。
 
     ```java
-    public class TemplatePatternDemo {
-       public static void main(String[] args) {
-     
-          Game game = new Cricket();
-          game.play();
-          System.out.println();
-          game = new Football();
-          game.play();      
-       }
-    }
+    public class TemplatePatternDemo {   public static void main(String[] args) {       Game game = new Cricket();      game.play();      System.out.println();      game = new Football();      game.play();         }}
     ```
 
     
@@ -1096,67 +1087,7 @@ AQS 实现的部分有，
 一个简单的自定义独占锁demo
 
 ```java
-
-public class testExclusiveLock {
-
-    public static void main(String[] args) {
-        // 创建锁实例
-        CustomQueue lock = new CustomQueue();
-        // 主线程先拿锁执行
-        lock.lock();
-        for (int i = 0; i < 10; i++) {
-            // 整10个子线程，它们的执行都需要先拿到锁，因为主线程一直持锁未释放，所以只有等到主线程释放锁后，它们才能依次执行
-            // 因为不能直接拿到锁，所以会入等待队列，然后依次出队拿到锁执行
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    lock.lock();
-                    System.out.println(Thread.currentThread().getName() + " is using the lock...");
-                    lock.unlock();
-                }
-            }).start();
-            try {
-                sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println("Main is willing to release...");
-        lock.unlock();
-    }
-}
-
-
-// 自定义锁，继承AQS，因为是独享锁，只需实现 tryAcquire 和 tryRelease
-class CustomQueue extends AbstractQueuedSynchronizer {
-    @Override
-    protected boolean tryAcquire(int arg) {
-        if (compareAndSetState(0, 1)) {
-            setExclusiveOwnerThread(Thread.currentThread());
-            return true;
-        }
-        return false;
-    }
-
-    // 调用 acquire 实现 lock
-    public void lock() {
-        acquire(1);
-    }
-
-    // 调用 release 实现 unlock
-    public void unlock() {
-        release(0);
-    }
-
-    @Override
-    protected boolean tryRelease(int arg) {
-        setState(arg);
-        setExclusiveOwnerThread(null);
-        return true;
-    }
-
-}
+public class testExclusiveLock {    public static void main(String[] args) {        // 创建锁实例        CustomQueue lock = new CustomQueue();        // 主线程先拿锁执行        lock.lock();        for (int i = 0; i < 10; i++) {            // 整10个子线程，它们的执行都需要先拿到锁，因为主线程一直持锁未释放，所以只有等到主线程释放锁后，它们才能依次执行            // 因为不能直接拿到锁，所以会入等待队列，然后依次出队拿到锁执行            new Thread(new Runnable() {                @Override                public void run() {                    lock.lock();                    System.out.println(Thread.currentThread().getName() + " is using the lock...");                    lock.unlock();                }            }).start();            try {                sleep(100);            } catch (InterruptedException e) {                e.printStackTrace();            }        }        System.out.println("Main is willing to release...");        lock.unlock();    }}// 自定义锁，继承AQS，因为是独享锁，只需实现 tryAcquire 和 tryReleaseclass CustomQueue extends AbstractQueuedSynchronizer {    @Override    protected boolean tryAcquire(int arg) {        if (compareAndSetState(0, 1)) {            setExclusiveOwnerThread(Thread.currentThread());            return true;        }        return false;    }    // 调用 acquire 实现 lock    public void lock() {        acquire(1);    }    // 调用 release 实现 unlock    public void unlock() {        release(0);    }    @Override    protected boolean tryRelease(int arg) {        setState(arg);        setExclusiveOwnerThread(null);        return true;    }}
 ```
 
 执行结果
@@ -1385,23 +1316,7 @@ ReentrantLock 和 synchronized 都是互斥锁，可重入锁
 ​		可以像这样实现
 
 ```java
-public class Lock{  
-    // 这个字段用来标识当前是否可以获取锁
-    private boolean isLocked = false;
-    // 同步方法获取锁，其实就是改变字段状态，保证了只能有一个线程获取锁成功
-    public synchronized void lock()  
-        throws InterruptedException{  
-        while(isLocked){  
-            wait();  
-        }  
-        isLocked = true;  
-    }  
- 	// 同步方法释放锁，其实也是改变字段状态，释放锁后通知其他线程苏醒继续获取锁
-    public synchronized void unlock(){  
-        isLocked = false;  
-        notify();  
-    }  
-}  
+public class Lock{      // 这个字段用来标识当前是否可以获取锁    private boolean isLocked = false;    // 同步方法获取锁，其实就是改变字段状态，保证了只能有一个线程获取锁成功    public synchronized void lock()          throws InterruptedException{          while(isLocked){              wait();          }          isLocked = true;      }   	// 同步方法释放锁，其实也是改变字段状态，释放锁后通知其他线程苏醒继续获取锁    public synchronized void unlock(){          isLocked = false;          notify();      }  }  
 ```
 
 ​		这种锁的定义方法，假设一个线程获取到了锁，在它未调用unlock释放锁之前，任何一个线程包括它自己再次调用 lock 都不会获取锁成功而是会进入wait，那么，如果代码逻辑中出现了获取锁后不释放锁就直接再次获取锁的错误逻辑，那么程序会陷入死锁，任何线程都不能得以运行，这种锁就是不可重入锁
@@ -1409,34 +1324,7 @@ public class Lock{
 ​		那么，一个线程获取到锁之后，如果它再次尝试获取锁还能获取到，那么就能避免死锁的产生，此时可以引用一个计数字段和当前持有锁的线程对象，如果请求锁的线程等于当前持有锁的线程，那么允许再次获取该锁，可以像这样实现：
 
 ```java
-public class Lock{
-    //标记是否已经被占有
-    boolean isLocked = false;
-    //记录当前占有该锁的线程
-    Thread  lockedBy = null;
-    //记录持有锁的线程获取该锁的次数
-    int lockedCount = 0;
-    //同步获取锁，如果被自己持有，则还可获取到该锁，同时次数加一
-    public synchronized void lock() throws InterruptedException{
-        Thread callingThread = Thread.currentThread();
-        while(isLocked && lockedBy != callingThread){
-            wait();
-        }
-        isLocked = true;
-        lockedCount++;
-        lockedBy = callingThread;
-    }
-    //同步释放锁，只有获取锁的线程才能释放锁，每次释放计数减一，直至为零，然后唤醒其他线程
-    public synchronized void unlock(){
-        if(Thread.curentThread() == this.lockedBy){
-            lockedCount--;
-            if(lockedCount == 0){
-                isLocked = false;
-                notify();
-            }
-        }
-    }
-}
+public class Lock{    //标记是否已经被占有    boolean isLocked = false;    //记录当前占有该锁的线程    Thread  lockedBy = null;    //记录持有锁的线程获取该锁的次数    int lockedCount = 0;    //同步获取锁，如果被自己持有，则还可获取到该锁，同时次数加一    public synchronized void lock() throws InterruptedException{        Thread callingThread = Thread.currentThread();        while(isLocked && lockedBy != callingThread){            wait();        }        isLocked = true;        lockedCount++;        lockedBy = callingThread;    }    //同步释放锁，只有获取锁的线程才能释放锁，每次释放计数减一，直至为零，然后唤醒其他线程    public synchronized void unlock(){        if(Thread.curentThread() == this.lockedBy){            lockedCount--;            if(lockedCount == 0){                isLocked = false;                notify();            }        }    }}
 ```
 
 
@@ -1456,31 +1344,25 @@ public class Lock{
 *   可以使用数字常量直接初始化包装类型， 将会自动调用new创建对象， 称为自动装箱
 
     ```java
-    Integer a = 3; 
-    // 使用数字常量初始化包装类型， 将会自动调用new方法来装箱为对象，称为自动装箱
+    Integer a = 3; // 使用数字常量初始化包装类型， 将会自动调用new方法来装箱为对象，称为自动装箱
     ```
 
 *   可以使用包装类型对象直接初始化基本类型对象，赋值后两个变量指向同一个地址，称为自动拆箱
 
     ```java
-    Integer c = new Integer(3);
-    int d = c; 
-    // 可以直接将包装类型变量赋值给基本类型，为自动拆箱，此时两个变量指向地址相同
+    Integer c = new Integer(3);int d = c; // 可以直接将包装类型变量赋值给基本类型，为自动拆箱，此时两个变量指向地址相同
     ```
 
 *   在自动装箱或者新建基本类型变量时， 如果数字在范围 -127~128内，那么将直接指向数字常量池中对应位置，不会申请新内存
 
     ```java
-    Integer a = 3; 
-    Integer b = 3; 
-    // 如果数字常量在 -127~128 范围内，那么会直接指向数字常量池中对应位置，不会申请新的内存， 所以a==b
+    Integer a = 3; Integer b = 3; // 如果数字常量在 -127~128 范围内，那么会直接指向数字常量池中对应位置，不会申请新的内存， 所以a==b
     ```
 
 *   如果手动调用 new 创建包装类型，无论数字在哪个范围， 都会申请新的内存
 
     ```java
-    Integer c = new Integer(3); 
-    // 手动调用new新建包装类型实例，那么必然会申请新的内存
+    Integer c = new Integer(3); // 手动调用new新建包装类型实例，那么必然会申请新的内存
     ```
 
     
@@ -1601,13 +1483,7 @@ public class Lock{
 ​		每次循环保证左边部分序列是有序的，也就是每次多包含进来一个元素，将其插入到左边已经排序的序列，稳定的排序
 
 ```java
-static void insert(int[] arr) {
-    for (int i = 0; i < arr.length; i++) {
-        for (int j = i; j > 0; j--) {
-            if (arr[j] < arr[j - 1]) swap(arr, j, j - 1);
-        }
-    }
-}
+static void insert(int[] arr) {    for (int i = 0; i < arr.length; i++) {        for (int j = i; j > 0; j--) {            if (arr[j] < arr[j - 1]) swap(arr, j, j - 1);        }    }}
 ```
 
 
@@ -1619,13 +1495,7 @@ static void insert(int[] arr) {
 ​		每次循环从右边部分序列选择最小的元素作为左边序列的最大值，不稳定的排序
 
 ```java
-static void select(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = i; j < arr.length; j++) {
-                if (arr[j] < arr[i]) swap(arr, i, j);
-            }
-        }
-    }
+static void select(int[] arr) {        for (int i = 0; i < arr.length; i++) {            for (int j = i; j < arr.length; j++) {                if (arr[j] < arr[i]) swap(arr, i, j);            }        }    }
 ```
 
 
@@ -1639,13 +1509,7 @@ static void select(int[] arr) {
 ​		只要在判断时使用仅大于，就可以保证排序结果中不打乱原数组中相等元素的相对位置，稳定的排序算法
 
 ```java
-static void bubble(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr.length - i - 1; j++) {
-                if (arr[j] > arr[j + 1]) swap(arr, j, j + 1);
-            }
-        }
-    }
+static void bubble(int[] arr) {        for (int i = 0; i < arr.length; i++) {            for (int j = 0; j < arr.length - i - 1; j++) {                if (arr[j] > arr[j + 1]) swap(arr, j, j + 1);            }        }    }
 ```
 
 
@@ -1657,59 +1521,7 @@ static void bubble(int[] arr) {
 ​		分治后合并时可以保证原先在左边的子数组中与右边数组中出现相同的元素时，总是先将左边的数组加入到合并后的数组中，这样就保证了原数组相同元素的先后顺序， 是稳定的排序
 
 ```java
-// 归并排序
-public class dac {
-
-    // 入口方法
-    void dodac(int[] arr) {
-        dfs(arr, 0, arr.length - 1);
-    }
-
-    // 递归切分子数组，将排列好的子数组拼接为结果返回
-    void dfs(int[] arr, int left, int right) {
-        // 如果只有一个元素，直接返回
-        if (left == right) return;
-        // 如果有两个元素，将两个元素排列好然后返回
-        if (left + 1 == right) {
-            if (arr[left] > arr[right]) {
-                int tmp = arr[left];
-                arr[left] = arr[right];
-                arr[right] = tmp;
-            }
-            return;
-        }
-
-        // 将左右两个子数组排列完成
-        int mid = (right - left) / 2 + left;
-        dfs(arr, left, mid - 1);
-        dfs(arr, mid, right);
-
-        // 将排列完成的两个子数组拼接到一个新数组中，然后使用新数组替换原数组
-        int[] res = new int[right - left + 1];
-        int i = left;
-        int j = mid;
-        int loc = 0;
-        while (i != mid || j != right + 1) {
-            if (i != mid && j != right + 1) {
-                if (arr[i] < arr[j]) {
-                    res[loc++] = arr[i++];
-                } else {
-                    res[loc++] = arr[j++];
-                }
-                continue;
-            }
-            if (i != mid) {
-                res[loc++] = arr[i++];
-            }
-            if (j != right + 1) {
-                res[loc++] = arr[j++];
-            }
-        }
-        for (int t = 0; t < res.length; t++) {
-            arr[left + t] = res[t];
-        }
-    }
-}
+// 归并排序public class dac {    // 入口方法    void dodac(int[] arr) {        dfs(arr, 0, arr.length - 1);    }    // 递归切分子数组，将排列好的子数组拼接为结果返回    void dfs(int[] arr, int left, int right) {        // 如果只有一个元素，直接返回        if (left == right) return;        // 如果有两个元素，将两个元素排列好然后返回        if (left + 1 == right) {            if (arr[left] > arr[right]) {                int tmp = arr[left];                arr[left] = arr[right];                arr[right] = tmp;            }            return;        }        // 将左右两个子数组排列完成        int mid = (right - left) / 2 + left;        dfs(arr, left, mid - 1);        dfs(arr, mid, right);        // 将排列完成的两个子数组拼接到一个新数组中，然后使用新数组替换原数组        int[] res = new int[right - left + 1];        int i = left;        int j = mid;        int loc = 0;        while (i != mid || j != right + 1) {            if (i != mid && j != right + 1) {                if (arr[i] < arr[j]) {                    res[loc++] = arr[i++];                } else {                    res[loc++] = arr[j++];                }                continue;            }            if (i != mid) {                res[loc++] = arr[i++];            }            if (j != right + 1) {                res[loc++] = arr[j++];            }        }        for (int t = 0; t < res.length; t++) {            arr[left + t] = res[t];        }    }}
 ```
 
 
@@ -1725,33 +1537,7 @@ public class dac {
 ​		基数排序是稳定的排序
 
 ```java
-static void radix(int[] arr) {
-    // 先整10个队列
-    List<LinkedList<Integer>> qs = new ArrayList<>();
-    for (int i = 0; i < 10; i++) qs.add(new LinkedList<Integer>());
-
-    int radix_num = 10;
-    boolean ext = true;
-    // 从最低位开始比较
-    while (ext) {
-        boolean find = false;
-        // 把所有的元素都放到指定的队列中
-        for (int j : arr) {
-            if (j / radix_num > 0) find = true;
-            qs.get(j % radix_num / (radix_num / 10)).add(j);
-        }
-        int loc = 0;
-        // 把所有的元素从队列中取出覆盖原数组
-        for (LinkedList<Integer> l : qs) {
-            int size = l.size();
-            for (int i = 0; i < size; i++) {
-                arr[loc++] = l.poll();
-            }
-        }
-        radix_num *= 10;
-        ext = find;
-    }
-}
+static void radix(int[] arr) {    // 先整10个队列    List<LinkedList<Integer>> qs = new ArrayList<>();    for (int i = 0; i < 10; i++) qs.add(new LinkedList<Integer>());    int radix_num = 10;    boolean ext = true;    // 从最低位开始比较    while (ext) {        boolean find = false;        // 把所有的元素都放到指定的队列中        for (int j : arr) {            if (j / radix_num > 0) find = true;            qs.get(j % radix_num / (radix_num / 10)).add(j);        }        int loc = 0;        // 把所有的元素从队列中取出覆盖原数组        for (LinkedList<Integer> l : qs) {            int size = l.size();            for (int i = 0; i < size; i++) {                arr[loc++] = l.poll();            }        }        radix_num *= 10;        ext = find;    }}
 ```
 
 
@@ -1785,24 +1571,7 @@ static void radix(int[] arr) {
     
 
 ```java
-static void shell(int[] arr) {
-    int step = arr.length / 2;
-    while (step > 0) {
-        // ### use insert function to sort the select sublist
-        // iterate all sublist
-        for (int start = 0; start < step; start++) {
-            // sort sublist with insert function
-            for (int loc = start; loc < arr.length; loc += step) {
-                for (int cur = loc; cur > start; cur -= step) {
-                    if (arr[cur] < arr[cur - step]) 
-                        swap(arr, cur, cur - step);
-                }
-            }
-        }
-        // update step
-        step /= 2;
-    }
-}
+static void shell(int[] arr) {    int step = arr.length / 2;    while (step > 0) {        // ### use insert function to sort the select sublist        // iterate all sublist        for (int start = 0; start < step; start++) {            // sort sublist with insert function            for (int loc = start; loc < arr.length; loc += step) {                for (int cur = loc; cur > start; cur -= step) {                    if (arr[cur] < arr[cur - step])                         swap(arr, cur, cur - step);                }            }        }        // update step        step /= 2;    }}
 ```
 
 
