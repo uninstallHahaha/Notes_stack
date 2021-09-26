@@ -1594,7 +1594,13 @@ public class Lock{
 ​		每次循环保证左边部分序列是有序的，也就是每次多包含进来一个元素，将其插入到左边已经排序的序列，稳定的排序
 
 ```java
-static void insert(int[] arr) {    for (int i = 0; i < arr.length; i++) {        for (int j = i; j > 0; j--) {            if (arr[j] < arr[j - 1]) swap(arr, j, j - 1);        }    }}
+static void insert(int[] arr) {    
+    for (int i = 0; i < arr.length; i++) {        
+        for (int j = i; j > 0; j--) {            
+            if (arr[j] < arr[j - 1]) swap(arr, j, j - 1);        
+        }    
+    }
+}
 ```
 
 
@@ -1606,7 +1612,13 @@ static void insert(int[] arr) {    for (int i = 0; i < arr.length; i++) {       
 ​		每次循环从右边部分序列选择最小的元素作为左边序列的最大值，不稳定的排序
 
 ```java
-static void select(int[] arr) {        for (int i = 0; i < arr.length; i++) {            for (int j = i; j < arr.length; j++) {                if (arr[j] < arr[i]) swap(arr, i, j);            }        }    }
+static void select(int[] arr) {        
+    for (int i = 0; i < arr.length; i++) {            
+        for (int j = i; j < arr.length; j++) {                
+            if (arr[j] < arr[i]) swap(arr, i, j);            
+        }        
+    }    
+}
 ```
 
 
@@ -1620,7 +1632,13 @@ static void select(int[] arr) {        for (int i = 0; i < arr.length; i++) {   
 ​		只要在判断时使用仅大于，就可以保证排序结果中不打乱原数组中相等元素的相对位置，稳定的排序算法
 
 ```java
-static void bubble(int[] arr) {        for (int i = 0; i < arr.length; i++) {            for (int j = 0; j < arr.length - i - 1; j++) {                if (arr[j] > arr[j + 1]) swap(arr, j, j + 1);            }        }    }
+static void bubble(int[] arr) {        
+    for (int i = 0; i < arr.length; i++) {            
+        for (int j = 0; j < arr.length - i - 1; j++) {                
+            if (arr[j] > arr[j + 1]) swap(arr, j, j + 1);            
+        }        
+    }    
+}
 ```
 
 
