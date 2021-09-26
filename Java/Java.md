@@ -1401,7 +1401,34 @@ public class Lock{
 ​		那么，一个线程获取到锁之后，如果它再次尝试获取锁还能获取到，那么就能避免死锁的产生，此时可以引用一个计数字段和当前持有锁的线程对象，如果请求锁的线程等于当前持有锁的线程，那么允许再次获取该锁，可以像这样实现：
 
 ```java
-public class Lock{    //标记是否已经被占有    boolean isLocked = false;    //记录当前占有该锁的线程    Thread  lockedBy = null;    //记录持有锁的线程获取该锁的次数    int lockedCount = 0;    //同步获取锁，如果被自己持有，则还可获取到该锁，同时次数加一    public synchronized void lock() throws InterruptedException{        Thread callingThread = Thread.currentThread();        while(isLocked && lockedBy != callingThread){            wait();        }        isLocked = true;        lockedCount++;        lockedBy = callingThread;    }    //同步释放锁，只有获取锁的线程才能释放锁，每次释放计数减一，直至为零，然后唤醒其他线程    public synchronized void unlock(){        if(Thread.curentThread() == this.lockedBy){            lockedCount--;            if(lockedCount == 0){                isLocked = false;                notify();            }        }    }}
+public class Lock{
+    //标记是否已经被占有
+    boolean isLocked = false;
+    //记录当前占有该锁的线程
+    Thread  lockedBy = null;
+    //记录持有锁的线程获取该锁的次数
+    int lockedCount = 0;
+    //同步获取锁，如果被自己持有，则还可获取到该锁，同时次数加一
+    public synchronized void lock() throws InterruptedException{
+        Thread callingThread = Thread.currentThread();
+        while(isLocked && lockedBy != callingThread){
+            wait();
+        }
+        isLocked = true;
+        lockedCount++;
+        lockedBy = callingThread;
+    }
+    //同步释放锁，只有获取锁的线程才能释放锁，每次释放计数减一，直至为零，然后唤醒其他线程
+    public synchronized void unlock(){
+        if(Thread.curentThread() == this.lockedBy){
+            lockedCount--;
+            if(lockedCount == 0){
+                isLocked = false;
+                notify();
+            }
+        }
+    }
+}
 ```
 
 
@@ -1421,27 +1448,33 @@ public class Lock{    //标记是否已经被占有    boolean isLocked = false;
 *   可以使用数字常量直接初始化包装类型， 将会自动调用new创建对象， 称为自动装箱
 
     ```java
-    Integer a = 3; // 使用数字常量初始化包装类型， 将会自动调用new方法来装箱为对象，称为自动装箱
+    Integer a = 3; 
+    // 使用数字常量初始化包装类型， 将会自动调用new方法来装箱为对象，称为自动装箱
     ```
 
 *   可以使用包装类型对象直接初始化基本类型对象，赋值后两个变量指向同一个地址，称为自动拆箱
 
     ```java
-    Integer c = new Integer(3);int d = c; // 可以直接将包装类型变量赋值给基本类型，为自动拆箱，此时两个变量指向地址相同
+    Integer c = new Integer(3);
+    int d = c; 
+    // 可以直接将包装类型变量赋值给基本类型，为自动拆箱，此时两个变量指向地址相同
     ```
 
 *   在自动装箱或者新建基本类型变量时， 如果数字在范围 -127~128内，那么将直接指向数字常量池中对应位置，不会申请新内存
 
     ```java
-    Integer a = 3; Integer b = 3; // 如果数字常量在 -127~128 范围内，那么会直接指向数字常量池中对应位置，不会申请新的内存， 所以a==b
+    Integer a = 3; 
+    Integer b = 3; 
+    // 如果数字常量在 -127~128 范围内，那么会直接指向数字常量池中对应位置，不会申请新的内存， 所以a==b
     ```
 
 *   如果手动调用 new 创建包装类型，无论数字在哪个范围， 都会申请新的内存
 
     ```java
-    Integer c = new Integer(3); // 手动调用new新建包装类型实例，那么必然会申请新的内存
+    Integer c = new Integer(3); 
+    // 手动调用new新建包装类型实例，那么必然会申请新的内存
     ```
-
+    
     
 
 
@@ -1497,7 +1530,8 @@ public class Lock{    //标记是否已经被占有    boolean isLocked = false;
 
 *   尽量避免在一个线程中对多个对象加锁
 *   如果多个线程要对同样的多个对象加锁，尽量保持相同的加锁顺序
-*   可以使用定时锁，即定时释放的锁
+*   破坏不剥夺条件，即一个线程在未完全获取所需资源而等待剩余资源时，将其已经获取的资源隐式放入可用资源列表中，可供其他线程获取，待到该线程获取到剩余资源时，需要对之前获取的资源进行再次确认，如果已经被剥夺，则需要重新获取
+*   可以使用<>定时锁，即定时释放的锁
 *   产生死锁后使用死锁检测算法，使得某些线程让出资源从而解除死锁
 
 
