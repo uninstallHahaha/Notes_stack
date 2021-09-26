@@ -1650,7 +1650,59 @@ static void bubble(int[] arr) {
 ​		分治后合并时可以保证原先在左边的子数组中与右边数组中出现相同的元素时，总是先将左边的数组加入到合并后的数组中，这样就保证了原数组相同元素的先后顺序， 是稳定的排序
 
 ```java
-// 归并排序public class dac {    // 入口方法    void dodac(int[] arr) {        dfs(arr, 0, arr.length - 1);    }    // 递归切分子数组，将排列好的子数组拼接为结果返回    void dfs(int[] arr, int left, int right) {        // 如果只有一个元素，直接返回        if (left == right) return;        // 如果有两个元素，将两个元素排列好然后返回        if (left + 1 == right) {            if (arr[left] > arr[right]) {                int tmp = arr[left];                arr[left] = arr[right];                arr[right] = tmp;            }            return;        }        // 将左右两个子数组排列完成        int mid = (right - left) / 2 + left;        dfs(arr, left, mid - 1);        dfs(arr, mid, right);        // 将排列完成的两个子数组拼接到一个新数组中，然后使用新数组替换原数组        int[] res = new int[right - left + 1];        int i = left;        int j = mid;        int loc = 0;        while (i != mid || j != right + 1) {            if (i != mid && j != right + 1) {                if (arr[i] < arr[j]) {                    res[loc++] = arr[i++];                } else {                    res[loc++] = arr[j++];                }                continue;            }            if (i != mid) {                res[loc++] = arr[i++];            }            if (j != right + 1) {                res[loc++] = arr[j++];            }        }        for (int t = 0; t < res.length; t++) {            arr[left + t] = res[t];        }    }}
+// 归并排序
+public class dac {
+
+    // 入口方法
+    void dodac(int[] arr) {
+        dfs(arr, 0, arr.length - 1);
+    }
+
+    // 递归切分子数组，将排列好的子数组拼接为结果返回
+    void dfs(int[] arr, int left, int right) {
+        // 如果只有一个元素，直接返回
+        if (left == right) return;
+        // 如果有两个元素，将两个元素排列好然后返回
+        if (left + 1 == right) {
+            if (arr[left] > arr[right]) {
+                int tmp = arr[left];
+                arr[left] = arr[right];
+                arr[right] = tmp;
+            }
+            return;
+        }
+
+        // 将左右两个子数组排列完成
+        int mid = (right - left) / 2 + left;
+        dfs(arr, left, mid - 1);
+        dfs(arr, mid, right);
+
+        // 将排列完成的两个子数组拼接到一个新数组中，然后使用新数组替换原数组
+        int[] res = new int[right - left + 1];
+        int i = left;
+        int j = mid;
+        int loc = 0;
+        while (i != mid || j != right + 1) {
+            if (i != mid && j != right + 1) {
+                if (arr[i] < arr[j]) {
+                    res[loc++] = arr[i++];
+                } else {
+                    res[loc++] = arr[j++];
+                }
+                continue;
+            }
+            if (i != mid) {
+                res[loc++] = arr[i++];
+            }
+            if (j != right + 1) {
+                res[loc++] = arr[j++];
+            }
+        }
+        for (int t = 0; t < res.length; t++) {
+            arr[left + t] = res[t];
+        }
+    }
+}
 ```
 
 
@@ -1666,7 +1718,33 @@ static void bubble(int[] arr) {
 ​		基数排序是稳定的排序
 
 ```java
-static void radix(int[] arr) {    // 先整10个队列    List<LinkedList<Integer>> qs = new ArrayList<>();    for (int i = 0; i < 10; i++) qs.add(new LinkedList<Integer>());    int radix_num = 10;    boolean ext = true;    // 从最低位开始比较    while (ext) {        boolean find = false;        // 把所有的元素都放到指定的队列中        for (int j : arr) {            if (j / radix_num > 0) find = true;            qs.get(j % radix_num / (radix_num / 10)).add(j);        }        int loc = 0;        // 把所有的元素从队列中取出覆盖原数组        for (LinkedList<Integer> l : qs) {            int size = l.size();            for (int i = 0; i < size; i++) {                arr[loc++] = l.poll();            }        }        radix_num *= 10;        ext = find;    }}
+static void radix(int[] arr) {
+    // 先整10个队列
+    List<LinkedList<Integer>> qs = new ArrayList<>();
+    for (int i = 0; i < 10; i++) qs.add(new LinkedList<Integer>());
+
+    int radix_num = 10;
+    boolean ext = true;
+    // 从最低位开始比较
+    while (ext) {
+        boolean find = false;
+        // 把所有的元素都放到指定的队列中
+        for (int j : arr) {
+            if (j / radix_num > 0) find = true;
+            qs.get(j % radix_num / (radix_num / 10)).add(j);
+        }
+        int loc = 0;
+        // 把所有的元素从队列中取出覆盖原数组
+        for (LinkedList<Integer> l : qs) {
+            int size = l.size();
+            for (int i = 0; i < size; i++) {
+                arr[loc++] = l.poll();
+            }
+        }
+        radix_num *= 10;
+        ext = find;
+    }
+}
 ```
 
 
@@ -1700,7 +1778,24 @@ static void radix(int[] arr) {    // 先整10个队列    List<LinkedList<Intege
     
 
 ```java
-static void shell(int[] arr) {    int step = arr.length / 2;    while (step > 0) {        // ### use insert function to sort the select sublist        // iterate all sublist        for (int start = 0; start < step; start++) {            // sort sublist with insert function            for (int loc = start; loc < arr.length; loc += step) {                for (int cur = loc; cur > start; cur -= step) {                    if (arr[cur] < arr[cur - step])                         swap(arr, cur, cur - step);                }            }        }        // update step        step /= 2;    }}
+static void shell(int[] arr) {
+    int step = arr.length / 2;
+    while (step > 0) {
+        // ### use insert function to sort the select sublist
+        // iterate all sublist
+        for (int start = 0; start < step; start++) {
+            // sort sublist with insert function
+            for (int loc = start; loc < arr.length; loc += step) {
+                for (int cur = loc; cur > start; cur -= step) {
+                    if (arr[cur] < arr[cur - step]) 
+                        swap(arr, cur, cur - step);
+                }
+            }
+        }
+        // update step
+        step /= 2;
+    }
+}
 ```
 
 
@@ -1721,7 +1816,9 @@ static void shell(int[] arr) {    int step = arr.length / 2;    while (step > 0)
 
 
 
-##### 缓存池
+##### 基本类型缓存池
+
+​		所以注意：基本类型的包装类型相当于直接缓存到了堆中，而不是在方法区单独进行缓存的，这里的缓存只是相当于在程序运行初期就预先创建一系列变量，然后接下来直接使用这些变量罢了
 
 ​		对于基本类型的包装类型，默认提供缓存池，实际上就是一个数组，事先存放好缓存范围内的对象
 
@@ -1739,13 +1836,15 @@ static void shell(int[] arr) {    int step = arr.length / 2;    while (step > 0)
 
 ##### 字符串常量池
 
+​		所以注意：字符串常量池才是 jvm机制中真正会单独分配到固定的内存，并且可以在 jvm 参数中配置其大小
+
 ​		基础类型包装类的缓存池使用一个数组进行缓存，而 String 类型，JVM 内部使用 HashTable 进行缓存，我们知道，HashTable 的结构是一个数组，数组中每个元素是一个链表。和我们平时使用的 HashTable 不同，JVM 内部的这个 HashTable  是不可以动态扩容的。
 
 ​		在 Java 6 中，String Pool 置于 PermGen Space 中，PermGen 有一个问题，那就是它是一个固定大小的区域，虽然我们可以通过 `-XX:MaxPermSize=N` 来设置永久代的空间大小，但是不管我们设置成多少，它终归是固定的。
 
 ​		所以，在 Java 6 中，我们应该尽量小心使用 String.intern() 方法，否则容易导致 OutOfMemoryError。
 
-​		到了 Java 7，大佬们已经着手去掉 PermGen Space 了，首先，就是将 String Pool 移到了堆中。把 String Pool 放到堆中，即使堆的大小也是固定的，但是这个时候，对于应用调优工作，只需要调整堆大小就行了。
+​		到了 Java 7，大佬们已经着手去掉 PermGen Space 了，首先，就是将 String Pool 移到了堆中。把 String Pool 放到堆中，即使堆的大小也是固定的，但是这个时候，对于应用调优工作，只需要调整堆大小就行了
 
 ​		在 Java 8 中，String Pool 依然还是在 Heap Space 中
 
