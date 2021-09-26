@@ -199,9 +199,9 @@
 
 ​		注: 1.6及以前, 字符串常量池在方法区
 
-​				1.7常量池在堆
+​				1.7字符串常量池在堆
 
-​				1.8及以后常量池在元空间 (其实还是方法区,又挪回来了)
+​				1.8及以后字符串常量池在元空间
 
 <span style='color:cyan;'>方法区在 1.8以前放到 永久代, 1.8以后放到 元空间</span>
 
@@ -296,6 +296,29 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 > ByteBuffer.allocateDirect() 实际上也是调用了 Unsafe 的 allocateMemory() 方法, 然后由 Cleaner 虚引用来监测 ByteBuffer 的状态, 当 ByteBuffer 被回收时, cleaner 调用 freeMemory() 方法实现释放直接内存
 
 > 在运行参数中设置 -XX:+DisableExplicitGC 禁用在代码中显式地调用垃圾回收,即 System.GC() , 这样会造成直接内存不会被释放直到对应的变量被销毁, 此时可以通过调用 unsafe 对象的 freeMemory() 实现对直接内存的回收
+
+
+
+
+
+##### 参数设置
+
+*   Xss 单个线程栈的大小，不能太大，太大的话能够同时开的线程数就变少
+*   Xmx  最大堆内存，默认物理内存 1/4
+*   Xms  初始堆内存，默认物理内存 1/64
+*   Xmn  新生代大小，覆盖 XX:NewRatio 设置
+*   XX:MetaSpaceSize  元空间大小（用来放方法和字符串常量池，直接使用物理内存）
+*   XX:SurvivorRatio  一个幸存区/Eden区 的 比例，注意有两个幸存区，它们的相同，这里设置的是一个的比例
+*   XX:NewRatio  新生代/老年代 的 比例
+*   XX:MaxTenuringThreshold  进入老年代的阈值
+
+
+
+
+
+
+
+
 
 
 
