@@ -1089,7 +1089,66 @@ AQS 实现的部分有，
 一个简单的自定义独占锁demo
 
 ```java
-public class testExclusiveLock {    public static void main(String[] args) {        // 创建锁实例        CustomQueue lock = new CustomQueue();        // 主线程先拿锁执行        lock.lock();        for (int i = 0; i < 10; i++) {            // 整10个子线程，它们的执行都需要先拿到锁，因为主线程一直持锁未释放，所以只有等到主线程释放锁后，它们才能依次执行            // 因为不能直接拿到锁，所以会入等待队列，然后依次出队拿到锁执行            new Thread(new Runnable() {                @Override                public void run() {                    lock.lock();                    System.out.println(Thread.currentThread().getName() + " is using the lock...");                    lock.unlock();                }            }).start();            try {                sleep(100);            } catch (InterruptedException e) {                e.printStackTrace();            }        }        System.out.println("Main is willing to release...");        lock.unlock();    }}// 自定义锁，继承AQS，因为是独享锁，只需实现 tryAcquire 和 tryReleaseclass CustomQueue extends AbstractQueuedSynchronizer {    @Override    protected boolean tryAcquire(int arg) {        if (compareAndSetState(0, 1)) {            setExclusiveOwnerThread(Thread.currentThread());            return true;        }        return false;    }    // 调用 acquire 实现 lock    public void lock() {        acquire(1);    }    // 调用 release 实现 unlock    public void unlock() {        release(0);    }    @Override    protected boolean tryRelease(int arg) {        setState(arg);        setExclusiveOwnerThread(null);        return true;    }}
+public class testExclusiveLock {
+
+    public static void main(String[] args) {
+        // 创建锁实例
+        CustomQueue lock = new CustomQueue();
+        // 主线程先拿锁执行
+        lock.lock();
+        for (int i = 0; i < 10; i++) {
+            // 整10个子线程，它们的执行都需要先拿到锁，因为主线程一直持锁未释放，所以只有等到主线程释放锁后，它们才能依次执行
+            // 因为不能直接拿到锁，所以会入等待队列，然后依次出队拿到锁执行
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    lock.lock();
+                    System.out.println(Thread.currentThread().getName() + " is using the lock...");
+                    lock.unlock();
+                }
+            }).start();
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("Main is willing to release...");
+        lock.unlock();
+    }
+}
+
+
+// 自定义锁，继承AQS，因为是独享锁，只需实现 tryAcquire 和 tryRelease
+class CustomQueue extends AbstractQueuedSynchronizer {
+    @Override
+    protected boolean tryAcquire(int arg) {
+        if (compareAndSetState(0, 1)) {
+            setExclusiveOwnerThread(Thread.currentThread());
+            return true;
+        }
+        return false;
+    }
+
+    // 调用 acquire 实现 lock
+    public void lock() {
+        acquire(1);
+    }
+
+    // 调用 release 实现 unlock
+    public void unlock() {
+        release(0);
+    }
+
+    @Override
+    protected boolean tryRelease(int arg) {
+        setState(arg);
+        setExclusiveOwnerThread(null);
+        return true;
+    }
+
+}
 ```
 
 执行结果
@@ -1118,7 +1177,7 @@ ReentrantLock 和 synchronized 都是互斥锁，可重入锁
 *   ReentrantLock 可以选择是 公平锁 或者 非公平锁，synchronized 是个非公平锁且无法修改
 *   ReentrantLock 可以通过 condition 限定哪些线程可以被唤醒来参与锁的竞争
 
- **性能已不是选择标准**
+**性能已不是选择标准**
 
 
 
@@ -1318,7 +1377,23 @@ ReentrantLock 和 synchronized 都是互斥锁，可重入锁
 ​		可以像这样实现
 
 ```java
-public class Lock{      // 这个字段用来标识当前是否可以获取锁    private boolean isLocked = false;    // 同步方法获取锁，其实就是改变字段状态，保证了只能有一个线程获取锁成功    public synchronized void lock()          throws InterruptedException{          while(isLocked){              wait();          }          isLocked = true;      }   	// 同步方法释放锁，其实也是改变字段状态，释放锁后通知其他线程苏醒继续获取锁    public synchronized void unlock(){          isLocked = false;          notify();      }  }  
+public class Lock{  
+    // 这个字段用来标识当前是否可以获取锁
+    private boolean isLocked = false;
+    // 同步方法获取锁，其实就是改变字段状态，保证了只能有一个线程获取锁成功
+    public synchronized void lock()  
+        throws InterruptedException{  
+        while(isLocked){  
+            wait();  
+        }  
+        isLocked = true;  
+    }  
+ 	// 同步方法释放锁，其实也是改变字段状态，释放锁后通知其他线程苏醒继续获取锁
+    public synchronized void unlock(){  
+        isLocked = false;  
+        notify();  
+    }  
+}  
 ```
 
 ​		这种锁的定义方法，假设一个线程获取到了锁，在它未调用unlock释放锁之前，任何一个线程包括它自己再次调用 lock 都不会获取锁成功而是会进入wait，那么，如果代码逻辑中出现了获取锁后不释放锁就直接再次获取锁的错误逻辑，那么程序会陷入死锁，任何线程都不能得以运行，这种锁就是不可重入锁
