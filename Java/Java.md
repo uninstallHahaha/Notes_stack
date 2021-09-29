@@ -274,7 +274,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
-###### HashMap
+##### HashMap
 
 ​		本质就是一个数组, 数组元素是 `Entry<K,V>` 类型, Entry 是链表节点的结构, 能保存下一个元素的位置
 
@@ -286,7 +286,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 ​		综上, 因为是数组存储, 所以查找, 修改, 删除速度为 O(1), 效率很高, 除非hash冲突很多导致链表很长.
 
-​		1.8中计算hash的方法，取hash值前16位和后16位按位或，得到16位的结果，不用32位的原hash值可能是为了提高效率吧
+​		1.8中计算hash的方法，取hash值前16位和后16位按位 <span style='color:cyan;'>异或</span>，得到16位的结果，不用32位的原hash值可能是为了提高效率吧
 
 ![image-20210817154155110](Java.assets/image-20210817154155110.png)
 
@@ -300,7 +300,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 ​		只要输入的HashCode本身分布均匀，Hash算法的结果就是均匀的, 这就<span style='color:orange;'>实现了均匀分布</span>
 
-​		hash运算的过程其实就是对目标元素的Key进行hashcode，再对Map的容量进行取模，而JDK 的工程师为了提升取模的效率，使用位运算代替了取模运算，<span style='color:cyan;'>这就要求Map的容量一定得是2的幂</span>
+​		hash运算的过程其实就是对目标元素的Key进行hashcode，再对Map的容量进行取模，而 JDK 的工程师为了提升取模的效率，使用位运算代替了取模运算，<span style='color:cyan;'>这就要求Map的容量一定得是2的幂</span>
 
 ​		而作为默认容量，太大和太小都不合适，所以16就作为一个比较合适的经验值被采用了
 
