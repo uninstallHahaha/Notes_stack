@@ -334,9 +334,11 @@ Deque<Integer> stack = new ArrayDeque<>();
 
     ConcurrentHashMap在进行put操作的还是比较复杂的，大致可以分为以下步骤：
 
+    ​		<span style='color:cyan;'>往数组中某个位置第一次写 Entry 时使用 CAS，往已经存在的 Entry 后面追加数据时使用 synchronized 加锁写</span>
+    
     1.  根据 key 计算出 hashcode 。
     2.  判断是否需要进行初始化。
-    3.  即为当前 key 定位出的 Node，如果为空表示当前位置可以写入数据，利用 CAS 尝试写入，失败则自旋保证成功。
+    3.  即为当前 key 定位出的 Node，如果为空表示当前位置可以写入数据，利用 CAS 尝试写入，失败则自旋保证成功
     4.  如果当前位置的 `hashcode == MOVED == -1`,则需要进行扩容。
     5.  如果都不满足，则利用 synchronized 锁写入数据。
     6.  如果数量大于 `TREEIFY_THRESHOLD` 则要转换为红黑树。
@@ -382,6 +384,16 @@ AVL树：自平衡二叉树，插入节点时通过左旋右旋来达到平衡�
 总结
 
 如果绝大部分操作都是查找，选择AVL，其余情况使用红黑树
+
+
+
+
+
+###### hashmap和红黑树
+
+在 CurrentHashMap 中是加锁了的，实际上是读写锁，如果写冲突就会等待，
+
+如果插入时间过长必然等待时间更长，而红黑树相对AVL树他的插入更快
 
 
 
