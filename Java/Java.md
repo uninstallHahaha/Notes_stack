@@ -459,6 +459,26 @@ Thread.currentThread() 获取到当前正在执行的线程实例
 
 
 
+
+
+###### 多线程 之 sleep
+
+sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch 捕获 InterruptedException
+
+![image-20210929085452815](Java.assets/image-20210929085452815.png)
+
+​		在线程被 sleep ，wait，join 的过程中，支持其他线程使用该线程实例调用方法 interrupt() 来提前中断该线程
+
+​		但是如果直接无任何操作地就将其中断，可能会造成数据的不同步，所以这里就有这样一个机制，当线程在以上过程中被调用 interrupt 函数真正中断前，会抛出 `InterruptedException` 异常，我们可以在 catch 中捕获这个异常，并且对数据做一些操作，执行完 catch 后，该线程将会被真正终止，所以这个 catch 相当于提前中断线程时的钩子函数，用于对数据进行处理
+
+
+
+
+
+
+
+
+
 ###### ***synchronized代码块***
 
 >   wait , notify , notifyall 只能在 synchronized 代码块中使用
