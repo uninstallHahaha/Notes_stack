@@ -96,6 +96,18 @@ public Object deleteLast(Vector v){
 
 
 
+
+
+##### ArrayList、LinkedList 占用空间问题
+
+试问 ArrayList、LinkedList 哪个更加占用空间
+
+通常情况下，由于 LinkedList 需要存储前后节点的指针，所以占用空间更大，但是考虑到 ArrayList 的扩容机制，每次空间不足时扩容至原长度的 1.5 倍，如果处于刚好扩容的临界值，那么将会多出来几乎三分之一的空间实际上并没有使用到而被浪费，所以对于谁占用空间更大这个问题，不能一概而论，应当考虑到数组的扩容机制
+
+
+
+
+
 ##### HashTable、HashMap、HashSet
 
 HashTable和HashMap采用的存储机制是一样的，不同的是：
