@@ -2,7 +2,7 @@ Java
 
 
 
-###### java中的集合, 线程安全? 线程不安全?
+##### java中的集合, 线程安全? 线程不安全
 
 *   线程安全：就是当多线程访问时，采用了加锁的机制；即当一个线程访问该类的某个数据时，会对这个数据进行保护，其他线程不能对其访问，直到该线程读取完之后，其他线程才可以使用。防止出现数据不一致或者数据被污染的情况 
 
@@ -22,7 +22,7 @@ Collections提供了如下几个静态方法，把这些线程不安全的集合
 
 
 
-###### 同步容器一定线程安全吗？
+##### 同步容器一定线程安全吗
 
 >   总结同步容器只能保证单个操作同步，在进行复合操作时很容易造成数据不同步，而且对于读操作也进行同步，这会降低效率
 >
@@ -56,7 +56,7 @@ public Object deleteLast(Vector v){
 
 
 
-###### Vector、ArrayList、LinkedList ?
+##### Vector、ArrayList、LinkedList
 
 1、Vector：
 
@@ -96,7 +96,7 @@ public Object deleteLast(Vector v){
 
 
 
-###### HashTable、HashMap、HashSet ?
+##### HashTable、HashMap、HashSet
 
 HashTable和HashMap采用的存储机制是一样的，不同的是：
 1、HashMap：
@@ -125,7 +125,7 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 
 
 
-###### Properties?
+##### Properties
 
 ​	java自带的读取 .Properties配置文件 的类, 继承自 HashTable, <span style="color:cyan">线程安全</span>
 
@@ -137,7 +137,7 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 
 
 
-###### StringBuffer , StringBulider , String ? 
+##### StringBuffer , StringBulider , String 
 
 *   String
 
@@ -173,7 +173,7 @@ final 关键字
 
 
 
-###### ***list*** 和 ***数组*** 之间的转换?
+##### ***list*** 和 ***数组*** 之间的转换
 
  ***数组*** 转 ***list*** 
 
@@ -193,7 +193,7 @@ list.toArray(arr);
 
 
 
-###### 队列容器
+##### 队列容器
 
 >   队列都来自于 Queue 接口
 
@@ -242,7 +242,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
-###### Set容器
+##### Set容器
 
 ![image-20210817211521190](Java.assets/image-20210817211521190.png)
 
@@ -262,7 +262,9 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
-###### 数据库连接池 ?
+##### 数据库连接池
+
+​		数据库连接是 TCP 连接，那么就知道为什么要缓存连接了吧
 
 ​	建立数据库连接是很耗时的操作 , 首先得加载数据库驱动程序到内存中, 然后与数据库建立网络连接, 然后才能执行语句, 用完之后还得释放连接, 如果没有释放连接, 那么数据库的对应的连接资源就不会被释放, 从而造成内存泄露.
 
@@ -463,6 +465,10 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 
 
+
+
+
+
 ##### 线程的状态
 
 线程状态: 创建 , 就绪, 运行, 阻塞, 终止, 僵死(Z)
@@ -480,6 +486,22 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 >   *   this.interrupted()：测试当前线程是否已经中断，执行后将状态标志清除为false
 >
 >   *   this.isInterrupted()：线程对象是否已经中断状态，但不清楚状态标志
+
+
+
+
+
+##### start 和 run
+
+start 函数调用后开启一个单独的线程来执行 run 函数中定义的逻辑，不能连续调用 start 函数，会抛出异常 `IllegalThreadStateException`
+
+![image-20210929145117959](Java.assets/image-20210929145117959.png)
+
+![image-20210929145352532](Java.assets/image-20210929145352532.png)
+
+run 函数本质上只是 runnable 实现类中定义的一个方法，手动调用 run 只不过相当于调用了一个普通方法
+
+
 
 
 
