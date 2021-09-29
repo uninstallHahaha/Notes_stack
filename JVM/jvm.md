@@ -519,7 +519,7 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 
 <span style='color:pink;'>垃圾回收的流程</span>
 
-1.  <span style='color:cyan;'>初始标记</span> : 单开一个垃圾回收线程标记工作线程中直接引用的对象, 此时工作线程阻塞
+1.  <span style='color:cyan;'>初始标记</span> : 单开一个垃圾回收线程标记工作线程中直接引用的对象, 此时工作线程阻塞，初始标记只标记直接被 Root 对象引用的对象，为的是尽量减少 STW 的时间，提升用户体验
 2.  <span style='color:cyan;'>并发标记</span> : 垃圾回收线程与工作线程并发执行, 垃圾回收线程根据上一步标记出引用到的对象, 对所有对象进行遍历, 以确定哪些对象需要被清理
 3.  <span style='color:cyan;'>重新标记</span> : 由于上一步中并发执行的工作线程可能导致对象引用的变化, 为了防止清理掉还在被引用的对象, 这一步中多个垃圾回收线程并发遍历变更引用对象所关联的对象, 以更新哪些对象应当被清理
 4.  <span style='color:cyan;'>并发清理</span> : 此时, 已经正确标记出当前状态下哪些对象需要被清理, 垃圾清理线程与工作线程并发执行, 垃圾清理线程进行对象回收
@@ -537,6 +537,25 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 ​		将堆内存分为离散的region(格子), 每个格子都有不同的角色(eden, servivor, old), 清理过程依然是标记, 复制, 清理
 
 ​		在标记的过程中，会对各个 region 的清理收益和清理时间进行估计，然后给出清理的优先次序，根据用户限定的 stw 时间按照优先度从高到低选择合适的 region 进行清理，因此 G1 的 stw时间是控的
+
+
+
+
+
+##### 对象进入老年代的方式
+
+*   正常的年龄增长至阈值，进入老年代
+
+*   如果 survivor 存不下活跃的对象时，直接进入老年代
+
+*   动态年龄
+
+    servivor 已满，且至少有50%对象年龄大于平均年龄，那么这些大于平均年龄的对象直接进入老年代
+
+*   大对象直接进入老年代
+
+    大对象在Survivor里存不下，也直接进入old区
+     **tips:只针对Serial和Parnew收集器生效，PS收集器无效**
 
 
 
@@ -678,7 +697,7 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 
 ###### JVM自带的类加载器?
 
-​	JVM里面自带了 Bootstrap ClassLoader , Extention ClassLoader, Application ClassLoader, 用来加载java核心类, java扩展类, 自定义引用的第三方类, 它们自右向左依次继承, JVM在运行之初, 就把这些类加载到了方法区
+​	JVM里面自带了 `Bootstrap ClassLoader` , `Extention ClassLoader`, `Application ClassLoader`, 用来加载java核心类, java扩展类, 自定义引用的第三方类, 它们自右向左依次继承, JVM在运行之初, 就把这些类加载到了方法区
 
 ###### JVM类加载器的逻辑?
 
