@@ -463,6 +463,8 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 `Thread.yield()` 当前线程让出cpu资源, 礼让其他同优先度线程, 但是可能因为再次被cpu选中执行而礼让无效
 
+`实例.join()` 让该线程插队进来执行，但是两个线程相互 join 会导致死锁
+
 <del>`suspend()` 暂停线程, 以及 `resume()` 继续线程, 但是不恰当的暂停可能导致公共资源被占用迟迟得不到释放而影响性能, 所以已经被弃用</del>
 
 `Thread.currentThread()` 获取到当前正在执行的线程实例
@@ -471,7 +473,7 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 
 
-###### 多线程 之 sleep
+###### 多线程之sleep
 
 sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch 捕获 InterruptedException
 
