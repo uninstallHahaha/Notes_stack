@@ -292,7 +292,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
-###### HashMap容量
+##### HashMap容量
 
 ​		*元素的index = hash(key) & (length-1)*
 
@@ -316,7 +316,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
-###### <span style='color:cyan;'>Hashmap如何实现线程安全</span>
+##### <span style='color:cyan;'>Hashmap如何实现线程安全</span>
 
 *   直接使用 HashTable , 本质上是把所有HashMap的方法都加上synchronized
 
@@ -349,7 +349,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
-###### HashMap版本变化
+##### HashMap版本变化
 
 *   1.7及之前，存储结构为 list+link
 
@@ -369,7 +369,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
-###### 红黑树与AVL树
+##### 红黑树与AVL树
 
 AVL树：自平衡二叉树，插入节点时通过左旋右旋来达到平衡，AVL树是严格的平衡树，任意节点两个子树高度差不大于1
 
@@ -389,7 +389,7 @@ AVL树：自平衡二叉树，插入节点时通过左旋右旋来达到平衡�
 
 
 
-###### hashmap和红黑树
+##### hashmap和红黑树
 
 在 CurrentHashMap 中是加锁了的，实际上是读写锁，如果写冲突就会等待，
 
@@ -401,7 +401,7 @@ AVL树：自平衡二叉树，插入节点时通过左旋右旋来达到平衡�
 
 
 
-###### HashTable 
+##### HashTable 
 
 线程安全版本的 hashMap , 在其所有方法前面都加上一个 `synchronized`
 
@@ -421,7 +421,7 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 
 
-###### 安全失败和快速失败
+##### 安全失败和快速失败
 
 <span style='color:cyan;'>快速失败</span>
 
@@ -449,7 +449,7 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 
 
-###### 多线程
+##### 多线程
 
 ***创建线程以及操作线程***
 
@@ -463,7 +463,7 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 
 
-###### 线程的状态
+##### 线程的状态
 
 线程状态: 创建 , 就绪, 运行, 阻塞, 终止, 僵死(Z)
 
@@ -483,13 +483,13 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 
 
-###### 守护线程
+##### 守护线程
 
 ​		守护线程, 线程后台执行, 默认创建的线程都是前台执行(用户线程), 也就是只要有一个前台线程没有执行完, java进程就不会结束, 可以调用 setDaemon() 设置线程为后台执行, 此时只要其他用户线程都结束了, 那么守护线程也会自动结束
 
 
 
-###### 线程API
+##### 线程API
 
 `setPriority(x)` 设置线程优先级, 优先级越高越容易被先执行
 
@@ -505,7 +505,7 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 
 
-###### 多线程之sleep
+##### 多线程之sleep
 
 sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch 捕获 InterruptedException
 
@@ -525,7 +525,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### ***synchronized代码块***
+##### ***synchronized代码块***
 
 >   wait , notify , notifyall 只能在 synchronized 代码块中使用
 >
@@ -547,7 +547,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### *synchronized原理*
+##### *synchronized原理*
 
 ​		synchronized 可重入
 
@@ -561,7 +561,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 ​		<span style='color:cyan;'>如果在执行中调用了wait方法，那么该线程进入 waitlist 队列，待到其他线程调用 notify 或者 notifyall 时，重新回到 entrylist 参与锁的竞争</span>
 
-###### 锁升级机制
+##### 锁升级机制
 
 ​		在 java 1.8 之前， synchronized 锁作为重量级锁而被诟病，java1.8 优化了 synchronized 锁机制，使其拥有了较好的性能，具体为：
 
@@ -577,7 +577,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### 锁消除机制
+##### 锁消除机制
 
 ​		jvm对不可能存在竞争的锁进行忽略消除，不再执行相关的加锁解锁操作
 
@@ -591,7 +591,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### 锁膨胀机制
+##### 锁膨胀机制
 
 ​		jvm检测连续频繁的加锁解锁操作，比如在循环中每次加锁解锁，将其加锁解锁操作扩张到循环之外
 
@@ -607,7 +607,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### 如果想要多个进程交替打印
+##### 如果想要多个进程交替打印
 
 ​	可以使用 synchronized 代码块, 让这些线程同时锁一个对象, 然后在代码块中先打印, 然后 notify 其他线程后自己 wait
 
@@ -615,7 +615,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### ThreadLocal
+##### ThreadLocal
 
 >   ThreadLocal的作用是让人人（线程们）吃上一碗饭（独立的变量）
 
@@ -648,7 +648,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### 虚拟内存?物理内存?共享内存?
+##### 虚拟内存?物理内存?共享内存?
 
 物理内存: 实际分配给应用程序的内存大小 (RES)
 
@@ -658,7 +658,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### Java的多态?
+##### Java的多态
 
 ​	java默认函数类型就是c++中的虚函数, 所以在子类中重写父类方法后, 创建的对象中的函数会动态绑定到子类中的实现, 即使使用父类型接收子对象, 其行为也是子对象的行为, 这就是多态.
 
@@ -670,7 +670,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### 为什么重写hashcode()和equals()?
+##### 为什么重写hashcode()和equals()
 
 ​	对象默认使用 Object 的 hashcode 和 equals, 即 比较内存地址是否相等
 
@@ -682,7 +682,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### copy on write?
+##### copy on write
 
 ​	针对多线程情况下, 多读少写时 ***提高读写吞吐量*** 的解决方案. 
 
@@ -696,7 +696,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### transient关键字
+##### transient关键字
 
 ​	对象如果想要进行被传输, 需要实现序列化, 传输后接收方再反序列化还原对象
 
@@ -706,7 +706,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### volatile关键字
+##### volatile关键字
 
 <span style='color:cyan;'>保证数据一致性</span>
 
@@ -736,7 +736,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-###### 原子性操作
+##### 原子性操作
 
 ​	直接将值赋给变量的操作编译后是一句话, 就是原子操作
 
@@ -775,6 +775,10 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
     因为这个 读+读操作, 对于读多写少的场景, 性能上就有很大的提升
 
 
+
+
+
+##### 设计模式
 
 
 
@@ -996,7 +1000,7 @@ public String getCheckResultSuper(String order) {
 
 
 
-###### 线程池的创建
+##### 线程池的创建
 
 ​	线程池减少创建和销毁线程的消耗, 复用线程使得处理任务更加迅速, 而且能控制最大线程数量, 防止挤爆内存, 而且还有针对定时任务的线程池
 
@@ -1048,7 +1052,7 @@ public String getCheckResultSuper(String order) {
 
 
 
-###### 线程池的使用
+##### 线程池的使用
 
 ​		线程池对象可以通过调用 `execute()` 和 `submit()` 来执行任务，通过传入 `Runnable` 实例或者 `Callable` 实例指定任务
 
@@ -1084,7 +1088,7 @@ public String getCheckResultSuper(String order) {
 
 
 
-###### 线程池的工作流程
+##### 线程池的工作流程
 
 ![image-20210718142036739](Java.assets/image-20210718142036739.png)
 
@@ -1100,7 +1104,7 @@ public String getCheckResultSuper(String order) {
 
 
 
-###### 线程池的参数
+##### 线程池的参数
 
 ![image-20210718142236505](Java.assets/image-20210718142236505.png)
 
@@ -1110,7 +1114,7 @@ public String getCheckResultSuper(String order) {
 
 
 
-###### NIO
+##### NIO
 
 ​	三个部分
 
@@ -1131,7 +1135,7 @@ public String getCheckResultSuper(String order) {
 
 
 
-###### Java线程安全
+##### Java线程安全
 
 1.  互斥同步锁（悲观锁）
 
@@ -1436,8 +1440,6 @@ ReentrantLock 和 synchronized 都是互斥锁，可重入锁
 
 
 
-
-
 ##### 对象锁和类锁
 
 对象锁
@@ -1639,7 +1641,7 @@ public class Lock{
 *   尽量避免在一个线程中对多个对象加锁
 *   如果多个线程要对同样的多个对象加锁，尽量保持相同的加锁顺序
 *   破坏不剥夺条件，即一个线程在未完全获取所需资源而等待剩余资源时，将其已经获取的资源隐式放入可用资源列表中，可供其他线程获取，待到该线程获取到剩余资源时，需要对之前获取的资源进行再次确认，如果已经被剥夺，则需要重新获取
-*   可以使用<>定时锁，即定时释放的锁
+*   可以使用 定时锁 ，即定时释放的锁
 *   产生死锁后使用死锁检测算法，使得某些线程让出资源从而解除死锁
 
 
@@ -1954,7 +1956,7 @@ static void shell(int[] arr) {
 
 ​		到了 Java 7，大佬们已经着手去掉 PermGen Space 了，首先，就是将 String Pool 移到了堆中。把 String Pool 放到堆中，即使堆的大小也是固定的，但是这个时候，对于应用调优工作，只需要调整堆大小就行了
 
-​		在 Java 8 中，String Pool 依然还是在 Heap Space 中
+​		在 Java 8 中，String Pool 在 元空间 中
 
 ​		插入的性能主要取决于链表的平均长度。当链表平均长度为 10 的时候，我们看到性能是几乎没有任何损失的。所以要根据自己的实际情况，考虑是否要设置 `-XX:StringTableSize=N`，还是使用默认值。
 
@@ -1992,9 +1994,11 @@ static void shell(int[] arr) {
 ##### 预防CPU飙升
 
 *   谨防代码死循环
+*   服务器设置限流和熔断，避免承受不住的高并发
 *   设置合适的 CAS 次数
 *   接口中，对于耗时的逻辑，放到 mq 中去做，不要同步
-*   服务器设置限流和熔断，避免承受不住的高并发
+
+
 
 
 
