@@ -1486,21 +1486,21 @@ boolean filter 的优点
 *   更新数据库时，更新缓存
 *   更新数据库时，删除缓存
 
-考虑高并发的情况
+<span style='color:cyan;'>考虑高并发的情况</span>
 
-1.  更新缓存方案
+1.  <del style='color:pink;'>更新缓存方案</del>
 
     解决方案通常是加分布式锁，在操作之前必须事先获取锁才能继续，但是这样会牺牲性能
 
-    1.  先更新数据库，后更新缓存
+    1.  <del style='color:pink;'>先更新数据库，后更新缓存</del>
 
         ![image-20211004164212545](Redis.assets/image-20211004164212545.png)
 
-    2.  先更新缓存，后更新数据库
+    2.  <del style='color:pink;'>先更新缓存，后更新数据库</del>
 
         原理同上，同样会造成数据不一致
 
-2.  删除缓存方案
+2.  <span style='color:liggreen;'>**删除缓存方案**</span>
 
     1.  先删除缓存，后更新数据库
 
