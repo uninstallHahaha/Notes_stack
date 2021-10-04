@@ -1500,13 +1500,13 @@ boolean filter 的优点
 
         原理同上，同样会造成数据不一致
 
-2.  <span style='color:liggreen;'>**删除缓存方案**</span>
+2.  <span style='color:lightgreen;'>***删除缓存方案***</span>
 
-    1.  先删除缓存，后更新数据库
+    1.  <del style='color:pink;'>先删除缓存，后更新数据库</del>
 
         ![image-20211004164655591](Redis.assets/image-20211004164655591.png)
 
-    2.  先更新数据库，后删除缓存
+    2.  <span style='color:lightgreen;'>***先更新数据库，后删除缓存***</span>
 
         ![image-20211004164851068](Redis.assets/image-20211004164851068.png)
 
