@@ -1486,7 +1486,7 @@ boolean filter 的优点
 *   更新数据库时，更新缓存
 *   更新数据库时，删除缓存
 
-<span style='color:cyan;'>考虑高并发的情况</span>
+<span style='color:cyan;'>***考虑高并发的情况***</span>
 
 1.  <del style='color:pink;'>更新缓存方案</del>
 
@@ -1511,6 +1511,8 @@ boolean filter 的优点
         ![image-20211004164851068](Redis.assets/image-20211004164851068.png)
 
         ![image-20211004164906616](Redis.assets/image-20211004164906616.png)
+
+        ![image-20211004165628438](Redis.assets/image-20211004165628438.png)
 
         
 
