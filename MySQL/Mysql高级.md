@@ -362,6 +362,26 @@ drop index index_name on 表名;
 
 
 
+###### 索引指南
+
+假设 `表 user` 中 `字段 age` 有索引
+
+*   有索引的字段单纯地出现在 select 后面时 或者 有索引的字段同时出现在 where 后时, 索引生效
+
+    `select age from user;`
+
+    `select age from user where age=20;`
+
+    也就是上面两种，索引age都会生效
+
+*   
+
+
+
+
+
+
+
 
 
 
