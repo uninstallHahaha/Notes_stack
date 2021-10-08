@@ -157,6 +157,8 @@ myisam和innodb对比
 
 索引的本质是使用树节点存放数据的结构，数据是 key-value 结构，key为建立索引的字段的值，value为其他列的所有值 或 该行记录的id值
 
+索引也是表，存储到硬盘上，在加载数据时优先于原表加载到内存中
+
 ###### 聚簇索引和非聚簇索引
 
 **聚簇索引**
@@ -195,11 +197,11 @@ myisam和innodb对比
 
 ###### 数据结构
 
-> 索引其实就是一张表, 也要占用空间, 而且当数据修改时 , 需要更新索引数据 , 这就降低了修改数据的效率
-
 > 索引是在存储引擎中实现的, 不同的存储引擎对索引的支持不同:
 >
-> 默认的存储引擎是 innodb, 其使用的默认索引是 b+tree 优化索引
+> 默认的存储引擎是 innodb, 其使用的默认索引是 B+tree 优化索引
+
+![image-20211008120806728](Mysql高级.assets/image-20211008120806728.png)
 
 二叉树
 
@@ -213,7 +215,9 @@ myisam和innodb对比
 >
 > 平衡二叉树指任何节点的两个子树的高度差最大为1
 
-b树
+B树
+
+![image-20211008120944101](Mysql高级.assets/image-20211008120944101.png)
 
 > balance-tree, 其实就是n叉平衡树结构, 一个节点保存至多n-1个值
 >
@@ -223,7 +227,11 @@ b树
 
 
 
-<span style='color:cyan;'>b+树</span>
+<span style='color:cyan;'>B+树</span>
+
+>   B+树，叶子节点会冗余存储所有非叶子节点的数据
+
+![image-20211008121322222](Mysql高级.assets/image-20211008121322222.png)
 
 ​	对于b树中依然会出现的树结构很深的问题
 
@@ -233,7 +241,7 @@ b树
 
 ​	b+树的优点在于能够极大地减少树的深度，同时由于实际的记录数据存储在叶子节点上，所有的数据查询最终都要来到叶子节点，这就使得每次查询要走的路径长度是相同的，也就是查询效率稳定
 
-<span style='color:cyan;'>innodb中使用三层b+树</span>
+<span style='color:cyan;'>innodb中使用三层B+树</span>
 
 ​		innodb默认使用 b+树, 深度为3的b+树就能存储 2kw条数据
 
@@ -247,7 +255,7 @@ b树
 
 
 
-<span style='color:cyan;'>innodb中的b+优化树</span>
+<span style='color:cyan;'>innodb中的B+优化树</span>
 
 ​		innodb 使用优化的 b+tree , 就是在各个最子级叶节点中最后一个数据加上了下一个分段第一个元素的地址 , 就相当于元素为数组的链表, 为的是跨多个最子级叶节点的范围查询时能够效率高些
 
@@ -321,7 +329,8 @@ drop index index_name on 表名;
 |                                          | <span style="color:#ff4a4a;">using join buffer</span> | <span style="color:#ff4a4a;">使用了join连接, 但是连接字段没用上索引, 此时应当在连接字段建立索引. 如果是外连接, 那么应当在被连接的表相应字段上建立索引; 如果是内连接, 那么随便哪个表上对应字段建立索引 , mysql 会根据是否有索引来决定哪个表是被连接表</span> |
 |                                          | impossible_where                                      | 瞎几把扯的 where 条件, 压根就不能匹配任何数据                |
 |                                          | using index                                           | 用上了索引, 索引覆盖                                         |
-|                                          | using where                                           | where条件用上了索引, 效率还不错                              |
+|                                          | using index condition                                 | 用到了索引，索引下推                                         |
+|                                          | using where                                           | where条件用上了索引                                          |
 |                                          | select tables optimized away                          | 用到了内置的优化查询方式, 例如myisam中 count(*) 实际上是直接去事先存好的count表中查询 |
 
 
@@ -499,6 +508,10 @@ drop index index_name on 表名;
 
 #### 并发控制
 
+###### 当前读和快照读
+
+![image-20211008113758881](Mysql高级.assets/image-20211008113758881.png)
+
 ###### MVCC
 
 多版本并发控制，使用 undo log日志文件来进行事务之间的隔离性，也就是实现不同的可见级别
@@ -508,6 +521,8 @@ drop index index_name on 表名;
 然后每次在事务中修改数据后，会生成新的 undo log日志记录，undo log 记录是链表的形式，形成记录链，可以用于后续的回滚操作，定位到某个历史记录
 
 最后是 read view读视图，在事务中使用 select 进行读取操作时，会生成读视图文件，后续根据版本号来判断当前 read view 中能够读取到的记录，来实现事务的隔离不同级别
+
+
 
 
 
