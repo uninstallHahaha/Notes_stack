@@ -2040,3 +2040,29 @@ static void shell(int[] arr) {
 
 
 
+##### 对象占多少字节
+
+所有对象都包含对象头：8个字节，用来存放锁信息
+
+jvm中按照 8 字节分配地址，所以占用字节数都是 8 的倍数
+
+*   `Object o = new Object()` 占多少字节
+
+    对象头（8字节）+ 指针（4字节）= 12字节
+
+    实际占用 8*2=16字节
+
+*   `User u = new User(); // u 占用多少字节` 
+
+    ```java
+    class User{
+        int id;
+        byte sex;
+        String name;
+    }
+    ```
+
+    对象头（8字节）+ int（4字节）+ byte（1字节）+ String（指针类型4字节）= 17字节 
+
+    实际占用 8*3=24 字节
+
