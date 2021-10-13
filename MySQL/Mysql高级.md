@@ -556,7 +556,7 @@ drop index index_name on 表名;
 
 ###### [间隙锁机制](https://www.cnblogs.com/howo/p/13282115.html)
 
->   mysql中，间隙锁机制的引入为了解决 RR(Repeatable Read) 隔离级别下的幻读问题
+mysql中，间隙锁机制的引入为了解决 RR(Repeatable Read) 隔离级别下的幻读问题
 
 >   总结来说，产生幻读的原因在于，在同一个事务中，先后使用了 ***当前读*** 和 ***可见读***
 
@@ -578,11 +578,11 @@ drop index index_name on 表名;
 
 例子
 
-表 user(id,name,age)，id主键索引
+表 `user(id,name,age)`，`id主键索引`
 
-存在数据 (1,alice,20) , (3,blice,20) , (5,clice,20)
+存在数据 `(1,alice,20)` , `(3,blice,20)` , `(5,clice,20)`
 
-那么存在间隙 (-无穷,1], (1,3], (3,5], (5,+无穷]
+那么存在间隙 `(-无穷,1], (1,3], (3,5], (5,+无穷]`
 
 使用 `select * from user where id=x for update;` 来使用间隙锁机制
 
