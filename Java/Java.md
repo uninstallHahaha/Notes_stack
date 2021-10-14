@@ -587,7 +587,7 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 ​		synchronized会被编译为 `monitorenter` 和 `monitorexit` 字节码指令，依赖操作系统底层的互斥锁实现
 
-​		当执行 monitorenter 指令时，线程试图获取锁也就是获取  monitor(monitor对象存在于每个Java对象的对象头中，synchronized  锁便是通过这种方式获取锁的，也是为什么Java中任意对象可以作为锁的原因)  的持有权。当计数器为0则可以成功获取，获取后将锁计数器设为1也就是加1。相应的在执行 monitorexit  指令后，将锁计数器设为0，表明锁被释放。
+​		当执行 monitorenter 指令时，线程试图获取锁也就是获取  monitor(monitor对象存在于每个Java对象的对象头中，synchronized  锁便是通过这种方式获取锁的，也是为什么Java中任意对象可以作为锁的原因)  的持有权。当计数器为0则可以成功获取，获取后将锁计数器设为1也就是加1。相应的在执行 monitorexit  指令后，将锁计数器减一，表明释放一层锁。
 
 ​		<span style='color:cyan;'>如果多个线程同时执行到 monitorenter 指令时，会进入 entrylist 队列尝试获取对象锁，成功获取到锁后锁计数加一并记录当前获得锁的线程</span>
 
