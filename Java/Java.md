@@ -316,7 +316,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 ​		hash运算的过程其实就是对目标元素的Key进行hashcode，再对Map的容量进行取模，而 JDK 的工程师为了提升取模的效率，使用位运算代替了取模运算，<span style='color:cyan;'>这就要求Map的容量一定得是2的幂</span>
 
-​		而作为默认容量，太大和太小都不合适，所以16就作为一个比较合适的经验值被采用了
+​		而作为默认容量，太大和太小都不合适，所以<span style='color:cyan;'>16</span>就作为一个比较合适的经验值被采用了
 
 为了保证任何情况下Map的容量都是2的幂，HashMap在两个地方都做了限制
 
