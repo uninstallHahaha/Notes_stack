@@ -2003,7 +2003,7 @@ static void shell(int[] arr) {
 ##### 排查服务器CPU占用100%
 
 1.  使用 htop 任务管理器，按照 cpu 占用排序，查看哪个进程占用率最高，`top -H` 按照cpu占用率排行显示
-2.  此时发现是 java 继承的占用率最高
+2.  此时发现是 java 进程的占用率最高
 3.  使用 `jstack pid > a.txt` 保存此时该 java 进程的栈信息
 4.  使用 `ps -mp pid -o THREAD,tid,time` 定位具体是哪个线程占用最高
 5.  将上一步查询到的线程号转换为16进制，得到16进制的线程号

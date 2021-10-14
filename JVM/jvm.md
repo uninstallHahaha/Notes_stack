@@ -101,7 +101,7 @@
 
 ###### 堆内存结构
 
-​		分代式实现：分为 Eden，survivor from，survivor to，old
+​		分代式实现：分为 `Eden`，`survivor from`，`survivor to`，`old`
 
 ###### 为什么分代管理？
 
@@ -303,9 +303,9 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 
 ##### 参数设置
 
-*   Xss 单个线程栈的大小，不能太大，太大的话能够同时开的线程数就变少
-*   Xmx  最大堆内存，默认物理内存 1/4
+*   Xss 设置单个线程栈的大小，不能太大，太大的话能够同时开的线程数就变少，最小值默认为228k
 *   Xms  初始堆内存，默认物理内存 1/64
+*   Xmx  最大堆内存，默认物理内存 1/4
 *   Xmn  新生代大小，覆盖 XX:NewRatio 设置
 *   XX:MetaSpaceSize  元空间大小（用来放方法和字符串常量池，直接使用物理内存）
 *   XX:SurvivorRatio  一个幸存区/Eden区 的 比例，注意有两个幸存区，它们的相同，这里设置的是一个的比例
