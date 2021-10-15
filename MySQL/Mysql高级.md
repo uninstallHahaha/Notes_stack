@@ -32,7 +32,7 @@ create table table_name()engine=引擎名;
 ###### 存储引擎对比
 
 * innodb 一张表对应两个文件, frm 表结构 , idb表数据和索引
-* myisam 不支持事务外键, 因此效率比 innodb 高, 一张表对应三个文件, frm表结构, myi表索引, myd表数据
+* myisam 不支持事务外键, 因此效率比 innodb 高, 一张表对应三个文件, frm表结构, myi表索引, myd表数据，<span style='color:cyan;'>因为索引和数据分开文件存储，所以都是非聚簇索引</span>
 * memory 数据存到内存中, 速度最快, 稳定性最差, 一张表对应一个文件 frm表结构, 为什么没人用, 因为出现的太晚了, nosql数据库已经盛行了
 * merge 类型的表其实就相当多个 myisam 类型且数据结构完全相同的表的组合视图 , 因此 merge 表在定义时需要指定数据来自于哪些 myisam 表,  merge 表不存储数据, 数据还是来源于基表
 * blackhole 表, 黑洞表, 不保存任何写入的数据, 适合做主备复制中的分发主库
@@ -114,13 +114,9 @@ myisam和innodb对比
 
 ​		如果数据库同时开启了 binlog，那么显然需要保证 binlog 和 redolog 中的记录是一致的，所以此时就需要在commit给出ok前，把binlog和redolog都落盘，才算成功
 
-​		考虑到可能会在写redolog和binlog两个步骤中间断电，那么就redolog 中记录状态，如果对应的binlog未保存成功，那么状态为 prepare，意思就是该状态的redolog是无效的，如果对应的binlog已经保存成功，那么状态为 commit，意思就是对应的binlog也保存成功，此记录有效
+​		考虑到可能会在写redolog和binlog两个步骤中间断电，那么就redolog 中记录状态，如果对应的binlog未保存成功，那么状态为 ***prepare***，意思就是该状态的redolog是无效的，如果对应的binlog已经保存成功，那么状态为 ***commit***，意思就是对应的binlog也保存成功，此记录有效
 
 ​		这里保证两种日志都保存成功的机制就是二段提交
-
-
-
-
 
 
 
