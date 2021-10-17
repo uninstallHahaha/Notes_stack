@@ -34,8 +34,6 @@
    	dbPath: 设置数据库存放位置, 就使用第二步中创建的路径
    ```
 
-   
-
 4. 在 bin 目录命令行中 `mongod -f ../config/mongod.conf`  或者  `mongod --config ../config/mongod.conf`
 
 如果是linux:
