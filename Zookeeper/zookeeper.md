@@ -499,6 +499,28 @@ FOLLOWING：leader已经选举出来，当前Server与之同步
 
 
 
+
+
+###### zab协议
+
+（zookeeper atomic broadcast ）zk原子广播协议，本质上就是用来保证集群中各个几点数据一致性的方案
+
+分为两种模式：恢复模式 和 同步模式
+
+（1）当服务器初始化 或者 服务器无法连接到leader时，触发恢复模式，用来选取新的leader
+
+（2）当集群中的leader选定后，则进入同步模式，同步各个节点的数据，直至数据一致
+
+
+
+
+
+
+
+
+
+
+
 ###### zk选主
 
 ![image-20211020090617476](zookeeper.assets/image-20211020090617476.png)
@@ -563,6 +585,24 @@ FOLLOWING：leader已经选举出来，当前Server与之同步
 *   observer：观察者，只提供读服务，不参与leader节点的竞选，不参与“过半写成功”的投票，目的为在不影响 <span style='color:cyan;'>写性能</span> 的同时提高 <span style='color:cyan;'>读性能</span>
 
 
+
+
+
+###### zk节点属性值
+
+![image-20211020150154082](zookeeper.assets/image-20211020150154082.png)
+
+zxid系列
+
+zxid为64位数字，前32位是epoch，代表一个leader统治的时期，每次更换leader，更新前32位值，后32位是全局唯一的时间戳，代表了本次操作的时序
+
+*   czxid : 节点创建时间戳
+*   mzxid：修改节点的时间戳
+*   pzxid：子节点的创建/删除时间戳，注，孙节点的创建或删除不计入这里
+
+version系列
+
+每次修改节点，version递增
 
 
 
