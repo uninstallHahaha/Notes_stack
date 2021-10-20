@@ -552,3 +552,17 @@ FOLLOWING：leader已经选举出来，当前Server与之同步
 
 
 
+
+
+###### zk角色设定
+
+*   leader：领导者，执行写操作，提供读服务，负责集群数据的更新
+
+*   follower：跟随者，提供读服务，将接收到的写请求转发给leader节点，参与leader节点的竞选，参与“过半写成功”的投票
+
+*   observer：观察者，只提供读服务，不参与leader节点的竞选，不参与“过半写成功”的投票，目的为在不影响 <span style='color:cyan;'>写性能</span> 的同时提高 <span style='color:cyan;'>读性能</span>
+
+
+
+
+
