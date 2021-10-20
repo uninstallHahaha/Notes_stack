@@ -490,7 +490,8 @@ observer节点不参与 leader 节点的选举, 不参与写数据时的ack反�
 
 ###### zk中节点状态
 
-每个Server在工作过程中有四种状态 
+每个Server在工作过程中有四种状态
+
 LOOKING：当前Server ***不知道leader是谁***，正在搜寻
 
 LEADING：当前Server即为选举出来的leader
