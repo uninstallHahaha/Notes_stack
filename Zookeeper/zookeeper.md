@@ -517,9 +517,9 @@ FOLLOWING：leader已经选举出来，当前Server与之同步
 
     PK的是规则是：
 
-    （a）优先对比ZXID，ZXID大的优先作为Leader（ZXID大的表示数据多）
+    （a）<span style='color:cyan;'>优先对比ZXID，ZXID大的优先作为Leader（ZXID大的表示数据多）</span>
 
-    （b）如果ZXID一样的话，那么就比较myid，让myid大的作为Leader服务器
+    （b）<span style='color:cyan;'>如果ZXID一样的话，那么就比较myid，让myid大的作为Leader服务器</span>
 
     ​		那根据这个规则的话
 
@@ -530,6 +530,10 @@ FOLLOWING：leader已经选举出来，当前Server与之同步
 7.  每次投票以后，服务器都会统计所有的投票，只要过半的机器投了相同的机器，那么Leader就选举成功了，上面的两台服务器进行第二次投票之后，两台服务器都会收到相同的投票(1,0)。那么此时myid为1的服务器就是Leader了
 
 8.  后续就是节点将自身设置为对应状态，如果是新的 leader，则标记为 leader，否则看看配置文件后决定设置为 fellower 或者 observer
+
+
+
+在leader崩溃后，会使用上述步骤重新选主
 
 
 
