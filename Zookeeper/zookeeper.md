@@ -500,6 +500,8 @@ FOLLOWING：leader已经选举出来，当前Server与之同步
 
 Observing：observer模式
 
+>   Leader 服务器挂了之后，余下的非Observer服务器都会把自己的服务器状态更改为LOOKING，然后开始进入Leader选举流程
+
 
 
 
