@@ -481,6 +481,15 @@ drop index index_name on 表名;
 
 ​	上述针对使用索引的优化手段能够提高查询效率, 但是实际生产中, 肯定不会对所有的查询 sql 进行优化 , 而是对查询频率最高的最影响效率的sql进行优化, 即优化 20% 的 sql , 覆盖 80% 的功能.
 
+<span style='color:cyan;'>profile工具</span>
+
+1.  `select @@have_profiling;` 查看当前数据库是否支持profile工具
+2.  `set profiling=1;` 设置开启profiling, 只对当前会话有效
+3.  `select @@profiling;` 查看profiling是否是开启状态
+4.  `show profile;` 查看前面执行的一条语句的各个阶段具体耗时情况
+5.  `show profiles;` 查看之前执行的各语句的耗时情况
+6.  `show profile for query 查询id;` 查看某一语句执行时具体各个阶段的耗时情况
+
 `show [global] status like 'Com_______';` 查看 [所有库的 / 当前库的] 各种语句的执行频次 (七个下划线进行模糊匹配)
 
 `show [global] status like 'Innodb_rows_%';` 查看 innodb 类型表的各种语句的执行频次
@@ -488,18 +497,6 @@ drop index index_name on 表名;
 `show processlist;` 查看当前所有连接的客户端
 
 `explain sql语句;` 查看该sql语句的执行计划 , 即执行步骤
-
-`show profile;` 分析sql
-
-`select @@have_profiling;` 查看当前数据库是否支持profile工具
-
-`select @@profiling;` 查看profiling是否是开启状态
-
-`set profiling=1;` 设置开启profiling, 只对当前会话有效
-
-`show profiles;` 查看之前执行的各语句的耗时情况
-
-`show profile for query 查询id;` 查看某一语句执行时具体各个阶段的耗时情况
 
 `show global status like 'Handler_read%';` 查看 会话/全局 索引使用情况
 
@@ -751,7 +748,7 @@ user表
 
 
 
-#### 查询过程分析
+#### 查询过程
 
 查询先看缓存，未命中后查看索引（读取索引也要走磁盘io），未命中后访问磁盘读取数据，所以这里可以得知，无缓存无索引的情况下，总是会走磁盘io
 

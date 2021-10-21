@@ -1469,6 +1469,18 @@ boolean filter 的优点
 
 
 
+###### 一个redis实例中能存放多少key
+
+一个redis实例最多存储2.5亿个key，每个key或者value最大为512Mb
+
+redis中各个数据类型能够存放元素的个数取决对硬件的内存大小
+
+
+
+
+
+
+
 ### redis和mysql数据一致性问题
 
 <span style='color:cyan;'>数据不一致问题是指：<br>在某个所有操作都已经完成的前提下，结果redis和mysql中的同一条数据值不一样的情况，也就是本应该一样的数据，却以不一祥的结果结束</span>
