@@ -479,6 +479,46 @@ HashMap 中的 Iterator 迭代器是 fail-fast（快速失败） 的，而 Hasht
 
 
 
+##### 创建线程的三种方法
+
+*   继承 Thread，实现 run，调用start
+
+*   实现 Runnable，构造 Thread，调用start
+
+*   实现 Callable<> , 构造 FutrueTask，构造 Thread，调用start，最后可以使用 `FutrueTask实例.get()` 获取线程执行函数的返回值
+
+    这种方法允许线程执行后进行返回并接收
+
+    ```java
+    import java.util.concurrent.*;
+    
+    public class CallableThreadTest implements Callable<Integer> {
+        @Override
+        public Integer call() throws Exception {
+            // 线程方法中sleep三秒
+            Thread.sleep(3000);
+            System.out.println("this is calling...");
+            // 最后返回一个值
+            return 10;
+        }
+    
+        public static void main(String[] args) throws ExecutionException, InterruptedException, TimeoutException {
+            // 创建FutureTask实例
+            FutureTask<Integer> ft = new FutureTask<Integer>(new CallableThreadTest());
+            // 创建 Thread 实例
+            new Thread(ft, "thread with return").start();
+            // 阻塞接收返回值
+            System.out.println(ft.get());
+            // 定时接收返回值，超时未返回直接抛出超时异常
+            System.out.println(ft.get(1, TimeUnit.SECONDS));;
+        }
+    }
+    ```
+
+    
+
+
+
 
 
 ##### 线程的状态
