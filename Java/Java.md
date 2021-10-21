@@ -1188,6 +1188,40 @@ public String getCheckResultSuper(String order) {
 
 
 
+##### 线程池自带的拒绝策略
+
+所有拒绝策略都实现了接口 RejectedExecutionHandler
+
+1.  AbortPolicy 直接抛异常，会因为任务队列满而造成程序抛异常退出
+
+    ![image-20211021133021196](Java.assets/image-20211021133021196.png)
+
+2.  CallerRunsPolicy
+
+    使用当前执行该回调函数的线程执行该任务
+
+    ![image-20211021133030244](Java.assets/image-20211021133030244.png)
+
+3.  DiscardOledestPolicy
+
+    把任务队列中最前面的任务丢弃，然后把这个任务加入到任务队列
+
+    ![image-20211021133110560](Java.assets/image-20211021133110560.png)
+
+4.  DiscardPolicy
+
+    直接扔掉
+
+    ![image-20211021133133279](Java.assets/image-20211021133133279.png)
+
+5.  我们也可以自己实现 RejectedExecutionHandler 接口来自定义处理策略
+
+
+
+
+
+
+
 
 
 ##### NIO
