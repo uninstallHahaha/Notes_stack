@@ -1082,6 +1082,8 @@ public String getCheckResultSuper(String order) {
 
 >   但是，《阿里巴巴Java开发手册》中强制线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险
 
+![image-20211021132253688](Java.assets/image-20211021132253688.png)
+
 ​	本质上这六种都是在创建 `ThreadPoolExecutor` 实例,  只不过调整了各个参数, 就相当于拿铁, 卡布奇诺之类的
 
 ​	当然也可以叫一个浓缩(`ThreadPoolExecutor`), 然后自己定制各个参数
