@@ -983,14 +983,19 @@ sql执行先过 where，然后数据量就会下来，count(*) 就不会出现�
 *   减少子查询，化子查询为连接查询，注意被链接字段要有索引
 *   替换 != 为 <n or >n
 *   优化 select * 为 select a,b,c 查询的字段够用就行，尽量索引覆盖
-*   检查字符串查询条件，加引号，防止自动转型带来索引失效
 
-###### limit优化
+###### [limit优化](https://www.cnblogs.com/dreamroute/p/11118581.html)
 
 >   前提是表记录不带删除的
 
 *   id自增的话，`select * from table where id>n limit m;`
 *   id不自增的话，自建字段 row_num, 该字段加索引辅助搜索，`where row_num>=n limit m;`
+
+>   先走覆盖索引查出来 id ，然后用 id 作为条件往后查询一页的记录
+
+*   前提是id自增 , id不自增时自建额外一列 row_num
+
+    `select id,title from collect where id>=(select id from collect order by id limit 90000,1) limit 10;`
 
 
 
