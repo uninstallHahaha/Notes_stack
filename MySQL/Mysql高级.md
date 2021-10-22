@@ -156,6 +156,30 @@ myisam和innodb对比
 
 索引也是表，存储到硬盘上，在加载数据时优先于原表加载到内存中
 
+
+
+
+
+
+
+###### 索引操作
+
+```mysql
+#创建索引
+create index index_name [using index_type] on 表名(列名[,列名...]);
+
+#查看索引
+#\G格式化输出结果
+show index from 表名\G;
+
+#删除索引
+drop index index_name on 表名;
+```
+
+
+
+
+
 ###### 聚簇索引和非聚簇索引
 
 **聚簇索引**
@@ -274,20 +298,6 @@ B树
 
 
 
-###### 索引操作
-
-```mysql
-#创建索引
-create index index_name [using index_type] on 表名(列名[,列名...]);
-
-#查看索引
-#\G格式化输出结果
-show index from 表名\G;
-
-#删除索引
-drop index index_name on 表名;
-```
-
 ###### 复合索引
 
 > 可以同时为多个字段创建复合索引, 在查询时符合最左匹配原则, 即如果创建复合索引的字段顺序为 abc, 那么在查询时条件为 a, ab, abc 的都会使用到该索引, 但是 bc, c 的条件就不会使用到该索引, 且如果 条件为 ac , 那么使用到索引的仅为 a 字段.
@@ -375,7 +385,7 @@ drop index index_name on 表名;
 >
 > 索引本身就是平衡n叉树结构, 从左到右自带排序属性 , 因此如果对一个有索引的字段进行 order by , 只需要 左序遍历或右序遍历 即可得到正确的排序结果, 无需使用其他算法单独对数据进行排序.
 
-* <span style="color:#ff4a4a;">无过滤, 不索引</span> , 如果sql语句中没有 where 条件或者 limit 限制, 直接使用 order by , 那么即使 order by 的字段有索引, 也不会使用. 例如, sql 语句为 where a order by b , 此时有复合索引 ab, sql 中对字段的使用顺序同复合索引顺序, 那么该索引会全部生效.
+* <span style="color:#ff4a4a;">无过滤, 不索引</span> , 如果sql语句中没有 <span style='color:cyan;'>where 条件或者 limit 限制</span>, 直接使用 order by , 那么即使 order by 的字段有索引, 也不会使用. 例如, sql 语句为 where a order by b , 此时有复合索引 ab, sql 中对字段的使用顺序同复合索引顺序, 那么该索引会全部生效.
 * <span style="color:#ff4a4a;">顺序错, 必排序</span> , 如果对多个字段 order by , 只要它们的顺序不同于存在的复合索引顺序, 就不能完全使用索引, 从顺序开始不匹配的字段开始, 就会 using filesort
 * <span style="color:#ff4a4a;">方向反, 必排序</span> , 如果对多个字段进行不同方向 order by , 例如 order by a desc , b asc , 那么索引就会失效
 
@@ -984,12 +994,40 @@ sql执行先过 where，然后数据量就会下来，count(*) 就不会出现�
 *   替换 != 为 <n or >n
 *   优化 select * 为 select a,b,c 查询的字段够用就行，尽量索引覆盖
 
-###### [limit优化](https://www.cnblogs.com/dreamroute/p/11118581.html)
 
->   前提是表记录不带删除的
 
-*   id自增的话，`select * from table where id>n limit m;`
-*   id不自增的话，自建字段 row_num, 该字段加索引辅助搜索，`where row_num>=n limit m;`
+
+
+
+
+#### [limit优化-面试问题](https://www.cnblogs.com/dreamroute/p/11118581.html)
+
+面临的问题主要有两个
+
+1.  `select * from table limit n,m;` 在所有数据中分页慢
+2.  `select * from table where a=x limit n,m;` 带筛选条件的分页慢
+
+
+
+###### 全数据limit查询
+
+<span style='color:cyan;'>通过order by id利用索引</span>
+
+![image-20211022103818465](Mysql高级.assets/image-20211022103818465.png)
+
+因为用到了 order by ，所以能直接利用到索引，而且使用的是主索引树，直接能够返回整条记录，但是，但是，但是，如果id不是自增，而是uuid之类的，那么返回的顺序将不是插入顺序，与预期顺序不同
+
+<span style='color:cyan;'>自建自增索引列row_num</span>
+
+考虑到id不自增的情况，可以自建自增带索引的一列 row_num, 然后使用利用该列进行 order by，因为该列自增，所以能够保证查询到的结果顺序同插入时的顺序
+
+![image-20211022103751981](Mysql高级.assets/image-20211022103751981.png)
+
+<span style='color:red;'>注意</span>，超出覆盖索引时，哪怕 order by 了带索引的字段，order by limit 时也会全表扫描，如下图，所以应当使用子查询定位当前页中第一条的id位置，然后向后推一页
+
+![image-20211022103722645](Mysql高级.assets/image-20211022103722645.png)
+
+<span style='color:cyan;'>先查ID然后往后查一页</span>
 
 >   先走覆盖索引查出来 id ，然后用 id 作为条件往后查询一页的记录
 
@@ -998,6 +1036,35 @@ sql执行先过 where，然后数据量就会下来，count(*) 就不会出现�
     `select id,title from collect where id>=(select id from collect order by id limit 90000,1) limit 10;`
 
 
+
+###### 带筛选的limit查询
+
+*   <del>分表做法</del>
+
+    >   将要查询的字段单独跟 ID 组成一个小表，先根据小表查询出对应 ID，然后根据 ID 查找其他字段
+    >
+    >   分表做法只适用于百万以下，以上的话还是会很慢
+
+    小表 t(id, condition)
+
+    原表 table(id, xxx, yyy, zzz, condition)
+
+    先 `select id from t where condition=x limit n,m;`，
+    
+    然后用上一步骤结果 `select * from table where id=(id);`
+
+
+
+*   <span style='color:cyan;'>复合索引做法</span>
+
+    >   不分表也能应对百万以上的limit查询
+
+    1.  首先建立索引 `search(condition, id)`
+
+    2.  然后 `select id from table where condition=x limit n,m;`
+    3.  最后使用获取到的 id 获取其他列值
+
+    注意：索引一定是 （条件字段，id）的顺序，然后查询也只能 select id，否则索引不生效
 
 
 
