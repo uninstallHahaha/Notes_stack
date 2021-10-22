@@ -1039,6 +1039,8 @@ sql执行先过 where，然后数据量就会下来，count(*) 就不会出现�
 
 ###### 带筛选的limit查询
 
+>   其实给足 where 条件复合索引，就已经能够优化带 where 的limit查询了
+
 *   <del>分表做法</del>
 
     >   将要查询的字段单独跟 ID 组成一个小表，先根据小表查询出对应 ID，然后根据 ID 查找其他字段
@@ -1052,21 +1054,6 @@ sql执行先过 where，然后数据量就会下来，count(*) 就不会出现�
     先 `select id from t where condition=x limit n,m;`，
     
     然后用上一步骤结果 `select * from table where id=(id);`
-
-
-
-*   <span style='color:cyan;'>复合索引做法</span>
-
-    >   不分表也能应对百万以上的limit查询
-
-    1.  首先建立索引 `search(condition, id)`
-
-    2.  然后 `select id from table where condition=x limit n,m;`
-    3.  最后使用获取到的 id 获取其他列值
-
-    注意：索引一定是 （条件字段，id）的顺序，然后查询也只能 select id，否则索引不生效
-
-
 
 
 
