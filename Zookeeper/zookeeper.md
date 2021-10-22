@@ -554,7 +554,7 @@ children：当前节点的子节点
 
 ###### zab协议
 
-（zookeeper atomic broadcast ）zk原子广播协议，本质上就是用来保证集群中各个几点数据一致性的方案
+（zookeeper atomic broadcast ）zk原子广播协议，本质上就是用来保证集群中各个节点数据一致性的方案
 
 分为两种模式：恢复模式 和 同步模式
 
