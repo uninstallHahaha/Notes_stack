@@ -1027,14 +1027,6 @@ sql执行先过 where，然后数据量就会下来，count(*) 就不会出现�
 
 ![image-20211022103722645](Mysql高级.assets/image-20211022103722645.png)
 
-<span style='color:cyan;'>先查ID然后往后查一页</span>
-
->   先走覆盖索引查出来 id ，然后用 id 作为条件往后查询一页的记录
-
-*   前提是id自增 , id不自增时自建额外一列 row_num
-
-    `select id,title from collect where id>=(select id from collect order by id limit 90000,1) limit 10;`
-
 
 
 ###### 带筛选的limit查询
