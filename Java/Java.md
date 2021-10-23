@@ -2166,3 +2166,52 @@ jvm中按照 8 字节分配地址，所以占用字节数都是 8 的倍数
 *   Function类型的变量用来接收方法类型
 *   interface中可以包含已经实现的 default 方法
 
+
+
+
+
+
+
+##### Java注解
+
+注解本质上就是给类，方法，字段加的<span style='color:cyan;'>标签</span>，对被注解的实例本身无任何影响
+
+注解的作用就是<span style='color:cyan;'>标记</span>，可以根据自定义的注解定制相关操作，这些逻辑需要开发者来完成
+
+定义注解
+
+>   注解通过元注解来进行定义
+>
+>   五个元注解 @Retention(生命周期)，@Target(适用范围)，@Inhirent(自动继承)，@Repeatable(可重复使用)，@Documented(被javadoc包管)
+>
+>   注解可以定义属性，作用就是传值
+
+```java
+// 生命周期
+@Retention(RetentionPolicy.SOURCE)
+// 适用范围
+@Target(ElementType.METHOD)
+// 被doc
+@Documented
+// 自动继承
+@Inherited
+public @interface AnnoTest {
+    // 定义属性
+    String role() default "alice";
+}
+```
+
+使用注解，就是从 class 中读出其附带的注解，然后做定制操作
+
+首先有注解
+
+![image-20211023155634938](Java.assets/image-20211023155634938.png)
+
+然后使用该注解
+
+![image-20211023155659057](Java.assets/image-20211023155659057.png)
+
+最后检查该注解
+
+![image-20211023160646070](Java.assets/image-20211023160646070.png)
+
