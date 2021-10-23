@@ -2219,7 +2219,7 @@ public @interface AnnoTest {
 
 
 
-###### 注解的用处
+###### [注解的用处](https://mp.weixin.qq.com/s?__biz=MzU4NzA3MTc5Mg==&mid=2247483821&idx=1&sn=e9003410a8d3c8a092de0c4d2002bedd&scene=21#wechat_redirect)
 
 结合AOP使用，对方法进行标记区分处理
 
