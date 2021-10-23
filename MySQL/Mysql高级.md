@@ -1053,13 +1053,13 @@ sql执行先过 where，然后数据量就会下来，count(*) 就不会出现�
 
 
 
-#### MySQL的COUNT是怎么执行的
+#### [MySQL的COUNT是怎么执行的](https://mp.weixin.qq.com/s?__biz=MzIxNTQ3NDMzMw==&mid=2247486071&idx=1&sn=7160fc85721f27177d7aeabfe92aa991&chksm=97968385a0e10a93432d02b9a9535176ea437d4689cab54412fb6ec0a8c5d1a0c9fdd3d47496&scene=132#wechat_redirect)
 
-前置知识一
+<span style='color:cyan;'>前置知识一</span>
 
 主键索引树是聚簇索引，叶子节点存放id和整条记录值；其他索引（二级索引）是非聚簇索引，叶子节点只存放该列值以及对应id。所以同样大小的叶子节点，二级索引能够存下更多的记录
 
-前置知识二
+<span style='color:cyan;'>前置知识二</span>
 
 mysql的service层与存储引擎的交互过程
 
@@ -1081,7 +1081,7 @@ mysql的service层与存储引擎的交互过程
 
 
 
-count函数的执行过程
+<span style='color:cyan;'>count函数的执行过程</span>
 
 1.  优化器选择使用哪个索引能够最快，其中二级索引因为叶子节点只保存id和列值而能够保存更多的记录数，所以会优先选择使用二级索引，假设最终选定要使用的二级索引为 key
 2.  首先 service层向存储引擎要符合条件的第一条记录，注意因为只需要统计数量，所以存储引擎会直接返回二级索引的叶子值，不需要回表
