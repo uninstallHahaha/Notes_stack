@@ -37,7 +37,7 @@
 
 ##### http
 
-![](F:\#NOTES\ING\Tomcat\http的工作原理.png)
+![](.\http的工作原理.png)
 
 * 先用tcp与服务器进行连接 , 然后使用http进行数据传输
 
@@ -49,15 +49,15 @@
 
 * tc工作流程
 
-![](F:\#NOTES\ING\Tomcat\tc工作流程.png)
+![](.\tc工作流程.png)
 
 * servlet工作流程
 
-    ![](F:\#NOTES\ING\Tomcat\servlet工作流程.png)
+    ![](.\servlet工作流程.png)
 
 * tc的架构
 
-    ![](F:\#NOTES\ING\Tomcat\tc架构.png)
+    ![](.\tc架构.png)
 
 连接器处理连接
 
@@ -67,7 +67,7 @@
 
 * 连接器和容器的总体架构
 
-    ![](F:\#NOTES\ING\Tomcat\coyote与catalina的交互.png)
+    ![](.\coyote与catalina的交互.png)
 
 连接器只负责io数据传输操作相关 
 
@@ -90,7 +90,7 @@
 
 ###### 连接器coyote的组成
 
-![](F:\#NOTES\ING\Tomcat\连接器组成.png)
+![](.\连接器组成.png)
 
 endpoint组件 : 将数据流转换成应用层协议的数据
 
@@ -102,11 +102,11 @@ adapter组件(适配器) : 将request类型的对象转换成servlerRequest对�
 
 ###### 容器catalna的组成
 
-![](F:\#NOTES\ING\Tomcat\catalina结构.png)
+![](.\catalina结构.png)
 
 container的结构
 
-![](F:\#NOTES\ING\Tomcat\container结构.png)
+![](.\container结构.png)
 
 * host是开启服务的虚拟主机 , 可以开启多个虚拟主机地址
 * context就是web应用 , 在一个host下可以有多个web应用
@@ -118,17 +118,17 @@ container的结构
 
 ##### tc的启动流程
 
-![](F:\#NOTES\ING\Tomcat\tc启动流程.png)
+![](.\tc启动流程.png)
 
 * 启动的入口类为
 
-    ![](F:\#NOTES\ING\Tomcat\启动的入口类.png)
+    ![](.\启动的入口类.png)
 
 
 
 ##### tc请求处理流程
 
-![](F:\#NOTES\ING\Tomcat\tc请求处理流程.png)
+![](.\tc请求处理流程.png)
 
 
 
@@ -140,7 +140,7 @@ container的结构
 
 * 各个组件的默认实现类
 
-    ![](F:\#NOTES\ING\Tomcat\各组件的默认实现.png)
+    ![](.\各组件的默认实现.png)
 
 
 
@@ -203,11 +203,11 @@ container的结构
 
 * session-config 配置web服务器端的session设置
 
-    ![](F:\#NOTES\ING\Tomcat\web-session设置.png)
+    ![](.\web-session设置.png)
 
 * servlet/servlet-mapping 配置 servlet
 
-    ![](F:\#NOTES\ING\Tomcat\web-servlet配置.png)
+    ![](.\web-servlet配置.png)
 
 * listener 配置监听器 , 监听context , servlet , request 的生命周期
 
@@ -259,7 +259,7 @@ container的结构
 
 * jvm内存模型
 
-    ![](F:\#NOTES\ING\Tomcat\jvm内存模型.png)
+    ![](.\jvm内存模型.png)
 
 * 配置jvm内存参数
 
@@ -358,7 +358,7 @@ container的结构
 
     使用单独的一台服务器加redis进行登录认证
 
-    ![](F:\#NOTES\ING\Tomcat\sso单点登录.png)
+    ![](.\sso单点登录.png)
 
 
 
@@ -452,11 +452,11 @@ container的结构
     
     2. **通过调整tc使用的垃圾回收器类型来满足不同的需求**
     
-        ![](F:\#NOTES\ING\Tomcat\垃圾回收器的类型.png)
+        ![](.\垃圾回收器的类型.png)
 
 
 
-![](F:\#NOTES\ING\Tomcat\如何选择垃圾回收器.png)
+![](.\如何选择垃圾回收器.png)
 
 在tc中配置使用的垃圾回收策略
 
@@ -474,15 +474,15 @@ container的结构
 
 2. 通过在 catalina.sh 中设置启动参数来设置垃圾回收器
 
-    ![](F:\#NOTES\ING\Tomcat\gc设置.png)
+    ![](.\gc设置.png)
 
-![](F:\#NOTES\ING\Tomcat\gc信息打印设置.png)
+![](.\gc信息打印设置.png)
 
 3. **通过调整server.xml中的连接器参数进行优化**
 
     调整 connector 标签中的参数
 
-    ![](F:\#NOTES\ING\Tomcat\connector参数优化.png)
+    ![](.\connector参数优化.png)
 
 
 
@@ -505,5 +505,5 @@ websocket : html5新增的长链接方式 , 请求路径为 ws://...
 
 在endpoint类上定义ws的声明周期方法:
 
-![](F:\#NOTES\ING\Tomcat\ws的服务端使用.png)
+![](.\ws的服务端使用.png)
 
