@@ -2172,7 +2172,7 @@ jvm中按照 8 字节分配地址，所以占用字节数都是 8 的倍数
 
 
 
-##### Java注解
+##### [Java注解](https://blog.csdn.net/qq1404510094/article/details/80577555/#t8)
 
 注解本质上就是给类，方法，字段加的<span style='color:cyan;'>标签</span>，对被注解的实例本身无任何影响
 
