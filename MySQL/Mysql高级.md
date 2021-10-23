@@ -1104,7 +1104,7 @@ mysql的service层与存储引擎的交互过程
 
 
 
-#### MySQL的limit是怎么执行的
+#### [MySQL的limit是怎么执行的](https://mp.weixin.qq.com/s?__biz=MzIxNTQ3NDMzMw==&mid=2247486044&idx=1&sn=499e047f7181969017f59b86abbc2c17&chksm=979683aea0e10ab8420c442b0a04487a523cf09ee7242cd5f23e0a2a294713d360ddccbc4c07&scene=132#wechat_redirect)
 
 前置知识
 
