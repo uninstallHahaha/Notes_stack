@@ -763,5 +763,21 @@
 -   `@EnableAutoConfiguration` 加载 实体类bean 和 其他组件 到IOC容器
 -   `@ComponentScan`  加载自己写的 component/service/controller 到IOC容器
 
-其中`@EnableAutoConfiguration`是关键(启用自动配置)，内部实际上就去加载`META-INF/spring.factories`文件的信息，然后筛选出以`EnableAutoConfiguration`为key的数据，加载到IOC容器中，实现自动配置功能
+其中`@EnableAutoConfiguration`是关键 (启用自动配置)，内部实际上就去加载`META-INF/spring.factories`文件的信息，然后筛选出以`EnableAutoConfiguration`为key的数据，加载到IOC容器中，实现自动配置功能
+
+
+
+
+
+
+
+![image-20211025115946145](SpringBoot.assets/image-20211025115946145.png)
+
+
+
+![image-20211025120156103](SpringBoot.assets/image-20211025120156103.png)
+
+
+
+![image-20211025120213530](SpringBoot.assets/image-20211025120213530.png)
 
