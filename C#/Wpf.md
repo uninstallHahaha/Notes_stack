@@ -519,7 +519,6 @@ vs创建不同类型项目的本质
       }
   }
   ```
-  
 
 ###### <span style="color:cyan;">访问Application实例</span>
 
@@ -970,6 +969,8 @@ ControlTemplate 中的 TemplateBinding
 
 ##### 数据模板
 
+`给集合控件指定数据源`
+
 > DataTemplate 数据模板, 实际上就是用于自定义集合控件中集合项内容的模板 
 >
 > 适用于 DataGrid( 表格 ), ComboBox(下拉列表), ListBox(列表) , TreeView(树结构) 等集合控件 
@@ -1022,6 +1023,8 @@ ControlTemplate 中的 TemplateBinding
 ##### 自定义集合控件
 
 > ItemControll 自定义集合控件, 需要同时指定该控件的容器 和 集合项模板
+
+`自定义集合控件 = 数据模板 + 控件模板`
 
 1. 在设计页面添加ItemControll
 
@@ -1243,13 +1246,14 @@ ControlTemplate 中的 TemplateBinding
   2. 在 xaml 中使用自定义的 转换器
   
      ```xaml
-   {Binging path=xxx,converter=xxx}
+      {Binging path=xxx,converter=xxx}
      ```
-  
 
 
 
 ##### 设置 ItemContent 子项样式
+
+`集合控件的子项样式`
 
 > 属于 ItemContent 类型的控件, 例如 listbox, listview , combobox , datagrid , 都可以设置 ItemContainerStyle 来定制子项样式
 
