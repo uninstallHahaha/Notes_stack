@@ -680,3 +680,74 @@
 15. 在提供者中连接redis并测试
 16. 将 优先使用redis的逻辑 添加到提供者service实现类逻辑中
 17. 启动消费者和提供者测试整个系统
+
+
+
+
+
+
+
+## 原理解析
+
+从一句代码开始
+
+![image-20211025113359807](SpringBoot.assets/image-20211025113359807.png)
+
+那么关键就在这个注解上，可以推断出，springboot根据这个注解找到相关的spring配置，加载相关的bean，然后启动 tomcat 容器并加载服务
+
+![image-20211025113424126](SpringBoot.assets/image-20211025113424126.png)
+
+点进去 `@SpringBootApplicaiton` 接口
+
+![image-20211025113621690](SpringBoot.assets/image-20211025113621690.png)
+
+其中包含三个重要的注解
+
+*   `@SpringBootConfiguration`：我们点进去以后可以发现底层是**Configuration**注解，说白了就是支持**JavaConfig**的方式来进行配置(**使用Configuration配置类等同于XML文件**)。
+
+*   `@EnableAutoConfiguration`：开启**自动配置**功能(后文详解)
+
+*   `@ComponentScan`：这个注解，学过Spring的同学应该对它不会陌生，就是**扫描**注解，默认是扫描**当前类下**的package。将`@Controller/@Service/@Component/@Repository`等注解加载到IOC容器中
+
+重点 `@EnableAutoConfiguration`
+
+我们点进去看一下，发现有**两个**比较重要的注解：
+
+![image-20211025113819495](SpringBoot.assets/image-20211025113819495.png)
+
+-   `@AutoConfigurationPackage`：加载实体类到 IOC 容器
+
+    ![image-20211025113853549](SpringBoot.assets/image-20211025113853549.png)
+
+    我们可以发现，依靠的还是`@Import`注解，再点进去查看，我们发现重要的就是以下的代码：
+
+    ![image-20211025113917986](SpringBoot.assets/image-20211025113917986.png)
+
+    在**默认**的情况下就是将：主配置类(`@SpringBootApplication`)的所在包及其子包里边的组件扫描到Spring容器中
+
+    比如说，你用了Spring Data JPA，可能会在实体类上写`@Entity`注解。这个`@Entity`注解由`@AutoConfigurationPackage`扫描并加载，而我们平时开发用的`@Controller/@Service/@Component/@Repository`这些注解是由`@ComponentScan`来扫描并加载的
+
+-   `@Import`：给IOC容器导入组件
+
+    我们回到`@Import(AutoConfigurationImportSelector.class)`这句代码上，再点进去`AutoConfigurationImportSelector.class`看看具体的实现是什么：
+
+    ![image-20211025114154764](SpringBoot.assets/image-20211025114154764.png)
+
+    我们再进去看一下这些配置信息是从哪里来的(进去getCandidateConfigurations方法)：
+
+    ![image-20211025114213865](SpringBoot.assets/image-20211025114213865.png)
+
+    这里包装了一层，我们看到的只是通过SpringFactoriesLoader来加载，还没看到关键信息，继续进去：
+
+    ![image-20211025114235679](SpringBoot.assets/image-20211025114235679.png)
+
+    -   `FACTORIES_RESOURCE_LOCATION`的值是`META-INF/spring.factories`
+    -   Spring启动的时候会扫描所有jar路径下的`META-INF/spring.factories`，将其文件包装成Properties对象
+    -   从Properties对象获取到key值为`EnableAutoConfiguration`的数据，然后添加到容器里边。
+
+    最后我们会默认加载113个默认的配置类：
+
+    ![图片](SpringBoot.assets/640)
+
+
+
