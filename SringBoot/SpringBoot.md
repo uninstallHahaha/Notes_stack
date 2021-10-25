@@ -709,6 +709,8 @@
 
 *   `@ComponentScan`：这个注解，学过Spring的同学应该对它不会陌生，就是**扫描**注解，默认是扫描**当前类下**的package。将`@Controller/@Service/@Component/@Repository`等注解加载到IOC容器中
 
+
+
 重点 `@EnableAutoConfiguration`
 
 我们点进去看一下，发现有**两个**比较重要的注解：
@@ -750,4 +752,16 @@
     ![图片](SpringBoot.assets/640)
 
 
+
+
+
+总结
+
+`@SpringBootApplication`等同于下面三个注解：
+
+-   `@SpringBootConfiguration`
+-   `@EnableAutoConfiguration` 加载 实体类bean 和 其他组件 到IOC容器
+-   `@ComponentScan`  加载自己写的 component/service/controller 到IOC容器
+
+其中`@EnableAutoConfiguration`是关键(启用自动配置)，内部实际上就去加载`META-INF/spring.factories`文件的信息，然后筛选出以`EnableAutoConfiguration`为key的数据，加载到IOC容器中，实现自动配置功能
 
