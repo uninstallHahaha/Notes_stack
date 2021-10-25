@@ -44,6 +44,8 @@ Spring IOC 解决的是**对象管理和对象依赖的问题**。本来我们�
 
 
 
+IOC configuration
+
 ![image-20211025092809533](Spring.assets/image-20211025092809533.png)![image-20211025092829801](Spring.assets/image-20211025092829801.png)
 
 
