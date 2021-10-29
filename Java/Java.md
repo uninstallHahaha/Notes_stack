@@ -1226,6 +1226,12 @@ public String getCheckResultSuper(String order) {
 
 ##### NIO
 
+![](Java.assets/P11029-161251(1).jpg)
+
+![](Java.assets/P11029-161305(2).jpg)
+
+![](Java.assets/P11029-161322(3).jpg)
+
 ​	三个部分
 
 *   selector : 就是开一个单独的线程轮询监听各个 channel 中是否发生了指定事件
