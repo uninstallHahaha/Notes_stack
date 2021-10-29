@@ -1,4 +1,4 @@
-Java
+
 
 
 
@@ -2241,4 +2241,86 @@ public @interface AnnoTest {
 3.  因为后端通常使用spring进行容器管理，spring中自带了 aop 机制
 4.  可以自定义 aop增强方法，在其中对该接口的注解进行判断，如果包含该自定义注解，那么就进行前端反馈
 5.  这种在aop中检查注解并且执行逻辑的方法即优雅又减少了代码的冗余，也利于维护（如果需求有变化，只需要改变该增强方法的逻辑即可）
+
+
+
+
+
+
+
+##### [Java泛型](https://blog.csdn.net/briblue/article/details/76736356)
+
+<span style='color:cyan;'>类泛型，接口泛型，方法泛型</span>
+
+```java
+List<Integer> ints = new ArrayList<>();
+List<String> strs = new ArrayList<>();
+System.out.println(ints.getClass().getName==strs.getClass().getName());
+// true
+```
+
+不管在代码里怎么定义的泛型，编译成 class 文件后，都会对泛型进行擦除
+
+也就是说，ints和 strs 都会变为 List，所以它们的 class name 相同
+
+<span style='color:cyan;'>那么泛型的作用？</span>
+
+泛型只存在于编码阶段，能够规范参数的类型，编译器可以根据指定的泛型来对类型进行检查，防止数据类型不匹配造成的低级问题
+
+泛型提高了程序的可读性，在使用泛型变量时无需手动强转，而是编译器自动进行强转，能够更清晰的表达要使用的类型
+
+如果不使用泛型，cache类要能够存储任何类型的数据，那么应当使用object, 然后就得结合强制转换来实现，这样差错就控制在编码人员手上，更容易造成更多的问题
+
+```java
+// definition
+class cache{
+    Object obj;
+    public void setValue(Object obj){
+        this.obj = obj;
+    }
+    public Object getValue(){
+        return Object(this.obj);
+    }
+}
+
+// use
+psvm(args){
+    cache c = new cache();
+    c.setValue(1);
+    sout((int)c.getValue()); // 取值需要强转
+    c.setValue("alice");
+    sout((int)c.getValue()); // 取值需要强转
+}
+```
+
+<span style='color:cyan;'>泛型通配符</span>
+
+*   <?> 通配任何类型，此时只能调用关于该变量的读操作，不能调用写相关操作，比如我有这样的一个方法
+
+    ![image-20211029192104619](Java.assets/image-20211029192104619.png)
+
+    那么在该方法中，关于 collection 变量的写操作都不能使用，因为 <?> 代表可以接受任何类型，那么此时就无法确定其中的元素类型，那么编译器应当怎么判断add时候该元素是否可以插入，无法判断，所以?通配后，无法调用写相关操作，比如
+
+    ![image-20211029192328491](Java.assets/image-20211029192328491.png)
+
+*   <? extends T> 指定这个泛型接收T或者T的子类类型，T给定，那么可以调用类型T中的所有操作，因为已经确定了?继承自T，那么就可以把所有元素都看做是T来看待
+
+*   <? super T> 指定这个泛型接收T或者T的超类，T给定
+
+<span style='color:cyan;'>类型擦除</span>
+
+泛型在编译阶段都被消除，因此编译后的字节码等同于jdk1.5版本之前的字节码，这就是它们能够兼容的原因
+
+原先定义的泛型变量
+
+*   <T> 普通泛型类型的变量，都被转为 Object 类型
+*   <? extends T> 类型的变量，都被转为 T 类型
+
+所以，原先一个 `List<Integer>` 编译后，其实就是 `List<Object>` , 在使用时的 add 类型限制，只是编译器做的限制，就像这样
+
+![image-20211029193245059](Java.assets/image-20211029193245059.png)
+
+其实最后不管是 23 还是 text ， 都会强转为 Object 类型，那么我们就可以利用这个本质以及反射机制，在一个List中存储不同的类型的元素
+
+![image-20211029193404722](Java.assets/image-20211029193404722.png)
 
