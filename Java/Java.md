@@ -2324,3 +2324,9 @@ psvm(args){
 
 ![image-20211029193404722](Java.assets/image-20211029193404722.png)
 
+<span style='color:cyan;'>注意</span>
+
+类泛型虽然也会被擦除，但是会以signature的方式将其泛型信息保存下来，所以下面代码是可以获取到类泛型的
+
+![image-20211029194008140](Java.assets/image-20211029194008140.png)
+
