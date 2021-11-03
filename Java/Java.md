@@ -288,6 +288,16 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
+###### TreeMap
+
+key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根据key进行排序, 这意味着 key 必须实现 comparable 接口即可排序
+
+插入元素即插入到红黑树中排序, 使用 interator 遍历时, 按照排序顺序返回 Entry元素
+
+
+
+
+
 ##### HashMap
 
 ​		本质就是一个数组, 数组元素是 `Entry<K,V>` 类型, Entry 是链表节点的结构, 能保存下一个元素的位置
@@ -897,6 +907,18 @@ class Single {
 ​		但是由于 JVM 具有 <span style='color:cyan;'>指令重排</span> 的特性，执行顺序有可能变成  1->3->2。指令重排在单线程环境下不会出现问题，但是在多线程环境下会导致一个线程获得还没有初始化的实例。例如，线程 T1 执行了 1 和 3，此时 T2 调用 getUniqueInstance() 后发现 uniqueInstance 不为空，因此返回  uniqueInstance，但此时 uniqueInstance 还未被初始化。
 
 ​		使用 volatile 可以禁止 JVM 的指令重排，保证在多线程环境下也能正常运行。
+
+
+
+
+
+###### 单例模式readResolve
+
+对于一个单例模式的类, 如果先序列化为文件, 然后从文件中读取并反序列化后, 由于序列化深拷贝的机制, 会得到一个新的单例类对象, 这就破坏了单例模式的本意
+
+JDK为我们提供了解决方案, 如果某个类中定义了 `public Object readResolve(){}` 方法, 那么在反序列化该类的实例时, 将不在执行默认的反序列化逻辑, 而是直接调用该方法, 使用该方法的返回值作为反序列化的结果, 那么我们可以在单例类中添加该方法, 返回内部的单例实例, 这样就避免了序列化操作会破坏单例模式
+
+`public Object readResolve(){ return instance; }`
 
 
 
@@ -2389,6 +2411,35 @@ AtomicLong 本质就是 cas操作一个字段, 并发高的时候就会造成大
 LongAdder 在内部维护一个base值和一个数组, 代表的值为base值＋数组中每个元素的值, 更新的时候虽然也是 cas,但是多个线程可以同时操作不同的cell, 这样就能够减少线程 cas 失败时发生自旋情况的几率, <span style='color:cyan;'>不过要分情况而论, 并发少的时候, 反而会因为这一系列不必要的复杂操作而降低性能, 只有当并发高的时候才能发挥出它的优势</span>
 
 ![1635847904660](Java.assets/1635847904660.png)
+
+
+
+
+
+
+
+##### 序列化与反序列化
+
+序列化就是为了保存java类的对象状态
+
+总之:序列化的作用就是为了不同jvm之间共享对象<span style='color:cyan;'>实例状态</span>的一种解决方案,由java提供此机制
+
+什么情况下需要序列化?
+             1.当你想要把内存中的对象状态保存到一个文件中或者数据中的时候
+             2.当你想用套接字在网络上传送对象的时候
+             3.当你想要通过RMI传输对象的时候
+
+<span style='color:cyan;'>序列化对象操作是深复制</span>, 相当于在反序列化的时候读取实例的状态信息, 然后新建一个实例
+
+`private static final Long serialVersionUID=1L;`
+
+这个ID是为了JVM在反序列化的时候定位要解析为哪个类的实例, 必须序列化和反序列化的类中的 ID 相同, 那么才能正常操作, 否则报错 `InvalidClassException`
+
+建议在需要序列化的类中定义 `private static final Long serialVersionUID=1L;` 否则JVM会自动生成该字段
+
+但是如果序列化和反序列化操作<span style='color:cyan;'>处于不同的JVM版本下</span>, 那么 serialVersionUID 可能因为生成策略的不同而不同, 进而造成不必要的 `InvalidClassException` 
+
+
 
 
 
