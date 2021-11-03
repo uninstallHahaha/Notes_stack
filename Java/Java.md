@@ -1550,6 +1550,10 @@ ReentrantLock 和 synchronized 都是互斥锁，可重入锁
 
 *   这种方法只能同时保证一个变量的原子性操作
 
+解决ABA问题, 在cas的成功时候保存一个版本号或者时间戳, 下次更新时不仅仅判断旧值是否改变, 还要判断版本号是否改变, 同时符合时, 才进行更新
+
+![1635848036899](Java.assets/1635848036899.png)
+
 
 
 
@@ -2329,4 +2333,62 @@ psvm(args){
 类泛型虽然也会被擦除，但是会以signature的方式将其泛型信息保存下来，所以下面代码是可以获取到类泛型的
 
 ![image-20211029194008140](Java.assets/image-20211029194008140.png)
+
+
+
+
+
+
+
+##### LongAdder 和 AtomicLong
+
+* `java.util.concurrent.atomic.LongAdder` 
+
+LongAdder 是 jdk1.8 中加入的原子操作类, 原子操作的实现方法为 CAS 机制
+
+内部包含 int base 字段, 为基础值
+
+包含 cell[] 数组字段, 每个 cell 类型元素保存一个值, 最终返回的值是每个 cell 元素的值以及 base之和, 为什么将一个数字分成多个 cell 来保存, 是用来在并发的情况下, 供多个线程分别进行操作, 这样就能提高并发
+
+![1635845775487](Java.assets/1635845775487.png)
+
+这些个返回值的方法其实都是在调用 `sum()`
+
+![1635845837647](Java.assets/1635845837647.png)
+
+那么 `sum()`  中其实就是返回 `base + each cell[] value`
+
+![1635846105569](Java.assets/1635846105569.png)
+
+以上是读的逻辑, 写的逻辑如下, 按照从上到下的顺序依次尝试, 成功则中止, 否则往下执行
+
+![1635846751637](Java.assets/1635846751637.png)
+
+其中, 兜底的 `longAccumulate()` 函数用来进行cas自旋更新操作
+
+![1635847274642](Java.assets/1635847274642.png)
+
+
+
+* `java.util.concurrent.atomic.AtomicLong`
+
+究其根源, AtomicLong 就是内部维护一个 volatile 类型的字段, 所有的操作都基于这一个字段, 使用底层的 cas 方法
+
+![1635847472659](Java.assets/1635847472659.png)
+
+![1635847512134](Java.assets/1635847512134.png)
+
+![1635847526502](Java.assets/1635847526502.png)
+
+
+
+LongAdder 和 AtomicLong 的差别
+
+AtomicLong 本质就是 cas操作一个字段, 并发高的时候就会造成大量的线程陷入 cas 失败后的自旋, 造成 cpu 空转, 浪费性能
+
+LongAdder 在内部维护一个base值和一个数组, 代表的值为base值＋数组中每个元素的值, 更新的时候虽然也是 cas,但是多个线程可以同时操作不同的cell, 这样就能够减少线程 cas 失败时发生自旋情况的几率, <span style='color:cyan;'>不过要分情况而论, 并发少的时候, 反而会因为这一系列不必要的复杂操作而降低性能, 只有当并发高的时候才能发挥出它的优势</span>
+
+![1635847904660](Java.assets/1635847904660.png)
+
+
 

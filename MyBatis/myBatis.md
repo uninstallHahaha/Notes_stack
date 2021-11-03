@@ -908,3 +908,109 @@ List<User> findAll();
 
     
 
+
+
+### mybatis面试
+
+###### #{} 和 ${}
+
+#{} 是通过预编译的方式, 先将#{}替换为？预编译为sql， 然后在执行的时候将参数替换进去, 也就是 preparedstatement , 能防止 sql 注入
+
+${} 是原样字符串拼接传递参数, 会造成 sql 注入漏洞
+
+###### 实体类字段与数据表字段的对应关系
+
+默认需要字段名一一对应相同
+
+如果不相同
+
+* 在 mapper.xml 中定义 resultmap, 设置字段的对应关系 ( 推荐 )
+
+或者
+
+* 在sql 查询中, 使用 as 关键字, 别名为实体类中的字段名
+
+###### sql传递多个参数方式
+
+* 使用 #{0} , #{1} ... 获取多个参数
+
+或者
+
+* 使用map类型作为参数, key 为 参数名, value 为参数值
+
+  ![1635902168781](myBatis.assets/1635902168781.png)
+
+###### mysql动态sql
+
+实际上就是根据条件字符串拼接 sql , 适用于多个查询条件, 且不确定哪个条件有值的的情况, 如果在代码中手动判断然后拼接sql 不优雅, 可以用 mybatis 提供的动态sql功能
+
+ Mybatis提供了9种动态sql标签：`trim|where|set|foreach|if|choose|when|otherwise|bind `
+
+###### DAO接口里面的方法能够参数重载吗
+
+根据接口的 `全限定类名+方法名` 作为该方法的唯一标识，所以不能参数重载
+
+工作原理是，读取DAO接口对应的xml中的sql，使用JDK动态代理，生成接口的代理对象，在handler中进行jdbc一系列操作， 然后执行对应的sql，最后将执行结果返回给用户
+
+因此，只需要用户提供一个接口, 用来生成代理对象, 提供给用户一个调用的渠道, 以及该接口方法对应的 sql , 用来表示 mybatis 应当为这个方法增强什么样的操作
+
+###### 懒加载原理
+
+懒加载是指出现在关联查询时, 对被关联对象的懒加载行为, 第一次查询只查询主查询中要获取的对象, 待到用户获取关联对象时, 再次对关联对象进行查询
+
+原理就是先查询一次, 通过cglib动态代理生成主查询对象, 然后对懒查询关联对象不进行查询,  比如 a.getB().getName()，拦截器invoke()方法发现a.getB()是null，就会单独发送事先保存好的查询关联B对象的sql，把B查询出来。然后调用a.setB(b)，这样a对象的b属性就会有值了，接着完成a.getB().getName()方法的调用，这就是延迟加载的基本原理 
+
+###### mybatis的三种executor
+
+![1635904161952](myBatis.assets/1635904161952.png)
+
+###### mybatis核心工作流程
+
+jdbc四个关键对象 : DriverManager,  connection, statement, resultmap
+
+mabatis四个关键对象: sqlsession, executor, mappedstatement, resulthandler
+
+一个 sqlsession 相当于一个 connection, 不同的是 connection 需要获取 statement 来执行 sql ,而 sqlsession 可以直接执行 sql , 其原因在于, sqlSession 中维护了 executor 对象, 一个 executor 对应一个或多个 statement 对象用来执行sql ,当使用 sqlSession 执行 sql 时, 其实是使用其内部的 executor 在执行 sql, mappedstatement 用来连接 输入对象(实体类) 和 输出对象(执行结果), 将其关联封装为结果返回给用户
+
+1. 读取配置文件, 包括数据库连接设置, xml中的sql设置
+2. 创建 sqlSessionfactory
+3. 创建 sqlSession
+4. 执行 sql
+5. 通过 mappedstatement 封装执行结果返回给用户
+
+
+
+
+
+
+
+
+
+### JDBC
+
+本质上就是java用来操作数据库的第三方包, 而所有的持久层框架实际上都是对 jdbc 的封装, 将每次使用 jdbc 时重复的步骤进行统一管理, 用户只需要关心执行的 sql 即可
+
+###### 使用步骤
+
+1. class.forname 加载jdbc包并创建实例
+2. 获取到连接对象 connection 实例
+3. 从连接对象实例上获取到 statement 实例或者 preparedstatement 实例
+4. 执行 statement/ preparedstatement 的 execute 方法执行 sql
+5. 得到返回的 resultset 为 sql 执行结果
+6. 遍历使用 resultset 实例
+7. 使用完毕, 依次关闭 resultset, statement, connection
+
+###### statement 和 preparedstatement
+
+两者都用来执行 sql 语句
+
+不同的是 statement 是静态编译, 直接将参数字符串拼接到 sql 中, 然后执行, 所以会造成 sql 注入漏洞
+
+preparedstatement 是动态编译, 首先将 sql 参数部分使用 ? 代替, 然后不带具体的参数预编译为 sql 模板, 等到执行的时候, 将参数设置到预编译的模板中, 这里设置参数时, 会对参数中的特殊字符进行转义, 也就是参数永远是参数, 不参与 sql 的语法构成, 这样就防止了 sql 注入
+
+因为 preparedstatement 一次预编译, 多次执行的机制, 而 statement 每次都需要编译的机制, 很显然, 如果有大量的仅仅参数不同的 sql 要执行, preparedstatement 效率要远高于 statement
+
+statement 的唯一优势在于, 每次都可以执行不同的 sql 
+
+
+
