@@ -954,7 +954,7 @@ TODO : 创建service的工厂类, 提供返回  *service代理对象*  的方法
 
 
 
-可以得知上述实现方式需要业务类有实现接口，才能调用jdk的 newProxyInstance 创建代理类，所以在 spring 的实现中，如果目标业务类实现了接口，那么默认使用 newProxyInstance 方式，否则使用第三方包 cglib 创建代理类实例
+<span style='color:cyan;'>可以得知上述实现方式需要业务类有实现接口，才能调用jdk的 newProxyInstance 创建代理类，所以在 spring 的实现中，如果目标业务类实现了接口，那么默认使用 newProxyInstance 方式，否则使用第三方包 cglib 创建代理类实例</span>
 
 
 
@@ -1772,7 +1772,7 @@ ApplicationContext 家族
 
 ​		Factorybean是一个接口，包含getObect()方法，使用该方法获取其他对象的实例，所以实现了该类型的类为工厂类
 
-​		IOC容器默认通过反射的方式创建bean，在某些情况下，实例化Bean过程比较复杂，如果按照传统的方式，则需要在<bean>中提供大量的配置信息。配置方式的灵活性是受限的，这时采用编码的方式可能会得到一个简单的方案。
+​		IOC容器默认通过反射的方式创建bean，在某些情况下，实例化Bean过程比较复杂，如果按照传统的方式，则需要在\<bean>中提供大量的配置信息。配置方式的灵活性是受限的，这时采用编码的方式可能会得到一个简单的方案。
 
 ​		Spring为此提供了一个 `org.springframework.bean.factory.FactoryBean` 的工厂类接口，用户可以通过实现该接口定制实例化Bean的逻辑。FactoryBean接口对于Spring框架来说占用重要的地位，Spring自身就提供了70多个FactoryBean的实现
 
@@ -2198,6 +2198,15 @@ public void refresh() throws BeansException, IllegalStateException {
 
 
 ## Bean的生命周期
+
+1. 实例化, 构造属性
+2. set属性, 注入依赖属性
+3. <span style='color:cyan;'>BeanPostProcessor前置处理</span>
+4. 调用 afterPropertiesSet 方法, InitializingBean 类型才会调用
+5. <span style='color:pink;'>调用 init-Method</span>
+6. <span style='color:cyan;'>BeanPostProcessor 后置处理</span>
+7. 使用中.......
+8. 调用 destroy-Method
 
 ![image-20210830232556704](Spring.assets/image-20210830232556704.png)
 
