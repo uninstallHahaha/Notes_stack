@@ -3199,3 +3199,15 @@ private void Button_Click(object sender, RoutedEventArgs e)
 * 文件浏览器(treeView)
 * 托盘程序
 
+
+
+
+
+
+
+
+
+#### 注意点
+
+* 双向绑定请使用 `依赖属性`
+
