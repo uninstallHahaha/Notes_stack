@@ -1242,6 +1242,34 @@ union 在将两个子查询的结果上下怼到一起后, 再对记录进行去
 
 
 
+#### Join的原理
+
+mysql中有三种方式实现join查询
+
+1.  Simple Nested-Loop Join 
+
+   从发起连接的表中每次取出一条记录, 返回给 service 层, 然后再遍历被连接表, 取出每一条记录查看是否能够连接, 是则返回, 本质就是两层 for 循环
+
+   <img src="Mysql高级.assets/1636545222725.png" alt="1636545222725" style="zoom: 67%;" />
+
+2.  Index Nested-Loop Join 
+
+   从发起连接的表中每次取出一条记录, 返回给 sevice 层, 然后通过索引定位被连接表中的匹配记录, 因为使用索引, 所以在被连接表中查询记录的步骤不需要再遍历整表, 但是前提是, 连接字段在被连接表中有索引
+
+   <img src="Mysql高级.assets/1636545338438.png" alt="1636545338438" style="zoom: 67%;" />
+
+3.  Block Nested-Loop Join 
+
+   从发起连接表中每次取出几条数据, 然后遍历被连接表取出每一条数据, 使用 or 判断被连接表中的记录是否匹配这几条记录中的某一条, 因为每次从发起连接的表中批量取出记录, 所以减少了外层 for 循环的遍历次数
+
+   在 MySQL 中默认开启此功能, 通过  `optimizer_switch的设置block_nested_loop为on`
+
+   <img src="Mysql高级.assets/1636545457898.png" alt="1636545457898" style="zoom:67%;" />
+
+
+
+
+
 
 
 #### 数据库设计三大范式 ?

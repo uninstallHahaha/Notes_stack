@@ -644,7 +644,7 @@ if(dig.ShowDialog()==true){
 SaveFileDialog  
 ```
 
-
+###### [保存文件窗口](https://www.cnblogs.com/XuanYaLeiMa/p/5935351.html)
 
 
 
@@ -3209,5 +3209,47 @@ private void Button_Click(object sender, RoutedEventArgs e)
 
 #### 注意点
 
+###### 双向绑定
+
 * 双向绑定请使用 `依赖属性`
+
+###### JSON工具- 实测会出现因为循环引用而报错(实际并无循环引用)
+
+```c#
+ // 添加 System.Web.Extentions.dll 的引用
+    public static class JsonUtil
+    {
+        /// <summary>
+        /// 内存对象转换为json字符串
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string ToJSON(object obj)
+        {
+            StringBuilder sb = new StringBuilder();
+            JavaScriptSerializer json = new JavaScriptSerializer();
+            json.Serialize(obj, sb);
+            return sb.ToString();
+        }
+        /// <summary>
+        /// Json字符串转内存对象
+        /// </summary>
+        /// <param name="jsonString"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T FromJSON<T>(string jsonString)
+        {
+            JavaScriptSerializer json = new JavaScriptSerializer();
+            return json.Deserialize<T>(jsonString);
+        }
+    }
+```
+
+###### [JSON工具](https://www.cnblogs.com/changbaishan/p/8761376.html)
+
+
+
+
+
+
 
