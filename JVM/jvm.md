@@ -788,3 +788,25 @@ JMM模型规范要求保证三点：原子性，可见性，有序性
 
 
 
+
+
+
+
+#### Server模式 和 Client模式
+
+ JVM有两种运行模式Server与Client。
+
+两种模式的区别在于，Client模式启动速度较快，Server模式启动较慢；
+
+但是启动进入稳定期长期运行之后Server模式的程序运行速度比Client要快很多。
+
+这是因为Server模式启动的JVM采用的是重量级的虚拟机，对程序采用了更多的优化；
+
+而Client模式启动的JVM采用的是轻量级的虚拟机。所以Server启动慢，但稳定后速度比Client远远要快。
+
+开发环境建议 Client 模式即可, 生产环境换成 Server 模式
+
+通过 `java --version` 查看当前 JVM 使用的模式
+
+ ![1636599950421](jvm.assets/1636599950421.png)
+
