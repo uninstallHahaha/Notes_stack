@@ -2476,3 +2476,76 @@ LongAdder 在内部维护一个base值和一个数组, 代表的值为base值＋
 
   比如 [0,5] 有 3 个数, [5, 10] 有 3 个数, [10, 15] 有三个数, 那显然整个数组的中位数就落在 [5, 10] 这个区间, 只需要求得该区间的中位数即可
 
+
+
+
+
+##### [类加载过程](https://www.cnblogs.com/wangsen/p/10838733.html)
+
+`加载 -> 连接 -> 初始化 -> 使用 -> 卸载`
+
+这里的类加载指的是, 将 class 文件加载到方法区的过程, 类加载的时机依据不同的虚拟机实现而不同, 常规的 Hotspot 虚拟机使用的是懒加载方式, 即只有在使用该类时, 才将其加载到方法区
+
+<span style='background:green;padding:5px;color:#fff'>加载</span>
+
+ 类加载的最终产品是位于运行时数据区的堆区的Class对象 
+
+该步骤做的两件事:
+
+1. 读取 class 字节码文件中的数据到方法区
+
+   本质上就是文件的读取到内存
+
+2. 在堆区创建对应的 java.lang.Class 类实例, 该类实例用以接下来创建该类的实例
+
+<span style='background:green;padding:5px;color:#fff'>连接</span>
+
+该步骤做的四件事:
+
+1. 检查字节码文件中是否符合语言规范, 是否能够正常被 jvm 解析
+
+2. 为类中静态成员分配内存, 并且赋值默认值
+
+3. 为类中的常量成员分配内存, 并赋值初始值, 初始值就是在代码里指定的值
+
+4. 将Class中的符号转换为实际的内存地址
+
+   比如, 在 Class 实例中包含一个方法 show 的定义, 那么在前面的步骤中, show 只是被解析为一个符号, 在本阶段将会找到 show 方法加载到方法区的实际内存地址, 然后使用该内存地址替换 show 符号, 此时就串联起来了 Class 中的所有组件 , 该 Class 已经真正可用, 这就是所谓的连接
+
+<span style='background:green;padding:5px;color:#fff'>初始化</span>
+
+完成此步骤后, 将会在堆中得到一个可用且初始化完成的 Class 实例, 接下来就可以 new 该 Class 实例对应的类实例了
+
+该步骤做一件事:
+
+从上之下执行类定义中的 `静态部分`, 如果存在父类, 那么先执行父类的这些部分完毕, 再执行子类内容
+
+![1636800931979](Java.assets/1636800931979.png)
+
+<span style='background:green;padding:5px;color:#fff'>使用</span>
+
+使用上面加载完成的 Class 实例, 创建对象
+
+创建对象的几种方式, 其中使用 `new` 和 `xxxClass.newInstance()` 时会调用构造方法
+
+1. `new`
+2. `xxxClass.newInstance()`
+3. `Class.forName("类的全限定路径")`
+4. `ClassLoader.loadClass("类的全限定路径")`
+
+<span style='background:green;padding:5px;color:#fff'>卸载</span>
+
+满足下面所有条件时, 卸载该类, 其实就是将方法定义从方法区回收, 将 Class 实例从堆区回收
+
+* 堆中不存在该 Class 的任何实例
+* 加载该类的 Classloader 已经被回收
+* 该类的 Class 实例在任何地方不存在被引用
+
+
+
+
+
+##### [对象实例化执行过程](https://www.cnblogs.com/wangsen/p/10838733.html)
+
+静态部分 ( 静态赋值语句 -> 静态代码块 ) -> 普通代码 ( 字段赋值语句 -> 花括号语句 ) -> 构造函数 ( 最后执行构造函数 )
+
