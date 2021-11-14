@@ -2547,5 +2547,37 @@ LongAdder 在内部维护一个base值和一个数组, 代表的值为base值＋
 
 ##### [对象实例化执行过程](https://www.cnblogs.com/wangsen/p/10838733.html)
 
-静态部分 ( 静态赋值语句 -> 静态代码块 ) -> 普通代码 ( 字段赋值语句 -> 花括号语句 ) -> 构造函数 ( 最后执行构造函数 )
+静态部分 ( 静态赋值语句 + 静态代码块 ) -> 普通代码 ( 字段赋值语句 + 花括号语句 ) -> 构造函数 ( 最后执行构造函数 )
+
+
+
+
+
+
+
+##### Class.forName 和 ClassLoader.loadClass
+
+Java中两个反射机制加载类的方法, 同样都能得到类的 Class 实例, 同样接收类的全限定类名作为参数
+
+不同的是
+
+Class.forName 会执行 `加载 -> 连接 -> 初始化` , 三个步骤, 最后将得到的 Class 实例返回
+
+ClassLoader.loadClass 只会执行 `加载` 这一个步骤, 也就是仅仅将 class 字节码文件读取并且加载到 jvm 内存中, 这意味着将不会执行 static 部分
+
+所以
+
+如果一个类需要执行其 static 部分后才能正常使用, 那么请使用 `Class.forName`, 比如通过反射创建连接 JDBC 的 `Driver` 实例时, 它必须执行类中的 static 部分将自己进行注册才能正常使用, 那么就必须使用该方式
+
+如果一个类不必要执行它的 static 部分, 那么可以选择 `ClassLoader.loadClass` , 比如 `springIOC` 加载类时, 实现的方式时懒加载, 也就是什么时候用再初始化, 那么就可以使用该方式加快 IOC 容器的创建过程
+
+例子
+
+`Class.forName`
+
+![1636879830551](Java.assets/1636879830551.png)
+
+`ClassLoader.loadClass`
+
+![1636879866880](Java.assets/1636879866880.png)
 
