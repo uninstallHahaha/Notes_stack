@@ -787,7 +787,38 @@ class MyThread extends Thread {
 
 ​		<span style='color:cyan;'>ThreadLocal原理</span>
 
-​		在 Thread 对象中，有一个 Map 类型（也就是key，value）的字段 <span style='color:cyan;'>ThreadLocalMap</span>，当在线程中使用外部的 Threadlocal 变量时，会自动以该变量名作为key，值作为value加入 Threadlocalmap中，此后对该变量的操作都将操作该本地位置
+​		在 Thread 对象中，有一个 Map 类型的字段 <span style='color:cyan;'>ThreadLocalMap</span>, (ThreadLocal : Object)
+
+​		这个 threadlocalmap 解决 hash 冲突的方法是 <span style='color:cyan;'>线性探测再散列</span>, 即如果一个坑已经被占了, 那么往下寻找直至有坑位
+
+线程初始化时, 默认复制一份父线程中的 threadLocalMap 作为自己的 threadLocalMap, 比如在 main 线程中创建一个子线程, 先前又在 main 线程中创建了 threadLocal 变量并且调用了其 set 方法, 那么父线程中会保存有该 threadLocal, 而创建出来的子线程也拥有它
+
+![1636990862820](Java.assets/1636990862820.png)
+
+​		ThreadLocalMap 内部维护 Entry 数组用来存储多个 ThreadLocal 的值 
+
+​		每个 Entry 是一个弱引用类型, 引用值为 ThreadLocal 变量, 值为 Object 值
+
+`threadLocal.get()`
+
+```
+threadLocal.get() , 从当前线程的 threadLocalMap 字段中根据该 threadLocal 的 hash 值定位在 Entry 数组上的位置, 然后获取值
+
+如果当前线程内的 threadLocalMap 为空 (一般不为空, 因为如上, 在创建进程的时候会直接拿来父线程的TLM作为自己的TML), 新建 Entry 数组然后赋值默认值
+```
+
+`threadLocal.set()`
+
+```
+先拿到当前线程中的 threadlocalmap, 如果 tml 为空, 那么新建一个默认长度为 16的tml, 并且存储一个 entry
+
+然后根据本 threadLocal 计算 hash 值, 然后计算应该出现在 entry 数组上的位置, 然后去该位置获取 entry 元素, 
+如果之前已经存过了且是该 threadlocal , 那么把这个 entry 的值改为新 set 的值, 
+如果之前已经存过了但是不是该 threadlocal , 继续往下找坑位
+如果直接这个坑位是空的, 说明之前都没有存过, 那么直接在该位置新建 entry 实例保存
+```
+
+
 
 ​		<span style='color:cyan;'>Threadlocal内存泄露</span>
 
