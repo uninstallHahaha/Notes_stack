@@ -288,7 +288,7 @@ Deque<Integer> stack = new ArrayDeque<>();
 
 
 
-###### TreeMap
+##### TreeMap
 
 key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根据key进行排序, 这意味着 key 必须实现 comparable 接口即可排序
 
@@ -299,6 +299,8 @@ key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根
 
 
 ##### HashMap
+
+> 注意, hashmap 中, key 可以有一个 null, 而 hashTable 的 key 不能有 null
 
 ​		本质就是一个数组, 数组元素是 `Entry<K,V>` 类型, Entry 是链表节点的结构, 能保存下一个元素的位置
 
@@ -645,6 +647,10 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 ​		<span style='color:cyan;'>如果在执行中调用了wait方法，那么该线程进入 waitlist 队列，待到其他线程调用 notify 或者 notifyall 时，重新回到 entrylist 参与锁的竞争</span>
 
+
+
+
+
 ##### 锁升级机制
 
 ​		在 java 1.8 之前， synchronized 锁作为重量级锁而被诟病，java1.8 优化了 synchronized 锁机制，使其拥有了较好的性能，具体为：
@@ -691,9 +697,79 @@ sleep函数 是 Thread类 中的静态方法，使用时必须使用 try catch �
 
 
 
-##### 如果想要多个进程交替打印
+##### 交替打印ABC
 
-​	可以使用 synchronized 代码块, 让这些线程同时锁一个对象, 然后在代码块中先打印, 然后 notify 其他线程后自己 wait
+synchronized代码块 ＋ 三个锁对象, 实现三个进程交替打印
+
+```java
+public class Jark {
+
+    public static void main(String[] args) throws InterruptedException {
+        // 创建三个对象作为锁对象
+        Object a = new Object();
+        Object b = new Object();
+        Object c = new Object();
+        // 分别给三个线程设置锁对象
+        MyThread A = new MyThread(c, a, "A");
+        MyThread B = new MyThread(a, b, "B");
+        MyThread C = new MyThread(b, c, "C");
+        // 手动干涉三个线程的启动顺序, 为了能够它们正确顺序执行
+        A.start();
+        Thread.sleep(200);
+        B.start();
+        Thread.sleep(200);
+        C.start();
+    }
+
+    static synchronized void print(String str) {
+        System.out.println(str);
+    }
+}
+
+class MyThread extends Thread {
+    // 前一个锁对象
+    public final Object prev;
+    // 当前锁对象
+    public final Object self;
+    // 要打印的值
+    public String str;
+
+    public MyThread(Object prev, Object self, String str) {
+        this.prev = prev;
+        this.self = self;
+        this.str = str;
+    }
+
+    @Override
+    public void run() {
+        int c = 10;
+        // 打印十次, 每次都需要先拿到前一个锁, 然后拿到当前锁, 才能进行
+        while (c-- > 0) {
+            // 先拿到前一个锁对象
+            synchronized (prev) {
+                // 然后拿到当前锁对象
+                synchronized (self) {
+                    System.out.print(str);
+                    // 通知下一个线程准备运行
+                    self.notifyAll();
+                }
+                try {
+                    // 如果是最后一次打印, 释放锁, 然后向下执行, 下次再进入while判断时, c==-1, 无法进入循环, 遂向下执行至方法尾部, 线程结束
+                    if (c == 0) prev.notifyAll();
+                    // 如果不是最后一次打印, 那么直接释放锁, 阻塞自己, 等待后续被唤醒
+                    else prev.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+```
+
+
+
+
 
 
 
@@ -2555,7 +2631,7 @@ LongAdder 在内部维护一个base值和一个数组, 代表的值为base值＋
 
 
 
-##### Class.forName 和 ClassLoader.loadClass
+##### [Class.forName 和 ClassLoader.loadClass](https://www.cnblogs.com/jimoer/p/9185662.html)
 
 Java中两个反射机制加载类的方法, 同样都能得到类的 Class 实例, 同样接收类的全限定类名作为参数
 
@@ -2580,4 +2656,15 @@ ClassLoader.loadClass 只会执行 `加载` 这一个步骤, 也就是仅仅将 
 `ClassLoader.loadClass`
 
 ![1636879866880](Java.assets/1636879866880.png)
+
+
+
+
+
+##### 创建对象的方法
+
+1. new
+2. 反射获取 Class 实例, 然后 newInstance, 会调用默认构造函数创建对象
+3. ins.clone() , clone方法是Object里的方法, 但是它是浅拷贝, 如需深拷贝, 请覆盖手动实现该方法
+4. 反序列化
 

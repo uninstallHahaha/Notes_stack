@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+
+<body>
+    <div style="position: relative;top: 234px;left: 345px;background-color: #666;">
+        <div id="ddd" class="blk" style="background-color: royalblue;"></div>
+        <div class="blk abs"></div>
+        <div class="blk"></div>
+        <div class="blk"></div>
+    </div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+        }
+
+        .blk {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+
+        .abs {
+            position: absolute;
+            top: 230px;
+            left: 140px;
+            background-color: purple;
+        }
+    </style>
+</body>
+
+</html>
+
+
+<script>
+
+    document.getElementById('ddd').addEventListener('click', function () {
+        alert('dom content loaded')
+    }, true)
+
+</script>
