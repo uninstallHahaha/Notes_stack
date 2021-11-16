@@ -1,4 +1,4 @@
-## mYbatis
+## myBatis
 
 持久层技术: 
 
@@ -821,7 +821,7 @@ List<User> findAll();
    </configuration>
    ```
 
-2. 在dao层接口接口上 使用  `@CacheNamespace`
+2. 在dao层接口上 使用  `@CacheNamespace`
 
    ```java
    //设置 对该接口中方法的调用使用二级缓存
@@ -888,10 +888,10 @@ List<User> findAll();
         ```xml
         <!--引入了mybatis-plus就不要引入myatis了, 因为mybatis-plus继承了mybatis--> 
         <dependency>
-                    <groupId>com.baomidou</groupId>
-                    <artifactId>mybatis-plus-boot-starter</artifactId>
-                    <version>3.4.3</version>
-                </dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.3</version>
+        </dependency>
         ```
 
     2.  给dao层接口继承BaseMapper, 那么它就默认有了一系列的接口
@@ -918,6 +918,8 @@ List<User> findAll();
 
 ${} 是原样字符串拼接传递参数, 会造成 sql 注入漏洞
 
+
+
 ###### 实体类字段与数据表字段的对应关系
 
 默认需要字段名一一对应相同
@@ -930,6 +932,8 @@ ${} 是原样字符串拼接传递参数, 会造成 sql 注入漏洞
 
 * 在sql 查询中, 使用 as 关键字, 别名为实体类中的字段名
 
+
+
 ###### sql传递多个参数方式
 
 * 使用 #{0} , #{1} ... 获取多个参数
@@ -940,11 +944,15 @@ ${} 是原样字符串拼接传递参数, 会造成 sql 注入漏洞
 
   ![1635902168781](myBatis.assets/1635902168781.png)
 
+
+
 ###### mysql动态sql
 
 实际上就是根据条件字符串拼接 sql , 适用于多个查询条件, 且不确定哪个条件有值的的情况, 如果在代码中手动判断然后拼接sql 不优雅, 可以用 mybatis 提供的动态sql功能
 
  Mybatis提供了9种动态sql标签：`trim|where|set|foreach|if|choose|when|otherwise|bind `
+
+
 
 ###### DAO接口里面的方法能够参数重载吗
 
@@ -954,15 +962,21 @@ ${} 是原样字符串拼接传递参数, 会造成 sql 注入漏洞
 
 因此，只需要用户提供一个接口, 用来生成代理对象, 提供给用户一个调用的渠道, 以及该接口方法对应的 sql , 用来表示 mybatis 应当为这个方法增强什么样的操作
 
+
+
 ###### 懒加载原理
 
 懒加载是指出现在关联查询时, 对被关联对象的懒加载行为, 第一次查询只查询主查询中要获取的对象, 待到用户获取关联对象时, 再次对关联对象进行查询
 
 原理就是先查询一次, 通过cglib动态代理生成主查询对象, 然后对懒查询关联对象不进行查询,  比如 a.getB().getName()，拦截器invoke()方法发现a.getB()是null，就会单独发送事先保存好的查询关联B对象的sql，把B查询出来。然后调用a.setB(b)，这样a对象的b属性就会有值了，接着完成a.getB().getName()方法的调用，这就是延迟加载的基本原理 
 
+
+
 ###### mybatis的三种executor
 
 ![1635904161952](myBatis.assets/1635904161952.png)
+
+
 
 ###### mybatis核心工作流程
 
@@ -992,7 +1006,7 @@ mabatis四个关键对象: sqlsession, executor, mappedstatement, resulthandler
 
 ###### 使用步骤
 
-1. class.forname 加载jdbc包并创建实例
+1. class.forname 加载jdbc包
 2. 获取到连接对象 connection 实例
 3. 从连接对象实例上获取到 statement 实例或者 preparedstatement 实例
 4. 执行 statement/ preparedstatement 的 execute 方法执行 sql
@@ -1002,7 +1016,7 @@ mabatis四个关键对象: sqlsession, executor, mappedstatement, resulthandler
 
 ###### statement 和 preparedstatement
 
-两者都用来执行 sql 语句
+两者都用来执行 sql 语句, preparedstatement 继承自 statement 
 
 不同的是 statement 是静态编译, 直接将参数字符串拼接到 sql 中, 然后执行, 所以会造成 sql 注入漏洞
 

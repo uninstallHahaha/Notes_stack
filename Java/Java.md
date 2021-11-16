@@ -147,6 +147,18 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 
 
 
+##### [String设计为final的目的](https://www.cnblogs.com/wkfvawl/p/11693260.html)
+
+* 安全
+
+  保证变量的安全, 在作为参数传递时, 复制一份新的而不是传递原先的, 这样只读的设置就避免 String 变量被修改\
+
+* 效率
+
+  string 变量不可变, 那么它的 hash 值也不会变, 那么就可以在 String 类中使用一个字段来保存 hash 值, 那么在用到其 hash 值时, 直接从属性中取即可, 也就是说, 在使用 hashmap 时, 使用 String 类型作为 key 会使得效率提高, 如果使用其他类型, 那么其 hash 值每次都得重新计算, 效率低
+
+
+
 
 
 ##### StringBuffer , StringBulider , String 

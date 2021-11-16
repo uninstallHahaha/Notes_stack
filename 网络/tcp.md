@@ -29,7 +29,6 @@ TCP 是面向连接的、可靠的、双向传输的传输层通信协议，所�
 ![图片](https://mmbiz.qpic.cn/mmbiz_png/J0g14CUwaZciat6yMSZJ2QYWIldpAXY6VLPcVD30JQ2hZKPOgCesbok6sNedqib1e0ibYJEI8qurabNKsjosVOhow/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
 
 <div style='display:flex;width:100%;background:#666;color:white;padding:5px;border-radius:5px;'>三次握手与数据传输</div>
-
 那么，三次握手的过程在一个 HTTP 请求的平均时间占比 10% 以上，在网络状态不佳、高并发或者遭遇 SYN 攻击等场景中，如果不能有效正确的调节三次握手中的参数，就会对性能产生很多的影响。
 
 如何正确有效的使用这些参数，来提高 TCP 三次握手的性能，这就需要理解「三次握手的状态变迁」，这样当出现问题时，先用 `netstat` 命令查看是哪个握手阶段出现了问题，再来对症下药，而不是病急乱投医。
@@ -671,3 +670,13 @@ Linux 会对缓冲区动态调节，我们应该把缓冲区的上限设置为�
 但需要注意的是，如果程序中的 socket 设置 SO_SNDBUF 和 SO_RCVBUF，则会关闭缓冲区的动态整功能，所以不建议在程序设置它俩，而是交给内核自动调整比较好。
 
 有效配置这些参数后，既能够最大程度地保持并发性，也能让资源充裕时连接传输速度达到最大值。
+
+
+
+
+
+## TCP问题
+
+###### [TCP第三次握手能传输数据](https://www.cnblogs.com/filmskin/p/5401170.html)
+
+只有前两次的 syn 消息不能传输数据, 其余的消息都可以传输数据, 所以第三次握手可以携带数据
