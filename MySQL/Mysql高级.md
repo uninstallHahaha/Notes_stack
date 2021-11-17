@@ -1270,6 +1270,16 @@ mysql中有三种方式实现join查询
 
 
 
+#### [为什么MySQL默认可重复读](https://lilu.org.cn/2020/07/12/database/mysql/why-does-mysql-choose-repeatable-read-as-the-default-isolation-level/)
+
+在其他数据库中, 默认的隔离级别都是读已提交, 而在 MySQL中, 默认的隔离级别是可重复读
+
+这是因为历史原因, 在MySQL5.0之前, binlog 只有 statement一种选项, 即记录执行的SQL语句, 在这种情况下, 如果使用读已提交的隔离级别, 会使得主库和从库可能造成数据不一致的情况, 所以将默认隔离级别设置为 可重复读
+
+
+
+
+
 
 
 #### 数据库设计三大范式 ?

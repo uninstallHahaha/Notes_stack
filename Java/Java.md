@@ -340,7 +340,7 @@ key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根
 
 ​		hash运算的过程其实就是对目标元素的Key进行hashcode，再对Map的容量进行取模，而 JDK 的工程师为了提升取模的效率，使用位运算代替了取模运算，<span style='color:cyan;'>这就要求Map的容量一定得是2的幂</span>
 
-​		而作为默认容量，太大和太小都不合适，所以<span style='color:cyan;'>16</span>就作为一个比较合适的经验值被采用了
+​		而作为默认容量，太大和太小都不合适，所以<span style='color:cyan;'> 16 </span>就作为一个比较合适的经验值被采用了
 
 为了保证任何情况下Map的容量都是2的幂，HashMap在两个地方都做了限制
 
@@ -354,7 +354,7 @@ key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根
 
 
 
-##### <span style='color:cyan;'>Hashmap如何实现线程安全</span>
+##### <span style='color:cyan;'>HashMap如何实现线程安全</span>
 
 *   直接使用 HashTable , 本质上是把所有HashMap的方法都加上synchronized
 
@@ -407,6 +407,18 @@ key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根
 
 
 
+##### HashMap 遍历
+
+1. 直接 foreach 遍历 Entry 对象
+2. 使用 foreach 遍历 keyset 或者 values
+3. 拿到 entrySet 的 iterator 然后 next 遍历
+
+
+
+
+
+
+
 ##### 红黑树与AVL树
 
 AVL树：自平衡二叉树，插入节点时通过左旋右旋来达到平衡，AVL树是严格的平衡树，任意节点两个子树高度差不大于1
@@ -427,7 +439,7 @@ AVL树：自平衡二叉树，插入节点时通过左旋右旋来达到平衡�
 
 
 
-##### hashmap和红黑树
+##### HashMap和红黑树
 
 在 CurrentHashMap 中是加锁了的，实际上是读写锁，如果写冲突就会等待，
 
@@ -2328,6 +2340,8 @@ jvm中按照 8 字节分配地址，所以占用字节数都是 8 的倍数
 *   lambda表达式表示方法
 *   Function类型的变量用来接收方法类型
 *   interface中可以包含已经实现的 default 方法
+*   stream 流式编程, 类似于 Scala
+*   [optinal](https://www.runoob.com/java/java8-optional-class.html) 可为空的类型, 根据传递的泛型保存不同类型的值, 可以指定默认值, 避免了程序报错空指针异常, 类似于 Scala
 
 
 
@@ -2711,3 +2725,10 @@ ClassLoader.loadClass 只会执行 `加载` 这一个步骤, 也就是仅仅将 
 3. ins.clone() , clone方法是Object里的方法, 但是它是浅拷贝, 如需深拷贝, 请覆盖手动实现该方法
 4. 反序列化
 
+
+
+
+
+##### int和Integer一样大
+
+<img src="Java.assets/1637050892368.png" alt="1637050892368" style="zoom:67%;" />
