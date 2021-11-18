@@ -8,7 +8,7 @@
 
 *   线程不安全：就是不提供数据访问时的数据保护，多个线程能够同时操作某个数据，从而出现数据不一致或者数据污染的情况 
 
-**Vector、HashTable、Properties是线程安全的；**
+**Vector、HashTable、Properties是线程安全**
 
 **ArrayList、LinkedList、HashSet、TreeSet、HashMap、TreeMap是线程不安全的**
 
@@ -90,9 +90,11 @@ public Object deleteLast(Vector v){
 
 ​		而数组更加适合做队列，使用两个指针指向队头和队尾，通过移动指针来表示入队和出队
 
-3、LinkedList：
-	a. 当对一列数据的前面或者中间执行添加或者删除操作时，并且按照顺序访问其中的元素时，要使用LinkedList。
-	b. LinkedList是用链表结构存储数据的，很适合数据的动态插入和删除，随机访问和遍历速度比较慢。另外，他还提供了List接口中没有定义的方法，专p门用于操作表头和表尾元素，可以当作堆栈、队列和双向队列使用。
+3、LinkedList
+
+​	a. 当对一列数据的前面或者中间执行添加或者删除操作时，并且按照顺序访问其中的元素时，要使用LinkedList
+
+​	b. LinkedList是用链表结构存储数据的，很适合数据的动态插入和删除，随机访问和遍历速度比较慢。另外，他还提供了List接口中没有定义的方法，专p门用于操作表头和表尾元素，可以当作堆栈、队列和双向队列使用。
 
 
 
@@ -100,9 +102,7 @@ public Object deleteLast(Vector v){
 
 ##### ArrayList、LinkedList 占用空间问题
 
-试问 ArrayList、LinkedList 哪个更加占用空间
-
-通常情况下，由于 LinkedList 需要存储前后节点的指针，所以占用空间更大，但是考虑到 ArrayList 的扩容机制，每次空间不足时扩容至原长度的 1.5 倍，如果处于刚好扩容的临界值，那么将会多出来几乎三分之一的空间实际上并没有使用到而被浪费，所以对于谁占用空间更大这个问题，不能一概而论，应当考虑到数组的扩容机制
+​		通常情况下，由于 LinkedList 需要存储前后节点的指针，所以占用空间更大，但是考虑到 ArrayList 的扩容机制，每次空间不足时扩容至原长度的 1.5 倍，如果处于刚好扩容的临界值，那么将会多出来几乎三分之一的空间实际上并没有使用到而被浪费，所以对于谁占用空间更大这个问题，不能一概而论，应当考虑到数组的扩容机制
 
 
 
@@ -130,8 +130,6 @@ HashTable和HashMap采用的存储机制是一样的，不同的是：
 ​	a. 基于HashMap实现
 ​	b. 非线程安全
 ​	c. 不保证数据的有序, 因为 hashmap 的 key 是无序的
-
-
 
 
 
@@ -366,22 +364,36 @@ key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根
 
     ![image-20210817164042837](Java.assets/image-20210817164042837.png)
 
-*   <span style='color:cyan;'>使用 java.util.concurrent.concurrentHashMap，这里面方法尽量减少了加synchronized的代码，只在关键的 put 操作时加synchronized，推荐用这个</span>
-
-    ​		concurrentHashMap 是由 Segment 数组、HashEntry 组成，ConcurrentHashMap 采用了**分段锁**技术，每当一个线程占用锁访问一个 Segment 时，不会影响到其他的 Segment，就是说如果容量大小是16他的并发度就是16，可以同时允许16个线程操作16个Segment而且还是线程安全的
-
-    ConcurrentHashMap在进行put操作的还是比较复杂的，大致可以分为以下步骤：
-
-    ​		<span style='color:cyan;'>往数组中某个位置第一次写 Entry 时使用 CAS，往已经存在的 Entry 后面追加数据时使用 synchronized 加锁写</span>
-    
-    1.  根据 key 计算出 hashcode 。
-    2.  判断是否需要进行初始化。
-    3.  即为当前 key 定位出的 Node，如果为空表示当前位置可以写入数据，利用 CAS 尝试写入，失败则自旋保证成功
-    4.  如果当前位置的 `hashcode == MOVED == -1`,则需要进行扩容。
-    5.  如果都不满足，则利用 synchronized 锁写入数据。
-    6.  如果数量大于 `TREEIFY_THRESHOLD` 则要转换为红黑树。
+* <span style='color:cyan;'>使用 java.util.concurrent.concurrentHashMap，这里面方法尽量减少了加synchronized的代码，只在关键的 put 操作时加synchronized，推荐用这个</span>
 
 
+
+
+
+##### [ConcurrentHashMap](https://mp.weixin.qq.com/s?__biz=MzAxMzE4MDI0NQ==&mid=2650336167&idx=1&sn=56f2583778afe80ce7a3476ad311e550&chksm=83aac79db4dd4e8b96aa46df3387157d1b8f7d279dfdb770a45a3fe9e17359a4e6e6ae499bb3&token=1182516540&lang=zh_CN#rd)
+
+> 注意, segment + array + entry link 是 JDK1.7 中的实现方式, 此时由于存在多个独立的 array, 所以扩容的时候只需要阻塞对当前 array 的并发操作即可, 无需阻塞其他 array 的并发操作
+>
+> ​		该版本中 segment 的个数即为支持并发的个数 , 是在一开始设定好的, 默认为 16
+
+> ​		在 JDK 1.8 中去除了 segment 的设定, 直接就是锁底层数组的格子, 但是这意味着如果要进行扩容, 那么整个 map数组 都得锁住, 不能读写, 所以针对扩容情况作了优化, 即给每个线程分配几个格子, 每个线程同时将旧的数据转移到新的数组中, 这样就提高了扩容的效率
+>
+> ​		该版本中底层数组的容量即为支持并发的个数, 随着自动扩容而增加, 所以并发远好于 segment 的方案
+
+
+
+​		concurrentHashMap 是由 Segment 数组、HashEntry 组成，ConcurrentHashMap 采用了**分段锁**技术，每当一个线程占用锁访问一个 Segment 时，不会影响到其他的 Segment，就是说如果容量大小是16他的并发度就是16，可以同时允许16个线程操作16个Segment而且还是线程安全的
+
+ConcurrentHashMap在进行put操作的还是比较复杂的，大致可以分为以下步骤
+
+​		<span style='color:cyan;'>往数组中某个位置第一次写 Entry 时使用 CAS，往已经存在的 Entry 后面追加数据时使用 synchronized 加锁写</span>
+
+1.  根据 key 计算出 hashcode 。
+2.  判断是否需要进行初始化。
+3.  即为当前 key 定位出的 Node，如果为空表示当前位置可以写入数据，利用 CAS 尝试写入，失败则自旋保证成功
+4.  如果当前位置的 `hashcode == MOVED == -1`,则需要进行扩容。
+5.  如果都不满足，则利用 synchronized 锁写入数据, 如果该元素已经存在元素, 那么意味着总是只有一个线程能够进入该同步代码块, <span style='color:cyan;'>也就是所谓的分段锁, 说白了就是锁定当前位置</span>
+6.  如果数量大于 `TREEIFY_THRESHOLD` 则要转换为红黑树
 
 
 
@@ -743,10 +755,6 @@ public class Jark {
         B.start();
         Thread.sleep(200);
         C.start();
-    }
-
-    static synchronized void print(String str) {
-        System.out.println(str);
     }
 }
 
@@ -2732,3 +2740,92 @@ ClassLoader.loadClass 只会执行 `加载` 这一个步骤, 也就是仅仅将 
 ##### int和Integer一样大
 
 <img src="Java.assets/1637050892368.png" alt="1637050892368" style="zoom:67%;" />
+
+
+
+
+
+
+
+##### [生产者消费者模型](https://www.jianshu.com/p/f53fb95b5820)
+
+* 使用同一个产品队列
+* 产品队列满， 则生产线程 wait， 每次生产完产品，  都唤醒其他消费者线程来消费
+* 产品队列空， 则消费线程 wait， 每次消费完产品，  都唤醒其他生产者线程来生产
+
+```java
+public class ProduceConsumer {
+
+    public static int count = 0;
+    public static int MAX_COUNT = 10;
+    public static final String lock = "lock";
+
+    // 生产者
+    static class Produce extends Thread {
+        @Override
+        public void run() {
+            // 生产十次
+            for (int i = 0; i < 10; i++) {
+                // 每次生产间隔
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 生产和消费公用同一个锁, 这意味着只能同时又一个线程在操作产品队列
+                synchronized (lock) {
+                    // 如果达到上限, 不再生产
+                    // 这里使用 while 的原因是, 如果本次拿到锁后, 判断队列已经满, 那么就让出锁
+                    // 待到下次再次获取到锁的时候, 继续判断队列是否满, 如果没有 while 那么会直接执行下面的生产代码, 会产生数据错误
+                    while (count == MAX_COUNT) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    // 生产一个
+                    count++;
+                    // 然后唤醒其他使用到该锁的线程
+                    lock.notify();
+                    System.out.println("produce one..., now is " + count);
+                }
+            }
+        }
+    }
+
+    // 消费者
+    static class Consumer extends Thread {
+        @Override
+        public void run() {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                synchronized (lock) {
+                    while (count == 0) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    count--;
+                    lock.notify();
+                    System.out.println("consume one..., now is " + count);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        // 开启一个生产者, 开启一个消费者
+        new Produce().start();
+        new Consumer().start();
+    }
+
+}
+```
+

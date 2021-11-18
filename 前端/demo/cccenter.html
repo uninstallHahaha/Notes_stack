@@ -11,11 +11,15 @@
 
 
 <body>
-    <div style="position: relative;top: 234px;left: 345px;background-color: #666;">
+    <div 
+        id='box'
+        onclick="ProxyClick()"
+        style="position: relative;top: 234px;left: 345px;background-color: #666;">
+        <button onclick="insertone()">insert</button>
         <div id="ddd" class="blk" style="background-color: royalblue;"></div>
         <div class="blk abs"></div>
         <div class="blk"></div>
-        <div class="blk"></div>
+        <div class="blk" style="background-color: saddlebrown;" id="ebtn"></div>
     </div>
     <style>
         * {
@@ -46,6 +50,23 @@
 
 
 <script>
+
+    function insertone(){
+        var d = document.createElement('div')
+        d.innerText = "is new"
+        document.getElementById('box').insertBefore(d, document.getElementById('ddd'))
+    }
+
+    document.getElementById('ebtn').onclick=function(e){
+        debugger
+    }
+
+    function ProxyClick(){
+        // e is event obj
+        var e = window.event || arguments.callee.caller.arguments[0];
+        debugger
+    }
+
 
     document.getElementById('ddd').addEventListener('click', function () {
         alert('dom content loaded')
