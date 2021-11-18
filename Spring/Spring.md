@@ -2224,6 +2224,37 @@ public void refresh() throws BeansException, IllegalStateException {
 
 
 
-## Spring事务功能
+## [Spring事务功能](https://mp.weixin.qq.com/s?__biz=MzAwNDA2OTM1Ng==&mid=2453142012&idx=2&sn=239d190ab27024af39e51e7e21806e95&scene=21#wechat_redirect)
 
-https://mp.weixin.qq.com/s?__biz=MzAwNDA2OTM1Ng==&mid=2453142012&idx=2&sn=239d190ab27024af39e51e7e21806e95&scene=21#wechat_redirect
+
+
+
+
+
+
+
+
+## [Spring解决循环依赖的机制](https://blog.csdn.net/qq_36381855/article/details/79752689)
+
+首先说明, 直接由构造函数造成的循环依赖是无法解决的, 如下
+
+<img src="Spring.assets/1637229151416.png" alt="1637229151416" style="zoom:50%;" />
+
+<img src="Spring.assets/1637229048242.png" alt="1637229048242" style="zoom:50%;" />
+
+<img src="Spring.assets/1637229163588.png" alt="1637229163588" style="zoom:50%;" />
+
+然后
+
+ <img src="Spring.assets/1637229181629.png" alt="1637229181629" style="zoom:50%;" />
+
+最后会
+
+<img src="Spring.assets/1637229201327.png" alt="1637229201327" style="zoom:50%;" />
+
+spring能够解决的循环依赖是在对象 setter 函数中产生的循环依赖, 解决的思路就是先通过无参构造函数将实例创建出来, 然后将这些半成品实例<span style='color:cyan;'>缓存起来</span>, 最后统一调用 setter 来设置属性
+
+通过 bean的生命周期, 如下图可知, spring 都是先创建出来bean 实例, 然后再调用 setter 函数为属性赋值
+
+<img src="Spring.assets/1637229365087.png" alt="1637229365087" style="zoom:50%;" />
+
