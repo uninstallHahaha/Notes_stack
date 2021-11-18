@@ -11,20 +11,58 @@
 
 
 <body>
-    <div 
-        id='box'
-        onclick="ProxyClick()"
-        style="position: relative;top: 234px;left: 345px;background-color: #666;">
+    <div id='box' onclick="ProxyClick()" style="position: relative;top: 234px;left: 345px;background-color: #666;">
         <button onclick="insertone()">insert</button>
         <div id="ddd" class="blk" style="background-color: royalblue;"></div>
         <div class="blk abs"></div>
         <div class="blk"></div>
-        <div class="blk" style="background-color: saddlebrown;" id="ebtn"></div>
+        <div class="blk" style="background-color: saddlebrown;" id="ebtn">
+            <div class="inb"></div>
+            <div class="inb"></div>
+            <div class="inb"></div>
+        </div>
     </div>
+
+    <div class="cont">
+        <div class="lf"></div>
+        <div class="rt">
+            <button>alice</button>
+        </div>
+    </div>
+
     <style>
         * {
             margin: 0;
             padding: 0;
+        }
+
+        .cont {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #666;
+        }
+
+        .lf {
+            width: 100px;
+            height: 300px;
+            float: left;
+            background-color: rebeccapurple;
+        }
+
+        .rt {
+            background-color: yellow;
+        }
+
+        .inb {
+            background-color: black;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 5px;
+            padding: 5px;
         }
 
         body {
@@ -51,17 +89,17 @@
 
 <script>
 
-    function insertone(){
+    function insertone() {
         var d = document.createElement('div')
         d.innerText = "is new"
         document.getElementById('box').insertBefore(d, document.getElementById('ddd'))
     }
 
-    document.getElementById('ebtn').onclick=function(e){
+    document.getElementById('ebtn').onclick = function (e) {
         debugger
     }
 
-    function ProxyClick(){
+    function ProxyClick() {
         // e is event obj
         var e = window.event || arguments.callee.caller.arguments[0];
         debugger

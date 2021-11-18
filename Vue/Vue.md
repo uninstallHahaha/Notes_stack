@@ -892,15 +892,15 @@ vue2-cli 的项目结构
 
 >   也就是说如果选择了 runtime-only, 那么就只能用 .vue 文件来组织组件, 但是这种方式打包出来的文件更小, 性能更高
 
-![image-20210603204123095](./Vue.assets/image-20210603204123095.png)
+<img src="./Vue.assets/image-20210603204123095.png" alt="image-20210603204123095" style="zoom: 80%;" />
 
 关于创建完项目后执行 `npm run build` 时具体的执行步骤
 
-![image-20210603204422325](./Vue.assets/image-20210603204422325-1622724263954.png)
+<img src="./Vue.assets/image-20210603204422325-1622724263954.png" alt="image-20210603204422325" style="zoom:80%;" />
 
 关于创建完项目后执行 `npm run dev` 时具体的执行步骤
 
-![image-20210603204457238](./Vue.assets/image-20210603204457238.png)
+<img src="./Vue.assets/image-20210603204457238.png" alt="image-20210603204457238" style="zoom:80%;" />
 
 
 
@@ -954,7 +954,7 @@ vue-cli2 和 vue-cli3 的区别
 
     使用js代码改变锚点的方式为, `loaction.hash='home'`, 那么 vue-router 只要监听这个事件的触发, 然后作出对应的页面切换即可
 
-2.  使用html5中提供的 history 方法, 只改变 url 而不重新发出请求
+2.  使用 html5 中提供的 history 方法, 只改变 url 而不重新发出请求
 
     在js代码中 ,
 
@@ -1311,7 +1311,7 @@ $route 是当前处于active状态的 route 对象, route对象就是在主路�
 
 5.  如果要修改全局属性, 不要直接操作 `$store.state.xxx` 来修改, 如下图, 如果这样修改, 就相当于直接从 vue components 到 state, 不经过 mutations, 因此 devtools 也检测不到修改, 那么就无法在 devtools  中查看修改操作详情
 
-    ![image-20210605090738425](./Vue.assets/image-20210605090738425.png)
+    <img src="./Vue.assets/image-20210605090738425.png" alt="image-20210605090738425"  />
 
     
 
@@ -1491,9 +1491,9 @@ $route 是当前处于active状态的 route 对象, route对象就是在主路�
 
 2.  在使用之前应当统一配置相同的设置, 避免之后发起请求时每次都要设置
 
-    ![image-20210605214203841](/home/yml/Data/Notes_stack/Vue/Vue.assets/image-20210605214203841.png)
+    ![image-20210605214203841](./Vue.assets/image-20210605214203841.png)
 
-    ![image-20210605214528811](/home/yml/Data/Notes_stack/Vue/Vue.assets/image-20210605214528811.png)
+    ![image-20210605214528811](./Vue.assets/image-20210605214528811.png)
 
 3.  如果后端是分布式, 不同模块对应不同的服务器地址, 那么就需要多套配置 , 此时应当使用 `axios.create()`来创建多个axios实例, 给每一个实例不同的设置, 使用多个实例分别请求不同的服务器
 
@@ -1524,7 +1524,7 @@ $route 是当前处于active状态的 route 对象, route对象就是在主路�
 
     所以, 在使用这类第三方包时, 一定要自己对其封装, 然后在业务代码中使用自己封装的api, 那么哪怕以后这个第三方包出了问题, 或者是要换掉这个包, 只需要修改自己封装的api即可.
     
-5.  也可以配置请求拦截器 http://www.axios-js.com/zh-cn/docs/#%E6%8B%A6%E6%88%AA%E5%99%A8
+5.  也可以配置 [请求拦截器]( http://www.axios-js.com/zh-cn/docs/#%E6%8B%A6%E6%88%AA%E5%99%A8)
 
     请求拦截器
 
@@ -1616,5 +1616,26 @@ for(let i=0;i<btns.length;i++){
 
 
 
+# 问题
+
+###### [双向绑定原理](https://segmentfault.com/a/1190000014616977)
+
+本质上使用了 Object.defineProperty() , 对变量的属性进行监听, 当修改变量属性时, 修改绑定元素的值, 这一步实现了从 model 到 view
+
+另外对元素添加监听事件, 每当元素内容发生变化时, 修改绑定的变量属性值, 这一步实现了从 view 到 model
+
+<img src="Vue.assets/1637244570630.png" alt="1637244570630" style="zoom:80%;" />
 
 
+
+
+
+###### [diff算法](https://www.cnblogs.com/wind-lanyan/p/9061684.html)
+
+时刻维护一个与当前 DOM 对应的 虚拟DOM 变量(树形结构, 与dom一一对应)
+
+每当变量发生变化时, 通过 watcher 创建对应的新的 vnode , 然后与 原虚拟dom树 上面对应位置的 vnode 比较
+
+如果类型不同, 直接不复用原 vnode, 将新 vnode 替换到 虚拟DOM树中 , 然后更新对应的页面元素 
+
+如果类型相同, 那么修改原 vnode 属性 , 修改对应 dom 元素属性 , 然后依次递归对比其子节点
