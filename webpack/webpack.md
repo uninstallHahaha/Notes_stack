@@ -10,28 +10,32 @@
 
 #### webpack五个核心概念
 
-1. Entry
+###### Entry
 
-   入口, 指webpack 使用哪个文件作为打包的入口文件开始分析依赖关系进行打包
+> 可以包含多个入口文件
 
-2. output
+入口, 指webpack 使用哪个文件作为打包的入口文件开始分析依赖关系进行打包
 
-   输出, 指 webpack 打包生成的 bundle 文件叫什么名字, 保存到哪里
+###### output
 
-3. loader
+> 可以打包生成多个输出文件
 
-   其实 webpack 本身只能处理 js 和 json 文件, 如需预处理如 less 之类的文件, 还需要借助对应的 less 编译器, 这些编译器就被称为 loader , webpack 调用 loader 实现对不同类型的文件的预处理
+输出, 指 webpack 打包生成的 bundle 文件叫什么名字, 保存到哪里
 
-4. plugin
+###### loader
 
-   插件, loader只能执行基本的编译操作, plugin可以实现更大范围的功能
+其实 webpack 本身只能处理 js 和 json 文件, 如需预处理如 less 之类的文件, 还需要借助对应的 less 编译器, 这些编译器就被称为 loader , webpack 调用 loader 实现对不同类型的文件的预处理
 
-5. mode
+###### plugin
 
-   模式, 两种模式
+插件, loader只能执行基本的编译操作, plugin可以实现更大范围的功能
 
-   * 开发模式, 能够把代码跑起来就行的环境
-   * 生产模式, 包含了优化相关的环境
+###### mode
+
+模式, 两种模式
+
+* 开发模式, 能够把代码跑起来就行的环境
+* 生产模式, 包含了优化相关的环境
 
 
 
@@ -1038,6 +1042,85 @@ output:{
     ```
 
     
+
+
+
+
+
+#### webpack面试
+
+
+
+###### 前端为什么要打包构建
+
+* 打包压缩后, 代码体积更小, 且请求数量减少, 提高加载速度
+* 可以使用高版本语法
+* 提供兼容性检查, 错误检查, 代码规范检查
+
+
+
+###### module chunk bundle
+
+module 源码文件
+
+chunk  是指webpack在进行模块依赖分析的时候，代码分割出来的代码块 
+
+bundle 打包输出的文件
+
+
+
+###### loader和plugin
+
+loader 是模块转换器, 功能在于将现有的模块文件进行转换输出
+
+plugin 是插件, 提供扩展的额外功能
+
+loader:
+
+* bable-loader 提供es版本降级
+* css-loader 加载 css
+* less-loader 加载 less
+* style-loader 加载 css 到 js 中
+* file-loader 加载图片
+
+plugin:
+
+* IngnorePlugin 避免引入无用模块
+* HotModuleReplacementPlugin 热更新
+* commons-chunk-plugin 提取公共代码
+* uglifyjs-webpack-plugin 丑化压缩代码
+
+
+
+###### bable和webpack
+
+babel实现的是Es的版本降级, webpack实现的是模块的打包压缩
+
+
+
+###### webpack如何懒加载
+
+使用 es10 的 import() 方法, 在代码中动态导入模块
+
+
+
+
+
+###### TreeSharking
+
+去掉无用的js代码, 如果想要优化 css , 使用 purify-css
+
+
+
+
+
+###### webpack与gulp
+
+gulp是工具链，可以配合各种插件做js、css压缩，less编译等；而webpack能把项目中的各种js、css文件等打包合并成一个或者多个文件，主要用于模块化方案，
+
+侧重点不同，gulp侧重于整个过程的控制管理（像是流水线），通过配置不同的task，构建整个前端开发流程；webpack则侧重于模块打包；并且gulp的打包功能是通过安装gulp-webpack来实现的
+
+webpack能够按照模块的依赖关系构建文件组织结构
 
 
 
