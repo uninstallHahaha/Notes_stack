@@ -372,7 +372,9 @@ key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根
 
 ##### [ConcurrentHashMap](https://mp.weixin.qq.com/s?__biz=MzAxMzE4MDI0NQ==&mid=2650336167&idx=1&sn=56f2583778afe80ce7a3476ad311e550&chksm=83aac79db4dd4e8b96aa46df3387157d1b8f7d279dfdb770a45a3fe9e17359a4e6e6ae499bb3&token=1182516540&lang=zh_CN#rd)
 
-> 注意, segment + array + entry link 是 JDK1.7 中的实现方式, 此时由于存在多个独立的 array, 所以扩容的时候只需要阻塞对当前 array 的并发操作即可, 无需阻塞其他 array 的并发操作
+> 注意
+>
+> ​		segment + array + entry link 是 JDK1.7 中的实现方式, 此时由于存在多个独立的 array, 所以扩容的时候只需要阻塞对当前 array 的并发操作即可, 无需阻塞其他 array 的并发操作
 >
 > ​		该版本中 segment 的个数即为支持并发的个数 , 是在一开始设定好的, 默认为 16
 
@@ -391,7 +393,11 @@ ConcurrentHashMap在进行put操作的还是比较复杂的，大致可以分为
 1.  根据 key 计算出 hashcode 。
 2.  判断是否需要进行初始化。
 3.  即为当前 key 定位出的 Node，如果为空表示当前位置可以写入数据，利用 CAS 尝试写入，失败则自旋保证成功
-4.  如果当前位置的 `hashcode == MOVED == -1`,则需要进行扩容。
+4.  如果当前位置的 `hashcode == MOVED == -1`,则需要进行扩容
+    1.  扩容的时候给每个线程分配几个格子来扩容
+    2.  按照两倍的原则创建出来新数组, 然后让每个线程分配几个格子, 对原数组中对应部分的内容转移到新数组
+    3.  扩容过程锁整个数组, 意味着不能读不能写
+    4.  那么最应当提升的就是扩容的效率, 其方案为新来的线程如果发现正在扩容, 那么就会被分配到格子帮助扩容
 5.  如果都不满足，则利用 synchronized 锁写入数据, 如果该元素已经存在元素, 那么意味着总是只有一个线程能够进入该同步代码块, <span style='color:cyan;'>也就是所谓的分段锁, 说白了就是锁定当前位置</span>
 6.  如果数量大于 `TREEIFY_THRESHOLD` 则要转换为红黑树
 
@@ -842,7 +848,7 @@ threadLocal.get() , 从当前线程的 threadLocalMap 字段中根据该 threadL
 `threadLocal.set()`
 
 ```
-先拿到当前线程中的 threadlocalmap, 如果 tml 为空, 那么新建一个默认长度为 16的tml, 并且存储一个 entry
+先拿到当前线程中的 threadlocalmap, 如果 tlm 为空, 那么新建一个默认长度为 16 的tlm, 并且存储一个 entry
 
 然后根据本 threadLocal 计算 hash 值, 然后计算应该出现在 entry 数组上的位置, 然后去该位置获取 entry 元素, 
 如果之前已经存过了且是该 threadlocal , 那么把这个 entry 的值改为新 set 的值, 
@@ -2345,10 +2351,40 @@ jvm中按照 8 字节分配地址，所以占用字节数都是 8 的倍数
 
 ##### JDK8新特性
 
-*   lambda表达式表示方法
-*   Function类型的变量用来接收方法类型
+###### lambda
+
+* 如果只有一个参数, 可以省略小括号
+* 如果只有一行代码, 可以省略花括号
+* 如果只有一行代码, 自动返回该句代码的结果值
+
+###### [Funciton](https://www.runoob.com/java/java8-functional-interfaces.html)
+
+* Function是个接口, 代表一个参数一个返回值的方法类型
+
+  <img src="Java.assets/1637573747711.png" alt="1637573747711" style="zoom:80%;" />
+
+*   BiFunction 是个接口, 代表两个参数一个返回值的方法类型
+
+    <img src="Java.assets/1637573812325.png" alt="1637573812325" style="zoom:67%;" />
+
+*   xxxConsumer 是个接口, 代表一个xxx类型的参数, 无返回值的方法类型
+
+*   xxxSupplier 是个接口, 代表无参数, 一个xxx类型返回值的方法类型
+
+###### Interface
+
 *   interface中可以包含已经实现的 default 方法
-*   stream 流式编程, 类似于 Scala
+
+###### Stream
+
+> stream 流式编程, 类似于 Scala
+
+本质就是提供了类型 stream, 该类型包含各种链式操作 API, 要进行链式操作时, 先得到 stream 实例, 然后再执行链式操作
+
+<img src="Java.assets/1637573500360.png" alt="1637573500360" style="zoom: 67%;" />
+
+###### Optional
+
 *   [optinal](https://www.runoob.com/java/java8-optional-class.html) 可为空的类型, 根据传递的泛型保存不同类型的值, 可以指定默认值, 避免了程序报错空指针异常, 类似于 Scala
 
 
@@ -2686,6 +2722,78 @@ LongAdder 在内部维护一个base值和一个数组, 代表的值为base值＋
 
 
 
+
+
+##### [从源码到执行](https://mp.weixin.qq.com/s?__biz=MzU4NzA3MTc5Mg==&mid=2247484557&idx=1&sn=6fb103a2a322effc564fbb04c3b93a6c&chksm=fdf0ecd2ca8765c4eacc22e54b4bc57888555efee99f1c7e57ee611e07d220b35b2aa658a4ca&token=830702193&lang=zh_CN&scene=21#wechat_redirect)
+
+`类编译 -> 类加载 -> 解释字节码 -> 执行机器指令`
+
+![1637549429291](Java.assets/1637549429291.png)
+
+<span style='background:orange;padding:5px;color:#fff;'>类编译</span>
+
+`语法分析 -> 语义分析 -> 注解处理 -> .class文件`
+
+类型擦除在此执行
+
+lombook在此生成实体类方法代码
+
+<span style='background:orange;padding:5px;color:#fff;'>类加载</span>
+
+`加载 -> 连接 -> 初始化`
+
+将.class加载到 JVM 内存中, 也就是上面的 `类加载过程`, 这一步所谓的将方法加载到方法区, 实际上就是二进制读取字节码到该区域, 并没有其他任何处理
+
+<span style='background:orange;padding:5px;color:#fff;'>解释字节码</span>
+
+当调用某个实例的方法时, 找到方法区对应的字节码文件, 然后实时解释每一句方法字节码内容, 转换为机器指令
+
+通过计数法判断一个方法是否是热点方法, 是则通过 JIT(即时编译器) 解释为机器指令后, 缓存起来, 下次直接执行缓存, 否则每次执行时实时解释
+
+<span style='background:orange;padding:5px;color:#fff;'>执行机器指令</span>
+
+将上一步中解释得到的机器指令逐行执行, 这一步中的机器指令根据操作系统不同而不同, 所以要在不同的操作系统上使用不同机器版本的 JVM 来得到适合的指令
+
+
+
+
+
+##### [双亲委派机制](https://mp.weixin.qq.com/s?__biz=MzU4NzA3MTc5Mg==&mid=2247484581&idx=1&sn=887268251772f4f8fc737d7e4354b5b8&chksm=fdf0ecfaca8765ec656ca3ea2ae57b33226eef3cbcc2c107168619aa6be37db5b3416ead43b5&token=1009822517&lang=zh_CN&scene=21#wechat_redirect)
+
+<span style='color:cyan;'>基本规则</span>
+
+​		每个类都由指定的类加载器来加载, 类加载器实际上就是一段逻辑, 实现的功能是, 读取类的字节码文件, 然后创建类的定义. 
+
+​		通过 `类加载器+全限定类名` 来区分该类是否已经被加载, 所以为了防止同一个类在内存中多次被加载, 使用双亲委派机制, 每当加载一个类时, 向上父类加载器试试能否加载, 直至根加载器, 如果不能加载, 则交给当前类加载器进行加载, 这样就就避免了同一个类因为使用了不同的类加载器而被多次加载, 内置的类加载器有 `bootstrap classloader -> ext classloader -> application classloader` 
+
+​		双亲委派加载机制只是一种建议, 所谓的打破双亲委派机制只不过是自定义一个 classloader, 然后具体实现的时候不按照其推荐的双亲委派加载机制实现
+
+<span style='color:cyan;'>Tomcat通过打破双亲委派机制实现web类的隔离加载</span>
+
+​		Tomcat 本质上就是一个 java 程序, 将部署的项目中的接口发布到不同的端口上
+
+​		常规的做法是, 将 war 项目包放到 webapp 下, 然后可以同时访问多个部署的 web 项目, 那么如果在多个 web 项目中, 同时存在相同全限定类型的类 User 时, 使用默认的类加载机制将会使得类加载被覆盖, 所以, tomcat 为每个 web 项目新建一个 WebAppClassLoader , 各自加载本项目的类, 这样就实现了不同项目中类的隔离
+
+​		不过, 对于多个项目中可能同时需要用到的同一个类, 比如 redis , 就不需要加载多份, tomcat 规定将这些需要共享的类单独放到一个位置, 然后统一由 SharedClassLoader 加载, 这样就实现了共享加载
+
+​		对于 tomcat 自身的类, 使用 CatalinaClassLoader 来独立加载, 不会发生跟 web 项目中的类加载冲突的情况
+
+​		对于 tomcat 自身的类, 如果需要与 web 项目中的类进行共享, 那么使用 CommonClassLoader 加载, 这样就实现了 tomcat 自身类与 web 项目类的共享加载
+
+<img src="Java.assets/1637552083328.png" alt="1637552083328" style="zoom:50%;" />
+
+<span style='color:cyan;'>JDBC打破双亲委派机制</span>
+
+​		JDBC中加载的基本类 DriverManager 在 `java.sql` 下, 这个包显然是 jdk 自身的包, 由 bootstrapClassLoader 加载,但是具体的实现又存在于第三方包, 此时 bootstrapClassLoader 肯定加载不到这些,  JDBC的具体方法是, 在加载具体实现时, 获取到当前线程上下文加载器, 实际上就是 applicationClassLoader, 然后加载具体的第三方包
+
+
+
+
+
+
+
+
+
 ##### [对象实例化执行过程](https://www.cnblogs.com/wangsen/p/10838733.html)
 
 静态部分 ( 静态赋值语句 + 静态代码块 ) -> 普通代码 ( 字段赋值语句 + 花括号语句 ) -> 构造函数 ( 最后执行构造函数 )
@@ -2828,4 +2936,28 @@ public class ProduceConsumer {
 
 }
 ```
+
+
+
+
+
+##### 接口和抽象类的区别
+
+抽象类用来实现功能的扩张, 接口用来制定一种规范
+
+* 抽象类能包含函数的具体实现 , 接口不能提供函数的具体实现, 虽然在 jdk1.8 以后可以包含一个 default 实现
+* 抽象类本身还是一个类, 所以一个类只能继承一个抽象类, 而可以同时实现多个接口
+
+
+
+
+
+##### 动态代理
+
+动态代理的目的是给原方法进行增强
+
+1. 使用 jdk 的 [proxy.newproxyinstance](https://www.jianshu.com/p/ad902069e5c3) 时, 需要被增强的类上有实现接口
+2. 使用 cglib 的 enhance
+
+
 

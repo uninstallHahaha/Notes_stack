@@ -1624,7 +1624,19 @@ for(let i=0;i<btns.length;i++){
 
 另外对元素添加监听事件, 每当元素内容发生变化时, 修改绑定的变量属性值, 这一步实现了从 view 到 model
 
+简单的示例
+
 <img src="Vue.assets/1637244570630.png" alt="1637244570630" style="zoom:80%;" />
+
+实际的机制
+
+<img src="Vue.assets/1637286770631.png" alt="1637286770631" style="zoom:80%;" />
+
+其中具体来说, 当 watcher 收到 model 属性值变化时, 会调用 `patch函数` 对原元素修改或者直接新建元素替换掉原元素
+
+
+
+
 
 
 
@@ -1639,3 +1651,6 @@ for(let i=0;i<btns.length;i++){
 如果类型不同, 直接不复用原 vnode, 将新 vnode 替换到 虚拟DOM树中 , 然后更新对应的页面元素 
 
 如果类型相同, 那么修改原 vnode 属性 , 修改对应 dom 元素属性 , 然后依次递归对比其子节点
+
+<img src="Vue.assets/1637287727606.png" alt="1637287727606" style="zoom: 50%;" />
+

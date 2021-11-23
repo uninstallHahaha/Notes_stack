@@ -204,6 +204,26 @@
 
 
 
+#### Linux查看端口占用
+
+* `lsof -i:端口号`
+
+* `netstat -tunlp | grep 端口号` 
+
+  t 显示tcp连接
+
+  u 显示udp连接
+
+  n 不显示别名
+
+  l 仅显示处于 listening 状态的连接
+
+  p 显示建立该连接的进程名称
+
+
+
+
+
 
 
 #### Linux包管理

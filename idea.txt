@@ -18,4 +18,12 @@ transformer ? to resolve seq2seq ?
 
 c3d视频动作识别 + gan  生成动作视频
 
+自动对焦
+
+多焦点
+
+超分辨
+
+下马赛克
+
 

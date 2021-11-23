@@ -700,6 +700,32 @@
 
 
 
+## [starter原理](https://jishuin.proginn.com/p/763bfbd243f0)
+
+sb 的 starters 本质就是将对应项目中的类型交给 spring 容器创建管理, 所以 sb 要能够通过 starter 完成对其实例的创建
+
+Bean的发现
+
+springboot默认扫描启动类所在的包下的主类与子类的所有组件，但并没有包括依赖包的中的类，那么依赖包中的bean是如何被发现和加载的？
+
+我们通常在启动类中加@SpringBootApplication这个注解，点进去看
+
+<img src="SpringBoot.assets/1637307824904.png" alt="1637307824904" style="zoom: 67%;" />
+
+每个 starter 大多都是空的 maven 项目, 只在其中的 pom 文件上引用该模块所需的各种依赖包, 然后在 starter 中建立一个 `spring.factories` 文件, 在该文件中以 `EnableAutoConfiguration=类路径` 的形式配置需要加载哪些 bean 到 spring ioc 容器中
+
+当 sb 启动时, 加载各个 starter 中的 `spring.factories` 文件, 然后根据里面的配置加载 bean
+
+
+
+
+
+
+
+
+
+
+
 ## 原理解析
 
 从一句代码开始

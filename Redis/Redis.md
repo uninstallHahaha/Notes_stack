@@ -1099,9 +1099,7 @@ public class JedisPoolUtil{
 
 
 
-######  redis 中 zset 的跳表实现
-
-https://blog.csdn.net/qq_38545713/article/details/105439688
+######  [redis 中 zset 的跳表实现](https://blog.csdn.net/qq_38545713/article/details/105439688)
 
 跳表 : 能够二分查找的单链表.
 
@@ -1474,6 +1472,35 @@ boolean filter 的优点
 一个redis实例最多存储2.5亿个key，每个key或者value最大为512Mb
 
 redis中各个数据类型能够存放元素的个数取决对硬件的内存大小
+
+
+
+
+
+
+
+###### 根据前缀批量查找key
+
+<div style='padding:5px;background:#666;display:inline-block;color:white;'>假设redis中有1E数据, 其中 1W 条前缀为 cart, 现在要求查询出这 1W 条数据</div>
+1. 使用 `keys <pattern>` 命令结合正则匹配, 但是会阻塞 redis 的工作线程, 生产环境禁用此方法
+
+2. 使用 `scan cursor [match pattern] [count n]` 使用scan结合正则匹配得到目标数据
+
+   scan 不会一次性读取所有符合条件的数据, 而是根据指定的 count 值每次读取指定数量的数据, 然后返回下一批数据的游标, 然后再拿着这个游标去查询下一批数据, 直至返回的游标是 0 , 代表数据遍历结束
+
+   第一次使用 scan 查询时, 输入的游标应当是 0
+
+   但是 scan 返回的所有数据可能存在重复, 因此需要在业务逻辑中进行去重
+
+   但是 scan 无法得到在遍历过程中被修改的数据, 也就是使用 scan 进行查询时, 如果对数据进行修改, 那么它只能得到旧的一批数据
+
+
+
+
+
+###### Redis线程模型
+
+redis为单线程模型, 内里调用操作系统的 epoll 来实现多路复用, 同时处理多个请求
 
 
 

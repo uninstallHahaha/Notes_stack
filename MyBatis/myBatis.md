@@ -972,13 +972,13 @@ ${} 是原样字符串拼接传递参数, 会造成 sql 注入漏洞
 
 
 
-###### mybatis的三种executor
+###### mybatis 的三种 executor
 
 ![1635904161952](myBatis.assets/1635904161952.png)
 
 
 
-###### mybatis核心工作流程
+###### mybatis 核心工作流程
 
 jdbc四个关键对象 : DriverManager,  connection, statement, resultmap
 
@@ -991,6 +991,42 @@ mabatis四个关键对象: sqlsession, executor, mappedstatement, resulthandler
 3. 创建 sqlSession
 4. 执行 sql
 5. 通过 mappedstatement 封装执行结果返回给用户
+
+
+
+
+
+###### [mybatis 实现原理](https://blog.csdn.net/weixin_43184769/article/details/91126687)
+
+<span style='color:cyan;'>xml方式</span>
+
+> 该版本中使用 `全限定类名+方法名` 来执行指定的 sql
+
+<img src="myBatis.assets/1637582089719.png" alt="1637582089719" style="zoom:80%;" />
+
+1. 解析配置文件, 初始化 configuration 对象
+
+2. 创建 sqlSessionFactory 对象
+
+3. 创建 sqlSession
+
+4. 将指定的方法封装为 MappedStatement, 一个 MappedStatement 就对应一个 Sql 语句
+
+   <img src="myBatis.assets/1637582356407.png" alt="1637582356407" style="zoom:80%;" />
+
+5. 查询是否有缓存, 是则直接返回
+
+6. 否则通过 JDBC 原生 prepareStatement 进行查询, 并记录缓存
+
+<span style='color:cyan;'>接口方式</span>
+
+> 使用 JDK 动态代理生成 SqlSession 对象, 进而执行指定的 sql 语句
+
+<img src="myBatis.assets/1637582912053.png" alt="1637582912053" style="zoom:80%;" />
+
+
+
+
 
 
 
