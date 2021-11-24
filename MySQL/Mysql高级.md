@@ -1270,9 +1270,43 @@ mysql中有三种方式实现join查询
 
 #### [为什么MySQL默认可重复读](https://lilu.org.cn/2020/07/12/database/mysql/why-does-mysql-choose-repeatable-read-as-the-default-isolation-level/)
 
+> 注意, 在 Oracle 中, 只有两个隔离级别, RC 和 Serializable, 默认 RC
+
 在其他数据库中, 默认的隔离级别都是读已提交, 而在 MySQL中, 默认的隔离级别是可重复读
 
-这是因为历史原因, 在MySQL5.0之前, binlog 只有 statement一种选项, 即记录执行的SQL语句, 在这种情况下, 如果使用读已提交的隔离级别, 会使得主库和从库可能造成数据不一致的情况, 所以将默认隔离级别设置为 可重复读
+这是因为历史原因, 在MySQL5.0之前, binlog 只有 statement一种选项, 即记录执行的SQL语句 (而不包括事务)
+
+在这种情况下, 如果使用RC, 会使得主库和从库可能造成数据不一致的情况, 所以将默认隔离级别设置为 RR
+
+设置为 RR 后, 如下事务二都无法执行, 被阻塞, 直至事务一执行完毕, 这样就能保证 statement 记录顺序的正确性
+
+比如, 某表中有两条记录, (A:10, B:1), (A:11, B:2), 此时使用 statement 作为 binlog 格式, 然后使用 read commited 隔离级别, 现有如下两个事务
+
+| 事务一                                                       | 事务二                                                       |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| begin transition                                             |                                                              |
+| update set A=20 where B=1                                    | <span style='color:orange;'>RC级别, 所以事务二此时看不到事务一的修改, 此时操作的目的也是仅仅将第二条记录的 B 改为 1</span> |
+| <span style='color:orange;'>RC级别, 事务一的本意是将第一条记录的 A 改为 20</span> | begin transition                                             |
+|                                                              | update set B=1 where B=2                                     |
+|                                                              | commit                                                       |
+| commit                                                       |                                                              |
+| <span style='color:orange;'>主库中, 最终的结果是 (A:20, B: 1) , (A: 11, B: 1)</span> | <span style='color:orange;'>但是 statement 的 binlog 不记录事务 , 仅仅是按照 commit 的先后顺序记录执行的 sql 语句, 那么在 statement 中记录的 sql 为 <br />update set B=1 where B=2<br />update set A=20 where B=1<br />那么传给从库执行完之后结果为 (A:20, B:1), (A:20, B:1), 此时主从不一致</span> |
+
+
+
+
+
+
+
+#### 为什么修改RR为RC
+
+RR时, 使用 `行锁+间隙锁`, 这使得锁的范围增大, 无疑会降低并发度, 而且会增加产生死锁的概率
+
+> 死锁, 事务一锁住了表A, 然后请求表B, 事务二锁住了表B, 然后请求表A, 此时两个事务相互等待, 即为死锁
+
+RR时, 仅仅使用 `行锁` , 锁的粒度更小, 能有效提高并发, 但是此时需要手动对幻读问题进行处理 , 且不能再使用 statement 的 binlog , 换成 row 或者 mixed
+
+
 
 
 
