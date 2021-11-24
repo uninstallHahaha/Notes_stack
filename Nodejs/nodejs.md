@@ -573,6 +573,8 @@ http.createServer().on('request', (req, res) => {
 
 > require加载的模块会打包成为一个 Module 类型的对象
 
+> 如果同时存在重名的内置模块和自定义模块, 那么优先使用内置模块
+
 ###### 导出和导入
 
 1. 被导入方使用 module.exports = xxx 来定义导入方接收到的数据
@@ -779,7 +781,13 @@ nodejs中事件回调都是基于 EventEmitter 对象实现的, 该对象实际�
 
 
 
+#### NodeJs global对象
 
+> 在 nodejs 中, 每个文件都是一个单独的 module , 它们的命名空间都是相互独立互不干扰的, 每个 module 中都内置了 global 对象, 类似于浏览器 window 对象, 该对象内置了很多现成的属性
+
+![1637734205089](nodejs.assets/1637734205089.png)
+
+![1637734323235](nodejs.assets/1637734323235.png)
 
 
 
