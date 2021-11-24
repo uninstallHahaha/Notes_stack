@@ -716,3 +716,78 @@ http.createServer().on('request', (req, res) => {
    ```
 
    
+
+
+
+
+
+
+
+#### NodeJs 事件循环
+
+> nodejs 事件循环机制类似于观察者模式
+
+nodejs基于单线程执行, 能够处理并发的原因在于其事件循环机制
+
+​		主线程每次从 <span style='color:cyan;'>event队列</span> 中取出一项来处理, 当客户端发来请求时, 对于 IO操作, 直接调用操作系统 epoll 系统调用, 同时为该事件生成对应的主题以及绑定对应的观察者回调函数 , 当执行完 IO 操作后, 触发观察者回调函数, 然后将该请求加入到 <span style='color:cyan;'>event 队列</span> 中, 因为主线程会不断从 event 队列中取出任务执行, 所以这就实现了在不阻塞主线程的情况下, 同时处理多个 IO 请求的功能
+
+单线程的优势在于
+
+* 进程内全程无线程切换, 减少了很多进程切换的时间损耗
+* 对于 IO 密集型场景十分契合, 能够以很高的效率处理并发
+* 单线程写代码简单, 无需考虑线程同步的问题
+
+缺点在于
+
+* 对于计算密集型场景不适合, 只能等到执行完一个请求后才能执行接下来的请求
+* 无法利用多核机器的优势
+* 但凡有一个处理请求的过程中抛错, 会导致整个服务直接完蛋
+
+
+
+
+
+#### NodeJs 运行机制
+
+1. v8解析js代码
+2. 解析完后的代码调用 node API
+3. 通过 libev 库系统调用 epoll, 形成 event 队列
+4. 主线程循环执行队列 event
+5. 最后通过v8将处理结果返回给用户
+
+<img src="nodejs.assets/1637726853661.png" alt="1637726853661" style="zoom:80%;" />
+
+
+
+
+
+
+
+#### NodeJs EventEmitter
+
+nodejs中事件回调都是基于 EventEmitter 对象实现的, 该对象实际上就是观察者模式的具体实现
+
+<img src="nodejs.assets/1637728222752.png" alt="1637728222752" style="zoom:80%;" />
+
+`EventEmitter 对象` 提供 `on('事件名', 回调函数)`, `emit('事件名')`  等 api 用来绑定和触发事件
+
+​		本质上当我们调用 `fs.readFileSync('filename', callback)` 时, 会创建一个<span style='color:cyan;'>观察者主题(事件名)</span>, 包含 `isTrigger 属性`, 同时创建对应的观察者对象, 将这些对象设置到 <span style='color:cyan;'>观察者主题</span> 中, 当读取完成 时, 触发该事件, 也就是将观察者中的 `isTrigger` 设置为 true , 然后遍历执行观察者对象中的触发逻辑, 而我们定义的 callback, 将会被设置到 <span style='color:cyan;'>观察者主题</span> 的观察者对象列表中, 待到事件触发时被调用
+
+<img src="nodejs.assets/1637728762106.png" alt="1637728762106" style="zoom:80%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
