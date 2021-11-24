@@ -1126,3 +1126,52 @@ webpack能够按照模块的依赖关系构建文件组织结构
 
 
 
+###### [webpack打包原理](https://segmentfault.com/a/1190000020353337?utm_source=sf-similar-article)
+
+前置知识
+
+1. <span style='color:cyan;'>webpack 配置文件</span>是一个 js 文件, 使用 commonJs 语法 export 一个配置对象
+2. 在使用 webpack 进行打包的前提下, 代码中直接使用 <span style='color:cyan;'>require() 导入</span>, webpack 会自动将 require() 替换为其使用es5语法自定义的方法 \__webpack_require__() 以便代码打包后能够正常在浏览器上运行
+3. <span style='color:cyan;'>loader</span> 是一个函数, 接收的参数是源码, 源码首先使用 utf-8 的编码格式进行读取, 然后遍历匹配的 loader, 将源码传入loader 函数, 最后得到经过 loader 转换的源码, 比如 css-loader, 就是会将 css 转换为 js 语句, 具体就是创建 style 标签, 然后将 css 文件内容添加到 style 标签中
+4. <span style='color:cyan;'>plugin</span> 是一个类, 类中包含 apply 方法, 在 webpack 加载时, 加载这些 plugin, 然后根据不同的事件触发不同的 plugin 进行处理
+5. webpack <span style='color:cyan;'>核心对象 Compiler</span>, 使用 config 配置对象进行初始化;
+
+
+
+打包流程
+
+> 当执行起 webpack 命令后...
+
+1. 加载 webpack.config.js 文件, 读取 config 配置信息用来创建 Compile 实例
+
+2. 调用 Compiler 实例的 run(), 执行打包逻辑
+
+3. 执行 buildModule(), 主要机制就是从入口文件开始, 递归遍历所有的相关引用文件, 然后将这些文件中的 require() 替换为 webpack_require(), 然后对源码执行匹配的 loader , 以及在钩子函数处触发 plugin逻辑, 执行完毕后返回被打包且已经经过处理的 js 代码
+
+   * 读取源码内容
+   * 遍历 rules, 找到合适的 loader, 对源码进行处理
+   * 使用 bable 将源码进行版本降级处理
+   * 替换掉 require() 为 webpack_require()
+   * 按照 [路径 : 源码] 的map格式, 将 modules 保存到 Compiler 的 modules 字段上
+   * 递归遍历所有依赖文件直至结束, 此时得到一个包含所有 modules 源码的 Compiler 实例
+
+4. 事先准备一个js 模板文件, 比如 ejs 
+
+   其中包含的逻辑是一个立即执行函数, 在其中提供 webpack_require() 的定义, 且动态拼接所有 modules 源码, 将这些源码使用 eval() 函数执行
+
+   <img src="webpack.assets/1637715811775.png" alt="1637715811775" style="zoom:80%;" />
+
+5. 调用 Compiler 的 emitFile(), 逻辑为读取 ejs 模板, 将 Compiler 中的 modules源码渲染到 ejs 模板中, 最后输出渲染后得到的 js文件, 即为打包后的 bundle 文件
+
+
+
+综上, webpack 做的核心几件事
+
+1. 递归分析依赖, 保存所有 modules 源码
+2. 将 js 文件通过 babel 降级, 将其他类型文件使用不同的 loader 转化为 js 文件
+3. 在指定的时机调用 plugin 处理逻辑
+4. 替换 require() 为 es5 版本的自定义的 webpack_require()
+5. 将所有 modules源码整合到一个 js模板中, 输出渲染后的 js 文件
+
+
+
