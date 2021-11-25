@@ -2995,6 +2995,12 @@ public class ProduceConsumer {
 
 
 
+[海量数据问题](https://blog.csdn.net/u010601183/article/details/56481868/?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-0.no_search_link&spm=1001.2101.3001.4242.1)
+
+
+
+
+
 ##### 海量数据中找到Top K
 
 ​		比如 K=10, 那么使用前十个元素创建最大堆, 然后遍历整个数据集, 每次插入到堆中的合适位置, 遍历完成后, 最大堆中的十个节点就是 Top K
@@ -3003,7 +3009,6 @@ public class ProduceConsumer {
 
 
 
-##### 海量IP中找到频次最高的
+##### [海量IP中找到频次最高的](https://blog.csdn.net/twlkyao/article/details/12037073)
 
-​		IPv4的个数是有限的, 那么可以创建 <ip, count> 的 hashmap, 然后遍历这些海量的ip, 统计到 hashmap 中, 然后遍历 hashmap 获取到最大的 count 值
-
+​		IPv4的个数是有限的, 那么可以创建长度等同于总数的数组, 然后遍历这些海量的ip, 统计到数组的每个位置中, 然后遍历数组获取到最大的 count 值
