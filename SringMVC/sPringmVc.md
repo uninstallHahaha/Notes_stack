@@ -9,6 +9,14 @@
 
 ## SpringMVC
 
+
+
+#### sm框架执行的流程
+
+<img src="1572509523(1).png"  />
+
+
+
 #### sm 和 Struts2的区别
 
 * sm入口是servlet, Struts2入口是filter
@@ -151,19 +159,11 @@
 
     
 
-    #### sm框架执行的流程
-
-    <img src="1572509523(1).png"  />
-
     
 
-      #### @RequestMapping
 
-    * 可用于类和方法上
-    * 只有path属性时, path可省略不写
-    * `method = Request.GET` 请求方式, 使用{} 设置多种请求方式
-    * `params={"name=hehe","age"}` 请求参数,这边设置了, 请求的时候必须传对应的参数( 如果设置了值, 那么值也必须相同)
-    * `headers={Accept}`请求必须包含这里设置的请求头参数
+
+
 
 
 
@@ -184,7 +184,7 @@ public String paramsBind(String name , int age){
 
 
 
-#### 通过配置过滤器解决post请求中文乱码问题
+#### 配置过滤器解决post请求中文乱码
 
 `web.xml`
 
@@ -263,6 +263,20 @@ public String getServlet(HttpServletRequest request, HttpServletResponse respons
     ...
 }
 ```
+
+
+
+
+
+#### @RequestMapping
+
+* 可用于类和方法上
+* 只有path属性时, path可省略不写
+* `method = Request.GET` 请求方式, 使用{} 设置多种请求方式
+* `params={"name=hehe","age"}` 请求参数,这边设置了, 请求的时候必须传对应的参数( 如果设置了值, 那么值也必须相同)
+* `headers={Accept}`请求必须包含这里设置的请求头参数
+
+
 
 
 
@@ -381,7 +395,9 @@ public String test(@CookieValue(value="JSESIONID")String cookie){
 
 
 
-#### SessionAttributes 用于操作多个请求之间的共享数据 ( 就是把数据存到session中 )
+#### @SessionAttributes 
+
+> 用于操作多个请求之间的共享数据 ( 就是把数据存到session中 )
 
 ```java
 @Controller

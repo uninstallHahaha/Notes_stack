@@ -8,7 +8,7 @@
 
 *   线程不安全：就是不提供数据访问时的数据保护，多个线程能够同时操作某个数据，从而出现数据不一致或者数据污染的情况 
 
-**Vector、HashTable、Properties是线程安全**
+**Vector、HashTable、Properties是线程安全的**
 
 **ArrayList、LinkedList、HashSet、TreeSet、HashMap、TreeMap是线程不安全的**
 
@@ -58,7 +58,7 @@ public Object deleteLast(Vector v){
 
 ##### Vector、ArrayList、LinkedList
 
-1、Vector：
+1、Vector
 
 ​	<span style="color:cyan;">线程安全版本的</span> ArrayList
 
@@ -68,7 +68,7 @@ public Object deleteLast(Vector v){
 
 ![image-20210817205722129](Java.assets/image-20210817205722129.png)
 
-2、ArrayList：
+2、ArrayList
 	a. 当操作是在一列数据的后面添加数据而不是在前面或者中间，并需要随机地访问其中的元素时，使用ArrayList性能比较好。
 	b. ArrayList是最常用的List实现类，内部是通过数组实现的，它允许对元素进行快速随机访问。数组的缺点是每个元素之间不能有间隔，当数组大小不满足时需要增加存储能力，就要讲已经有数组的数据复制到新的存储空间中。当从ArrayList的中间位置插入或者删除元素时，需要对数组进行复制、移动、代价比较高。因此，它适合随机查找和遍历，不适合插入和删除。
 
@@ -94,7 +94,7 @@ public Object deleteLast(Vector v){
 
 ​	a. 当对一列数据的前面或者中间执行添加或者删除操作时，并且按照顺序访问其中的元素时，要使用LinkedList
 
-​	b. LinkedList是用链表结构存储数据的，很适合数据的动态插入和删除，随机访问和遍历速度比较慢。另外，他还提供了List接口中没有定义的方法，专p门用于操作表头和表尾元素，可以当作堆栈、队列和双向队列使用。
+​	b. LinkedList是用链表结构存储数据的，很适合数据的动态插入和删除，随机访问和遍历速度比较慢。另外，他还提供了List接口中没有定义的方法，专门用于操作表头和表尾元素，可以当作堆栈、队列和双向队列使用。
 
 
 
@@ -103,6 +103,28 @@ public Object deleteLast(Vector v){
 ##### ArrayList、LinkedList 占用空间问题
 
 ​		通常情况下，由于 LinkedList 需要存储前后节点的指针，所以占用空间更大，但是考虑到 ArrayList 的扩容机制，每次空间不足时扩容至原长度的 1.5 倍，如果处于刚好扩容的临界值，那么将会多出来几乎三分之一的空间实际上并没有使用到而被浪费，所以对于谁占用空间更大这个问题，不能一概而论，应当考虑到数组的扩容机制
+
+
+
+##### [CopyOnRightList](https://segmentfault.com/a/1190000020031472)
+
+线程安全的list
+
+在 add() 方法中, 先对原数组加读锁, 然后复制一个新的数组, 在新的数据上进行修改, 最后将原数组指向新数组并且释放锁
+
+在写的过程中, 不影响其他线程对数组的读取操作, 提高了读读的并发
+
+缺点之一是每次 add 都需要复制一个新的数组, 这不仅仅浪费了时间, 还浪费了空间
+
+缺点之二是只能保证最终一致性, 不能保证实时一致性, 也就是在一个线程对数组进行修改完成后未提交时, 其他线程读取的还是旧数据
+
+注意! 如果使用一个 CopyOnRightList 初始化另外一个 CopyOnRightList, 那么只是将它们的底层数组浅拷贝
+
+<img src="Java.assets/1638173572621.png" alt="1638173572621" style="zoom:80%;" />
+
+
+
+
 
 
 
@@ -322,7 +344,7 @@ key,value 的数据结构, 内部使用红黑树的结构存储 Entry元素, 根
 
 ​		综上, 因为是数组存储, 所以查找, 修改, 删除速度为 O(1), 效率很高, 除非hash冲突很多导致链表很长.
 
-​		1.8中计算hash的方法，取hash值前16位和后16位按位 <span style='color:cyan;'>异或</span>，得到16位的结果，不用32位的原hash值可能是为了提高效率吧
+​		1.8中计算hash的方法，取hash值前16位和后16位按位 <span style='color:cyan;'>异或</span>，得到16位的结果，不用32位的原hash值可能是为了提高效率, 同时还是为了提高随机性, 为了hash的随机分布
 
 ![image-20210817154155110](Java.assets/image-20210817154155110.png)
 
@@ -399,7 +421,7 @@ ConcurrentHashMap在进行put操作的还是比较复杂的，大致可以分为
     3.  扩容过程锁整个数组, 意味着不能读不能写
     4.  那么最应当提升的就是扩容的效率, 其方案为新来的线程如果发现正在扩容, 那么就会被分配到格子帮助扩容
 5.  如果都不满足，则利用 synchronized 锁写入数据, 如果该元素已经存在元素, 那么意味着总是只有一个线程能够进入该同步代码块, <span style='color:cyan;'>也就是所谓的分段锁, 说白了就是锁定当前位置</span>
-6.  如果数量大于 `TREEIFY_THRESHOLD` 则要转换为红黑树
+6.  如果数量大于 `TREEIFY_THRESHOLD=8` , 并且数组大小大于 `MIN_TREEFIY_THRESHOLD=64` 则要转换为红黑树
 
 
 
@@ -417,7 +439,7 @@ ConcurrentHashMap在进行put操作的还是比较复杂的，大致可以分为
 
     ​		所以，哪怕1.8用了尾插法，也不要尝试在多线程时直接使用 hashmap
 
-*   1.8之后，存储结构为 <span style='color:cyan;'>list+link+tree</span>，list中元素是link或者tree，当该位置元素个数小于指定个数时，使用link存储，大于指定个数时，改为tree存储，为了能够提高查询效率，具体由 `MIN_TREEIFY_CAPACITY` 字段控制，默认是8
+*   1.8之后，存储结构为 <span style='color:cyan;'>list+link+tree</span>，list中元素是link或者tree，当该位置元素个数小于指定个数时，使用link存储，大于指定个数时，改为tree存储，为了能够提高查询效率，具体由 `TREEIFY_CAPACITY` 字段控制，默认是8
 
     ![image-20210817163434560](Java.assets/image-20210817163434560.png)
 
@@ -430,6 +452,18 @@ ConcurrentHashMap在进行put操作的还是比较复杂的，大致可以分为
 1. 直接 foreach 遍历 Entry 对象
 2. 使用 foreach 遍历 keyset 或者 values
 3. 拿到 entrySet 的 iterator 然后 next 遍历
+
+
+
+
+
+##### LinkedHashMap
+
+普通的 hashmap 遍历不一定按照 put 时候的顺序进行
+
+而 LinkedHashMap 维护一个链表, 用来保存插入的 key 的顺序, 然后在遍历的时候后使用这个链表进行遍历, 这样就能做到按照 put 顺序进行遍历
+
+
 
 
 

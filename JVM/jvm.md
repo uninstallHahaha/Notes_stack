@@ -502,6 +502,8 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 
 ![1595151873899](1595151873899.png)
 
+
+
 ###### 并行垃圾回收器
 
 > 通过设置虚拟机参数启用 -XX:+UseParallelGC 开启该回收器 , 在 jdk1.8中默认使用这个
@@ -515,6 +517,8 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 垃圾回收时的流程:
 
 ![1595152054920](1595152054920.png)
+
+
 
 ###### CMS回收器(并发标记清理)
 
@@ -536,6 +540,8 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 4.  <span style='color:cyan;'>并发清理</span> : 此时, 已经正确标记出当前状态下哪些对象需要被清理, 垃圾清理线程与工作线程并发执行, 垃圾清理线程进行对象回收
 
 ![1595152580893](1595152580893.png)
+
+
 
 ###### G1 垃圾回收器
 
@@ -566,13 +572,14 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 *   大对象直接进入老年代
 
     大对象在Survivor里存不下，也直接进入old区
-     **tips:只针对Serial和Parnew收集器生效，PS收集器无效**
+    
+    **tips:只针对Serial和Parnew收集器生效，PS收集器无效**
 
 
 
 
 
-##### gc时间过长卡顿?
+##### gc时间过长卡顿
 
 1.  优化代码, 少new一些对象
 2.  新生代内存分的太少, 总是发生 minor gc, 然后其中的对象寿命也增加的很快, 导致它们很快就进入老年代, 然后等到 full gc 的时候就得花更多时间

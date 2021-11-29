@@ -1067,21 +1067,29 @@ public class JedisPoolUtil{
 
 ###### redis 数据类型 
 
-1. string
+1. <span style='color:cyan;'>string</span>
 
     ​	string的二进制安全 : 即不会将某些字符进行转义, 存的是什么, 读出来的就是什么, 不会像c把\\0作为字符串的结尾来解析
 
     ​	单个值最大能存 512M
 
-2. list , 这里是 linkedlist 结构
+2. <span style='color:cyan;'>list</span>
 
-3. hash 字典 , 同 hashmap 结构，增加了 rehash 的优化即预备一个扩容数组，另外数据量少时使用 ziplist 结构时间换空间
+    这里是 linkedlist 结构
 
-4. set , 同 hashSet , 无序不可为空不可重复列表
+3. <span style='color:cyan;'>hash 字典</span>
 
-5. zset, 使用 key 作为排序标准的 hashMap 结构, 自动根据 key 进行排序, 直接就能用到排行榜功能上
+    同 hashmap 结构，增加了 rehash 的优化即预备一个扩容数组，另外数据量少时使用 ziplist 结构时间换空间
 
-6. HyperLogLog
+4. <span style='color:cyan;'>set</span>
+
+    同 hashSet , 无序不可为空不可重复列表
+
+5. <span style='color:cyan;'>zset</span>
+
+    使用 key 作为排序标准的 hashMap 结构, 自动根据 key 进行排序, 直接就能用到排行榜功能上
+
+6. <span style='color:cyan;'>HyperLogLog</span>
 
     ​	使用了固定大小用来统计不重复数据个数的类型, 该类型不存储实际数据, 只记录目前为止输入的数据去重后大概的个数, 一个 HyperLogLog 值占用空间 12k
 
@@ -1191,7 +1199,7 @@ public class JedisPoolUtil{
 
 
 
-###### redis的并发竞争问题如何解决?
+###### redis的并发竞争问题如何解决
 
 ​	Redis为单进程单线程模式，采用队列模式将并发访问变为串行访问。Redis本身没有锁的概念，Redis对于多个客户端连接并不存在竞争，但是在Jedis客户端对Redis进行并发访问时会发生连接超时、数据转换错误、阻塞、客户端关闭连接等问题，这些问题均是由于客户端连接混乱造成。对此有2种解决方法：
 
@@ -1202,7 +1210,7 @@ public class JedisPoolUtil{
 
 
 
-###### redis 性能问题 ?
+###### redis 性能问题
 
 ​		集群环境下, master节点进行数据落盘时, 主线程阻塞, 如果数据量过大, 会间断性暂停服务, 所以应当让从节点进行数据落盘, 主节点不要接手这档子事
 
@@ -1216,7 +1224,7 @@ public class JedisPoolUtil{
 
 
 
-###### redis实现分布式锁 ?
+###### redis实现分布式锁
 
 > ​	分布式锁是控制分布式系统或不同系统之间共同访问共享资源的一种锁实现，如果不同的系统或同一个系统的不同主机之间共享了某个资源时，往往需要互斥来防止彼此干扰来保证一致性。 
 
@@ -1228,7 +1236,7 @@ public class JedisPoolUtil{
 
 
 
-###### redis 分布式锁和 zookeeper 分布式锁 ?
+###### redis 分布式锁和 zookeeper 分布式锁
 
 ​	zookeeper使用自带的临时节点功能来实现分布式锁, 每一个进程来申请获取锁时会创建一个临时节点, 该临时节点编号递增, 只有进程获取到的节点编号是所有编号中最小的时候才认定为获得了锁, 否则给前一个节点添加监听, 当前一个节点操作完之后, 会将前一个节点删除, 此时后一个节点就监听到了删除事件, 然后再判断自己是不是当前最小的编号, 是则代表获得了锁.
 
@@ -1238,7 +1246,7 @@ public class JedisPoolUtil{
 
 
 
-###### redis 的 keys 命令?
+###### redis 的 keys 命令
 
 不要在生产环境用 keys命令, 因为单线程特性, 会让 redis 服务阻塞可能造成宕机.
 
@@ -1252,17 +1260,17 @@ scan 每次遍历一部分数据, 然后就返回当前批次的数据以及遍�
 
 
 
-###### redis 实现队列 ?
+###### redis 实现队列
 
 ​	就用自带的 list 类型的值 , 生产者队尾加, 消费者队首取
 
-###### 如果要实现延时队列?
+###### 如果要实现延时队列
 
 ​	用自带的 zset, 生产者设置 score 为当前时间戳, value 为消息, 消费者取消息时用当前时间戳减去延时, 然后范围查询 zset 中 score 在延时之前的消息.
 
 
 
-###### redis 的数据持久化机制?
+###### redis 的数据持久化机制
 
 ​	自动定时将内存中的数据保存到硬盘上, 下次启动时从备份文件中恢复数据到内存.
 
