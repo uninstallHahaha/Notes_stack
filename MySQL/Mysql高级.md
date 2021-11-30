@@ -1385,7 +1385,7 @@ MySQL会维护一个当前最大的主键值, 然后每次插入数据时使用�
 
 
 
-#### 行锁和表锁
+#### [行锁和表锁](https://blog.csdn.net/alexdamiao/article/details/52049993)
 
 > 注: 以下机制是 InnoDB 的机制, 在 myisam 中直接就是整表锁
 
