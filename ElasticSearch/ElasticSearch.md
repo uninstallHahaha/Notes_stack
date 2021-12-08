@@ -1,12 +1,106 @@
+##### docker中使用
+
+>   墙裂推荐使用 docker 玩
+
+1.  拉取 es 和 kibana 镜像， 注意版本保持一致
+
+    ```sh
+    docker pull docker.elastic.co/elasticsearch/elasticsearch:7.15.2
+    docker pull docker.elastic.co/kibana/kibana:7.15.2
+    ```
+
+2.  写一个脚本，一键启动 es 和 kibana， 注意要先启动es
+
+    ```sh
+    #!/bin/bash
+    
+    # network
+    # docker network create elastic
+    
+    # es
+    # --net 设置所在子网
+    # -e "ES_JAVA_OPTS" 设置es的jvm参数
+    docker run -d --rm --name es --net elastic -p 127.0.0.1:9200:9200 -p 127.0.0.1:9300:9300 \
+            -e "discovery.type=single-node" \
+            -v /var/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \
+            -v /var/elasticsearch/data:/usr/share/elasticsearch/data \
+            -v /var/elasticsearch/plugins:/usr/share/elasticsearch/plugins \
+            -e ES_JAVA_OPTS="-Xms64m -Xmx128m" \
+            docker.elastic.co/elasticsearch/elasticsearch:7.15.2
+    
+    # kibana
+    docker run --rm --name kibana --net elastic -p 127.0.0.1:5601:5601 \
+            -v /var/elasticsearch/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml \
+            docker.elastic.co/kibana/kibana:7.15.2
+    
+    ```
+
+3.  墙裂推荐使用外挂文件卷启动 es 和 kibana，所以在本机上创建出来 es 的 config 文件、data文件夹、plugins文件夹以及kibana的config文件
+
+    ```yml
+    # es 的 config 文件
+    cluster.name: "ultraman"
+    network.host: 0.0.0.0
+    
+    # 为了能让kibana访问到es服务，请设置为允许跨域
+    http.cors.enabled: true
+    http.cors.allow-origin: "*"
+    http.cors.allow-credentials: true
+    ```
+
+    ```yml
+    #kibana的config文件
+    
+    #
+    # ** THIS IS AN AUTO-GENERATED FILE **
+    #
+    
+    # Default Kibana configuration for docker target
+    server.host: "0"
+    server.shutdownTimeout: "5s"
+    # 在使用docker的方法时，这里的域名应当是docker启动的es容器的name值
+    elasticsearch.hosts: [ "http://es:9200" ]
+    monitoring.ui.container.elasticsearch.enabled: true
+    
+    # 切换到中文显示，本质就是使用人工翻译的一个映射关系文件
+    i18n.locale: "zh-CN"
+    ```
+
+4.  在docker 中创建一个子网，让 es 和 kibana都处于该子网中，以便于通信
+
+    ```sh
+    docker network create elastic
+    ```
+
+5.  运行第二步中的一键启动脚本，注意要先 `chmod +x filename` 赋予运行权限
+
+6.  启动后，使用 `docker ps` 查看es容器和kibana容器的运行情况
+
+7.  `127.0.0.1:9200` 访问es服务
+
+8.  `127.0.0.1:5601` 访问kibana服务
+
+9.  在kibana中操作es服务
+
+
+
+
+
+
+
+
+
 ##### 安装
 
 elasticsearch
 
 下载安装包解压即可，也可直接下载 docker 镜像进行启动，需要修改配置文件，允许跨域访问，因为需要其他端口上的服务来获取到es的状态
 
-elasticsearch-head
+[elasticsearch-head](https://github.com/mobz/elasticsearch-head)
 
 节点状态监控程序，实时显示集群中各个节点的数据状态
+
+直接下载，然后 `npm install`, 然后 `npm run start`, 最后 `localhost:9100`
 
 kibana
 
