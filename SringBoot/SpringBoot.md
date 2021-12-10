@@ -820,3 +820,61 @@ springboot默认扫描启动类所在的包下的主类与子类的所有组件�
 
 ![image-20211025120213530](SpringBoot.assets/image-20211025120213530.png)
 
+
+
+
+
+
+
+## SpringBoot自动装载原理
+
+###### [spring-boot父项目](https://www.cnblogs.com/alice-cj/p/11442228.html)
+
+​		首先我们的项目都是使用 `spring-boot-starter-parent` 作为父项目
+
+​		在 `spring-boot-starter-parent` 中，已经定义了所有常用的依赖包，不过是以 `dependencyManagement` 的方式进行定义的，也就是子项目默认不会继承使用这些包，只有声明使用时才会真正地使用这些包
+
+本质上 `spring-boot-starter-parent` 就是定义了一整套所有常用依赖包兼容版本的定义
+
+​		所以，在子项目中我们只需要声明 `dependency` 即可使用在父项目中事先定义好的依赖包，这其中不需要写 `version`
+
+![image-20211210194000167](SpringBoot.assets/image-20211210194000167.png)
+
+
+
+###### spring-boot-starter
+
+​		通常，对于常用的功能，官方已经将其所需的所有依赖包都整合到一个 `spring-boot-starter-xxx` 中，这个 starter 实际上就是一个空项目，仅仅在 `pom.xml` 中包含了所需的其他相关依赖包，那么我们只需要在项目中引入这个 starter 即相当于引入了该功能所需的所有包
+
+![image-20211210193904116](SpringBoot.assets/image-20211210193904116.png)
+
+
+
+###### META-INFO默认配置
+
+​		同时，对于已经在 `spring-boot-starter-parent` 中定义的依赖包，对应的在 `spring-boot-autoconfig` 中也有默认的 JavaConfig 配置类，因为我们使用一个依赖包的功能，本质上就是使用其中某些类实例，而这些类实例都将被 IOC 容器管理，所以在我们使用到某个依赖包时，如果不手动提供配置信息，那么将会使用这些默认的 JavaConfig 来创建对象实例
+
+![image-20211210193804869](SpringBoot.assets/image-20211210193804869.png)
+
+![image-20211210194120837](SpringBoot.assets/image-20211210194120837.png)
+
+​		`xxxAutoConfiguration` 是 spring-boot 提供的默认配置，同时它提供通过 `@ConfigurationProperties` 注解与 yaml 配置文件进行绑定的配置，如果在 yaml 配置文件中手动定义了配置项，那么会对默认配置进行覆盖
+
+![image-20211210202817017](SpringBoot.assets/image-20211210202817017.png)
+
+​		虽然spring-boot会为我们默认提供很多配置类，但是它们大多是按条件才生效，比如只有当我们加载了对应的包才生效，对于实际加载了哪些配置类，我们可以在 yaml 配置文件中配置 `debug: true` 使其在运行时打印这些信息
+
+![image-20211210202040150](SpringBoot.assets/image-20211210202040150.png)
+
+
+
+###### 总结
+
+​		综上所述，springboot自动装配的原理就在于它实际上就是把所有可能用到的包都事先定义好，并且定义好对应的 JavaConfig 配置类，这样就能够自动注入并使用
+
+
+
+
+
+
+

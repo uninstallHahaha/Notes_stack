@@ -2258,3 +2258,43 @@ spring能够解决的循环依赖是在对象 setter 函数中产生的循环依
 
 <img src="Spring.assets/1637229365087.png" alt="1637229365087" style="zoom:50%;" />
 
+
+
+
+
+
+
+
+
+## Spring的@Import
+
+>   @Import用于javaconfig配置类上，相当于用于方法上的@Bean
+>
+>   只不过@Import是直接将类型实例导入到IOC容器，而@Bean是通过手动定义返回实例，然后将其加入IOC容器
+
+@Import接收三种类型的类型定义：
+
+*   普通类
+*   实现了 ImportSelector 的类
+*   实现了 ImportBeanDefinitionRegister 的类
+
+>   这三种方式都是将指定的类型实例加载到IOC容器中
+
+1.  普通类
+
+    ![image-20211210145835952](Spring.assets/image-20211210145835952.png)
+
+2.  实现了 ImportSelector 的类
+
+    ![image-20211210145903970](Spring.assets/image-20211210145903970.png)
+
+    ![image-20211210145910900](Spring.assets/image-20211210145910900.png)
+
+3.  实现了 ImportBeanDefinitionRegister 的类
+
+    ![image-20211210150640595](Spring.assets/image-20211210150640595.png)
+
+    
+
+
+
