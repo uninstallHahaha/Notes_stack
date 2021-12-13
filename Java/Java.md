@@ -3061,3 +3061,24 @@ public class ProduceConsumer {
 
 
 
+
+
+##### native关键字
+
+​		native用来修饰方法，被修饰的方法代表是一个本地方法，由其他语言实现，native方法只需提供方法签名，无需提供方法实现
+
+​		这些方法将由其他语言进行实现，并且使用外部链接的方式进行关联，为的是能够实现 Java无法实现的功能，比如对操作系统的调用，这些只能交给 C/C++ 这样的语言来实现，这种机制被称为 JNI（Java Native Interface）
+
+​		本质上是用来实现 Java 代码调用其他语言的代码这个需求
+
+native用法
+
+1.编写带有native声明的方法的Java类（java文件）
+2.使用javac命令编译编写的Java类（class文件）如：javac NativeTest.java
+3.使用javah -jni ****来生成后缀名为.h的头文件（.h的文件） 如：javah -jni NativeTest
+4.使用其他语言（C、C++）实现本地方法
+5.将本地方法编写的文件生成动态链接库（dll文件）
+
+
+
+

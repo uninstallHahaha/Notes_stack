@@ -314,16 +314,53 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 
 ##### 参数设置
 
-*   Xss 设置单个线程栈的大小，不能太大，太大的话能够同时开的线程数就变少，最小值默认为228k
-*   Xms  初始堆内存，默认物理内存 1/64
-*   Xmx  最大堆内存，默认物理内存 1/4
-*   Xmn  新生代大小，覆盖 XX:NewRatio 设置
-*   XX:MetaSpaceSize  元空间大小（用来放方法和字符串常量池，直接使用物理内存）
-*   XX:SurvivorRatio  一个幸存区/Eden区 的 比例，注意有两个幸存区，它们的相同，这里设置的是一个的比例
-*   XX:NewRatio  新生代/老年代 的 比例
-*   XX:MaxTenuringThreshold  进入老年代的阈值
+栈
+
+*   -Xss 设置单个线程栈的大小，不能太大，太大的话能够同时开的线程数就变少，最小值默认为228k
+
+堆
+
+*   -Xms  初始堆内存，默认物理内存 1/64
+*   -Xmx  最大堆内存，默认物理内存 1/4
+*   -XX:NewRatio  新生代/老年代 的 比例
+*   -Xmn  新生代大小，覆盖 XX:NewRatio 设置
+*   -XX:MetaSpaceSize  元空间大小（用来放方法和字符串常量池，直接使用物理内存）
+*   -XX:SurvivorRatio  一个幸存区/Eden区 的 比例，注意有两个幸存区，它们的相同，这里设置的是一个的比例
+*   -XX:MaxTenuringThreshold  进入老年代的阈值
+
+其他
+
+*   -XX:+PrintGCDetails 在控制台打印GC相关信息
 
 
+
+
+
+
+
+##### OOM问题
+
+堆内存溢出，该问题无报错位置，无法直接定位源头所在
+
+​		可以先尝试调整JVM参数，调大堆内存，包括 Xms 和 Xmx，如果不再发生OOM，说明是因为内存不够，那么调大堆内存即可解决该问题，否则需要进一步分析内存信息
+
+​		可以直接使用 java.lang.Runtime 中提供的 API 来获取程运行过程中实时的内存信息，也可以使用更加专业的 JProfiler 工具进行内存分析
+
+***在Idea中，提供 Jprofiler 插件，用来分析 JVM 内存***
+
+1.  settings -> plugins -> search “Jprofiler” -> install
+
+2.  安装 Jrofiler 客户端， 注册码 `A-J12-pedoc#455172-msk2a0m2ucvtr#48b4b7`
+
+3.  在 idea 中 ， settings -> tools -> JProfiler 中指定 JProfiler 客户端中 jprofiler.exe 的安装位置
+
+4.  添加 JVM 参数 ![image-20211213202527685](jvm.assets/image-20211213202527685.png)，当程序出现OOM时将此时的内存占用情况保存为dump文件
+
+    注：不仅仅可以保存OOM时的内存情况，还可以保存其他任何情况下为dump文件
+
+5.  写会导致OOM的代码运行，出现OOM时，dump文件会被保存到项目根目录
+
+6.  使用 JProfiler 客户端打开该文件，分析内存占用情况
 
 
 
@@ -423,13 +460,17 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 
 优点: 没有内存碎片, 相对标记整理快
 
-缺点: 浪费内存
+缺点: 时刻保持 to 区域为空白区域，浪费内存
 
 
 
 ###### 分代垃圾回收
 
-​		分代收集算法整合了以上算法，综合了这些算法的优点，最大程度避免了它们的缺点，所以是现代虚拟机采用的首选算法,与其说它是算法，倒不是说它是一种策略，因为它是把上述几种算法整合在了一起
+​		分代回收将内存区域分为新生代和老年代，对其使用不同的垃圾回收算法，最大限度地利用各种算法的优势
+
+​		<span style='color:cyan;'>新生代使用复制算法</span>，因为新生代对象变化频繁，且新生代大小较小，那么复制算法需要多使用的 to 区域就不会浪费太多的内存，其利用到复制算法效率最高的优势
+
+​		<span style='color:cyan;'>老年代使用标记清除整理算法</span>，因为老年代较大但是垃圾清理很不频繁，所以可以使用标记清除整理算法，利用其最高的内存利用率，同时可以通过每几次标记清除后再统一整理一次的策略，提高标记清除整理的效率
 
 <img src="jvm.assets/image-20210818123438883.png" alt="image-20210818123438883" style="zoom:67%;" />
 
