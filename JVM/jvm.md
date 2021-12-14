@@ -332,6 +332,12 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 
 *   -XX:+PrintGCDetails 在控制台打印GC相关信息
 
+    ![image-20211214092657912](jvm.assets/image-20211214092657912.png)
+
+    ![image-20211214092708775](jvm.assets/image-20211214092708775.png)
+
+    ![image-20211214093031770](jvm.assets/image-20211214093031770.png)
+
 
 
 
@@ -361,6 +367,36 @@ Metaspace由两大部分组成：<span style='color:cyan;'>Klass Metaspace</span
 5.  写会导致OOM的代码运行，出现OOM时，dump文件会被保存到项目根目录
 
 6.  使用 JProfiler 客户端打开该文件，分析内存占用情况
+
+
+
+
+
+
+
+
+
+##### [JMM](https://www.jianshu.com/p/8a58d8335270)
+
+java memory model 是 java 的内存规范，只是一种用来规范java内存模型的协议
+
+存在为了提高程序效率的指令重排
+
+需要保证在单线程时，指令重排不能改变原有语义，这被称为 as-if-serial
+
+多线程时为了提高效率，每个线程存在私有缓存，它们将CPU共享内存上的数据保存到本地缓存，在本地进行读写，此时需要保证多个线程的数据一致性
+
+需要保证在多线程时，各个线程缓存的数据一致性，如果能够保证多个线程期望的执行顺序，那么就能实现上述要求，这被称为 happens-before，也就是满足一个线程的执行结果应当在另外一个线程执行之前被可见
+
+java 中通过 volatile 关键字和 synchronized 关键字来实现这些需求
+
+volatile 禁止相关指令重排，写回时清空其他线程上的缓存，这些机制保证了 jmm 规范
+
+synchronized 直接设置代码临界区，在一个临界区中，同时只有一个线程能够执行，这就从根本上解决了多线程时缓存数据不一致的情况
+
+
+
+
 
 
 
