@@ -236,7 +236,7 @@ docker build -t myShop .
 
 
 
-#### dockerfile指令
+#### Dockerfile指令
 
 > 每一条指令是一个单独的分层, 它们的上下文环境是不同的, 所以不能 使用 `RUN cd xxx` 命令来切换工作目录 
 >
