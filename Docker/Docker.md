@@ -255,7 +255,7 @@ docker build -t myShop .
 
 * ###### ADD 自动解压缩并删除压缩包, 同时源路径可以是url的拷贝文件功能 ( 不推荐使用,除非真的要自动解压并删除压缩包 )
 
-* ###### EXPOSE 暴露端口
+* ###### EXPOSE 仅仅说明镜像中使用的端口
 
 * ###### CMD 容器启动时执行的命令
 
@@ -285,7 +285,7 @@ docker build -t myShop .
 
 <span style="color:cyan;">以tomcat镜像为例解读 dockerfile 及其启动过程</span>
 
-* 在docker通过镜像启动容器时, 会先找到该镜像对应的dockerfile文件 ,然后文件中寻找 CMD 指令和 EXPOSE 指令来执行, CMD 指令就相当于shell脚本 , EXPOSE 指令指定了启动的该进程向外暴露哪个端口
+* 在docker通过镜像启动容器时, 会先找到该镜像对应的dockerfile文件 ,然后文件中寻找 CMD 指令和 EXPOSE 指令来执行, CMD 指令就相当于shell脚本 , EXPOSE 指令指名启动的该进程使用哪个端口
 * 在tomcat的dockerfile中, 就存在 `CMD ["catelina.sh","run"]` 指令, 也就是传入 "run" 参数来启动catalina.sh 这个文件 , 也就启动了tomcat服务器. 
 * 每一个启动的容器其实就是一个独立的程序 , 而启动的tomcat就相当于一个独立的服务器, 所以需要指定这个服务器上使用哪个端口来暴露服务, 也就是设置 EXPOSE 来指定的端口, 在tomcat的dockerfile中就存在 `EXPOSE 8080` 来暴露8080端口 .
 * 在启动tomcat的命令 `docker run -p 8080:8080 tomcat` 中
