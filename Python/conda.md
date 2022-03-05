@@ -7,7 +7,8 @@
 * activate env_name 切换到指定环境
 * conda deactivate 退出环境
 * conda info -e 显示所有已经创建的环境
-* conda create --name new_env_name --clone old_env_name (克隆)创建新环境
+* conda create --name new_env_name --clone old_env_name 创建新环境
+* conda create -n py37 python=3.7 按照指定python版本创建新环境
 * conda remove --name env_name --all 移除环境
 
 
