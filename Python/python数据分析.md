@@ -831,7 +831,7 @@ from pandas import Series,DataFrame
 
 #创建多层索引, 即有多个索引
 #使用from_product指定多层索引
- s=  Series(np.random.randint(0,150,size=6),index = pd.MultiIndex.from_product([['A','B','C'],['期中','期末']]))
+s = Series(np.random.randint(0,150,size=6),index = pd.MultiIndex.from_product([['A','B','C'],['期中','期末']]))
     
 #在DataFrame中使用多层索引 , 即嵌套表头
 #多层索引同样可使用在列即columns属性上
@@ -839,7 +839,7 @@ df = DataFrame(np.random.randint(0,150,size=(10,3)),columns=['py','math','en'],
               index=pd.MultiIndex.from_product([list('ABCDE'),['期中','期末']]))
 
 #多层索引的切片
-df.loc['A','B']
+df.loc['A':'B']
 df.iloc[0:3]
 
 #多层索引的聚合操作
@@ -1485,5 +1485,4 @@ axes3D.plot_surface(X,Y,Z)
 ## pyechart
 
 > 百度出品的图表绘制
-
 
