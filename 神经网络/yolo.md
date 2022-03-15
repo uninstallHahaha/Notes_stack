@@ -2,7 +2,7 @@
 
 1.  安装pyqt5, pillow，labelme
 
-2.  打开labelme 标注数据并保存为json文件
+2.  命令行直接打开 labelme 标注数据并保存为json文件，注意使用 conda 时要切换到安装了labelme 的环境
 
 3.  写脚本从 json 文件中读取数据并保存为 yolo 支持的标注数据格式
 
