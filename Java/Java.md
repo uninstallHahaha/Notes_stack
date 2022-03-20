@@ -2075,58 +2075,34 @@ static void bubble(int[] arr) {
 ​		分治后合并时可以保证原先在左边的子数组中与右边数组中出现相同的元素时，总是先将左边的数组加入到合并后的数组中，这样就保证了原数组相同元素的先后顺序， 是稳定的排序
 
 ```java
-// 归并排序
-public class dac {
-
-    // 入口方法
-    void dodac(int[] arr) {
-        dfs(arr, 0, arr.length - 1);
-    }
-
-    // 递归切分子数组，将排列好的子数组拼接为结果返回
-    void dfs(int[] arr, int left, int right) {
-        // 如果只有一个元素，直接返回
-        if (left == right) return;
-        // 如果有两个元素，将两个元素排列好然后返回
-        if (left + 1 == right) {
-            if (arr[left] > arr[right]) {
-                int tmp = arr[left];
-                arr[left] = arr[right];
-                arr[right] = tmp;
-            }
-            return;
+public class mergeSort{
+        // 归并排序
+        public static void main(String[] args){
+                int[] arr = new int[]{2,3,4,5,1};
+                process(arr, 0, arr.length-1);
+                for(int i: arr) System.out.println(i);
         }
-
-        // 将左右两个子数组排列完成
-        int mid = (right - left) / 2 + left;
-        dfs(arr, left, mid - 1);
-        dfs(arr, mid, right);
-
-        // 将排列完成的两个子数组拼接到一个新数组中，然后使用新数组替换原数组
-        int[] res = new int[right - left + 1];
-        int i = left;
-        int j = mid;
-        int loc = 0;
-        while (i != mid || j != right + 1) {
-            if (i != mid && j != right + 1) {
-                if (arr[i] < arr[j]) {
-                    res[loc++] = arr[i++];
-                } else {
-                    res[loc++] = arr[j++];
-                }
-                continue;
-            }
-            if (i != mid) {
-                res[loc++] = arr[i++];
-            }
-            if (j != right + 1) {
-                res[loc++] = arr[j++];
-            }
+        // 递归处理每个分块
+        static void process(int[] arr, int left, int right){
+                if(left==right) return;
+                int mid = left+((right-left)>>1);
+                process(arr, left, mid);
+                process(arr, mid+1, right);
+                merge(arr, left, right);
         }
-        for (int t = 0; t < res.length; t++) {
-            arr[left + t] = res[t];
+        // 有序合并两个分块的数据
+        static void merge(int[] arr, int left, int right){
+                int loc = 0;
+                int[] help = new int[right-left+1];
+                int mid = left+((right-left)>>1);
+                int l = left;
+                int r = mid+1;
+                while(l<=mid && r<=right)
+                        help[loc++]=arr[l]<=arr[r]?arr[l++]:arr[r++];
+                while(l<=mid) help[loc++]=arr[l++];
+                while(r<=right) help[loc++]=arr[r++];
+                for(int i=0;i<help.length;i++) arr[left+i]=help[i];
         }
-    }
 }
 ```
 
