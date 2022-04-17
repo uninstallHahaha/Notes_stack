@@ -2256,7 +2256,7 @@ spring能够解决的循环依赖是在对象 setter 函数中产生的循环依
 
 通过 bean的生命周期, 如下图可知, spring 都是先创建出来bean 实例, 然后再调用 setter 函数为属性赋值
 
-<img src="Spring.assets/1637229365087.png" alt="1637229365087" style="zoom:50%;" />
+<img src="Spring.assets/1637229365087.png" alt="1637229365087"  />
 
 
 
