@@ -931,13 +931,29 @@ threadLocal.get() , 从当前线程的 threadLocalMap 字段中根据该 threadL
 
 
 
-##### 为什么重写hashcode()和equals()
+##### [hashcode和equals](https://blog.csdn.net/Dream_Weave/article/details/105319988)
 
-​	对象默认使用 Object 的 hashcode 和 equals, 即 比较内存地址是否相等
+对象默认使用 Object 的 hashcode 和 equals, 即 比较内存地址是否相等
 
-​	而实际开发中可能需要根据对象的某个属性来决定是否相等, 比如要通过 id属性 判断相同与否进而 put 到 hashmap 中，所以重写 hashcode 就是自定义实例的身份证, 在 hashSet 之类的容器中, 每次添加新元素会判断 hashcode是否相同, 此时使用自定义的 hashcode 方法就可以实现业务上的定制需求
+*   equals 方法用来判断两个对象是否相等，默认实现是比较内存地址
 
-​	equal 的行为应当与 hashcode 的比较结果相同, 否则会造成不可预料的错误
+    相同值的基本类型都在栈中保存，则内存地址相等
+
+    引用类型都在堆中保存，内存地址不等，使用默认 equals 时，即使内容相等，也返回false
+
+    如业务需求根据引用类型的内容比较，那么需要重写 equals 方法
+
+*   hashcode 为集合类型而设计，比如 Map 和 Set
+
+    在插入新元素时，先比较 hashcode 然后比较 equals，如果只重写 equals，那么相同内容的对象还是会被当做不同的对象进行插入，这不符合业务需求
+
+    因此，必须同时重写 hashcode 和 equals
+
+    ![image-20220421111457672](Java.assets/image-20220421111457672.png)
+
+
+
+
 
 
 
@@ -1443,6 +1459,33 @@ public String getCheckResultSuper(String order) {
 ​    本质思想就是操作系统中的 select 方式, 单独开一个线程轮询所有的 channel(socket), 每当收到感兴趣的事件, 就把数据写到该 channel 对应的 buffer中, 具体代码中的实现就是创建 selector , 然后注册监听 channel, 然后无线轮询问 selector 是否有就绪事件, 有的话就从所有的 channel 中轮询查出来是哪个 channel 来的消息, 最后进行处理.
 
 ![image-20210719134336809](Java.assets/image-20210719134336809.png)
+
+
+
+
+
+
+
+
+
+##### NIO和BIO
+
+*   操作系统维护 socket，当有消息时，将 socket 中的数据发送到对应应用程序的全连接队列中
+*   每个服务器应用都可以设置全连接队列长度
+*   如果某个服务器的全连接队列满，那么该 socket 再来新消息时，会执行操作系统 tcp 设置中的队列满策略，默认给客户端返回 rst
+*   每当服务器调用 accept() 时，从全连接队列中阻塞取出最新的消息
+*   如果需要服务器同时服务多个客户端，在使用 accept 的方式下，需要对应数量的线程阻塞监听，因为线程一调用 accept 就会阻塞，这就是传统 BIO 的服务方式
+
+![image-20220421095715827](Java.assets/image-20220421095715827.png)
+
+![image-20220421095731889](Java.assets/image-20220421095731889.png)
+
+*   NIO 使用非阻塞 IO 的方法，一个线程负责接收客户端请求，一个线程负责非阻塞轮询多个 socket，再开 n 个线程处理请求，就实现了使用少量线程处理多个请求
+*   且在轮询 socket 时，即使输入流中没有准备好足够的数据，也会读取现有的数据直接返回，而不是像 BIO 那样必须等到数据准备完毕后再返回
+
+
+
+
 
 
 

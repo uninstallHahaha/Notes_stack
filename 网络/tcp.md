@@ -226,7 +226,7 @@ Tomcat、Nginx、Apache 常见的 Web 服务的 backlog 默认值都是 511。
 
 在 Linux 系统中，可以通过**设置 tcp_fastopn 内核参数，来打开 Fast Open 功能**：
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/J0g14CUwaZciat6yMSZJ2QYWIldpAXY6VwzGZbjy6Wv2IXuibTCRXveHazhGKm9MIULSDsOXj7ZmUMK7WkYy4yKA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
+![图片](tcp.assets/640)
 
 tcp_fastopn 各个值的意义:
 
@@ -562,7 +562,7 @@ Linux 中打开这一功能，需要把 tcp_window_scaling 配置设为 1（默�
 
 这样看来，只要进程能及时地调用 read 函数读取数据，并且接收缓冲区配置得足够大，那么接收窗口就可以无限地放大，发送方也就无限地提升发送速度。
 
-**这是不可能的，因为网络的传输能力是有限的，当发送方依据发送窗口，发送超过网络处理能力的报文时，路由器会直接丢弃这些报文。因此，缓冲区的内存并不是越大越好。**
+**这是不可能的，因为网络的传输能力是有限的，当发送方依据发送窗口，发送超过网络处理能力的报文时，路由器会直接丢弃这些报文（MTU）。因此，缓冲区的内存并不是越大越好。**
 
 #### 如果确定最大传输速度？
 
